@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#185FA5">
+<meta name="theme-color" content="#1E5AA8">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Control SAC">
-<link rel="manifest" href="data:application/json,{%22name%22:%22Control%20SAC%22,%22short_name%22:%22Control%20SAC%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23f5f5f0%22,%22theme_color%22:%22%23185FA5%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,%253Csvg xmlns=%2527http://www.w3.org/2000/svg%2527 viewBox=%25270 0 100 100%2527%253E%253Crect width=%2527100%2527 height=%2527100%2527 rx=%252720%2527 fill=%2527%2523185FA5%2527/%253E%253Ctext x=%252750%2527 y=%252568%2527 font-size=%252755%2527 fill=%2527white%2527 text-anchor=%2527middle%2527 font-family=%2527sans-serif%2527 font-weight=%2527bold%2527%253E%25E2%259C%2593%253C/text%253E%253C/svg%253E%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22},{%22src%22:%22data:image/svg+xml,%253Csvg xmlns=%2527http://www.w3.org/2000/svg%2527 viewBox=%25270 0 100 100%2527%253E%253Crect width=%2527100%2527 height=%2527100%2527 rx=%252720%2527 fill=%2527%2523185FA5%2527/%253E%253Ctext x=%252750%2527 y=%252568%2527 font-size=%252755%2527 fill=%2527white%2527 text-anchor=%2527middle%2527 font-family=%2527sans-serif%2527 font-weight=%2527bold%2527%253E%25E2%259C%2593%253C/text%253E%253C/svg%253E%22,%22sizes%22:%22512x512%22,%22type%22:%22image/svg+xml%22}]}">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23185FA5'/%3E%3Ctext x='50' y='68' font-size='55' fill='white' text-anchor='middle' font-family='sans-serif' font-weight='bold'%3E%E2%9C%93%3C/text%3E%3C/svg%3E">
 <title>Control SAC</title>
 <style>
 :root{
@@ -197,6 +196,14 @@ button.primary:hover{filter:brightness(1.1)}
   .filters{gap:5px}
   .chip{padding:5px 10px;font-size:11px}
   .export-bar{width:100%;justify-content:flex-end}
+  #resumen-content table{font-size:0}
+  #resumen-content thead{display:none}
+  #resumen-content tbody{display:flex;flex-direction:column;gap:6px}
+  #resumen-content tbody tr{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 10px;gap:2px}
+  #resumen-content tbody tr td{display:flex;justify-content:space-between;padding:2px 0;border:none;font-size:12px;text-align:right}
+  #resumen-content tbody tr td:first-child{font-size:13px;font-weight:700;justify-content:flex-start;text-align:left}
+  #resumen-content tbody tr[style*="f9f9f7"]{background:var(--blue-light);padding:6px 10px}
+  #resumen-content tbody tr[style*="f9f9f7"] td{font-size:11px;display:block;text-align:left}
 }
 </style>
 </head>
@@ -1069,6 +1076,83 @@ setGerente(false);
 refreshTareas();
 refreshVencimientos();
 startAutoRefresh();
+
+// GENERAR ÍCONOS PNG REALES (Canvas) — más confiable que SVG para PWA en Android
+function generateIcon(size){
+  const c=document.createElement("canvas");
+  c.width=size;c.height=size;
+  const ctx=c.getContext("2d");
+  const grad=ctx.createLinearGradient(0,0,size,size);
+  grad.addColorStop(0,"#1E5AA8");
+  grad.addColorStop(1,"#0F3D7A");
+  const r=size*0.22;
+  ctx.beginPath();
+  ctx.moveTo(r,0);
+  ctx.lineTo(size-r,0);
+  ctx.quadraticCurveTo(size,0,size,r);
+  ctx.lineTo(size,size-r);
+  ctx.quadraticCurveTo(size,size,size-r,size);
+  ctx.lineTo(r,size);
+  ctx.quadraticCurveTo(0,size,0,size-r);
+  ctx.lineTo(0,r);
+  ctx.quadraticCurveTo(0,0,r,0);
+  ctx.closePath();
+  ctx.fillStyle=grad;
+  ctx.fill();
+  // círculo naranja con check
+  const cx=size/2,cy=size/2,cr=size*0.32;
+  const grad2=ctx.createLinearGradient(cx-cr,cy-cr,cx+cr,cy+cr);
+  grad2.addColorStop(0,"#F58220");
+  grad2.addColorStop(1,"#FFB81C");
+  ctx.beginPath();
+  ctx.arc(cx,cy,cr,0,Math.PI*2);
+  ctx.fillStyle=grad2;
+  ctx.fill();
+  ctx.strokeStyle="#fff";
+  ctx.lineWidth=size*0.045;
+  ctx.lineCap="round";
+  ctx.lineJoin="round";
+  ctx.beginPath();
+  ctx.moveTo(cx-cr*0.45,cy+cr*0.05);
+  ctx.lineTo(cx-cr*0.1,cy+cr*0.4);
+  ctx.lineTo(cx+cr*0.5,cy-cr*0.4);
+  ctx.stroke();
+  return c.toDataURL("image/png");
+}
+
+(function setupPWAIcons(){
+  const icon192=generateIcon(192);
+  const icon512=generateIcon(512);
+
+  const appleLink=document.createElement("link");
+  appleLink.rel="apple-touch-icon";
+  appleLink.href=icon192;
+  document.head.appendChild(appleLink);
+
+  const favicon=document.createElement("link");
+  favicon.rel="icon";
+  favicon.href=icon192;
+  document.head.appendChild(favicon);
+
+  const manifest={
+    name:"Control SAC",
+    short_name:"Control SAC",
+    start_url:".",
+    display:"standalone",
+    background_color:"#f5f5f0",
+    theme_color:"#1E5AA8",
+    icons:[
+      {src:icon192,sizes:"192x192",type:"image/png",purpose:"any maskable"},
+      {src:icon512,sizes:"512x512",type:"image/png",purpose:"any maskable"}
+    ]
+  };
+  const manifestBlob=new Blob([JSON.stringify(manifest)],{type:"application/json"});
+  const manifestUrl=URL.createObjectURL(manifestBlob);
+  const manifestLink=document.createElement("link");
+  manifestLink.rel="manifest";
+  manifestLink.href=manifestUrl;
+  document.head.appendChild(manifestLink);
+})();
 
 // PWA — Service Worker inline (vía Blob) para soporte offline básico
 if("serviceWorker" in navigator){
