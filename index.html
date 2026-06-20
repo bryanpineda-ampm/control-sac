@@ -128,17 +128,6 @@ button.primary:hover{filter:brightness(1.1)}
 .alert-banner{background:#fee2e2;border:1px solid #fca5a5;border-radius:9px;padding:9px 12px;margin-bottom:10px;display:flex;align-items:center;gap:7px;font-size:12px;color:#b91c1c;animation:popIn .25s ease}
 .warn-banner{background:var(--orange-light);border:1px solid var(--orange);border-radius:9px;padding:9px 12px;margin-bottom:8px;display:flex;align-items:center;gap:7px;font-size:12px;color:var(--orange-dark);animation:popIn .25s ease}
 .export-bar{display:flex;gap:5px;flex-wrap:wrap;margin-left:auto}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
-.cal-day{background:var(--card);border:1px solid var(--border);border-radius:9px;min-height:85px;padding:6px}
-.cal-day-header{font-size:10px;font-weight:700;color:var(--text-soft);text-align:center}
-.cal-day-date{font-size:12px;font-weight:700;color:var(--text);text-align:center;margin:2px 0 4px}
-.cal-day.today .cal-day-date{background:var(--orange);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;margin:2px auto 4px}
-.cal-task{font-size:9px;padding:2px 4px;border-radius:3px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
-.cal-task.pending{background:#FAEEDA;color:#633806}
-.cal-task.done{background:#EAF3DE;color:#27500A}
-.cal-task.overdue{background:#fee2e2;color:#b91c1c}
-.cal-nav{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.cal-nav h3{flex:1;text-align:center;font-size:13px;font-weight:600}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:none;align-items:center;justify-content:center;padding:14px}
 .modal-overlay.open{display:flex}
 .modal{background:var(--card);border-radius:14px;padding:20px;width:100%;max-width:420px;max-height:85vh;overflow-y:auto;animation:popIn .2s ease}
@@ -188,22 +177,12 @@ button.primary:hover{filter:brightness(1.1)}
   .venc-table td:first-child{font-size:13px;font-weight:700}
   .venc-table td:first-child:before{content:""}
   .agent-grid{grid-template-columns:1fr}
-  .cal-grid{grid-template-columns:repeat(7,minmax(40px,1fr));gap:3px;overflow-x:auto}
-  .cal-day{min-height:70px;padding:4px}
   .modal{max-width:100%;margin:0 8px}
   .pin-box{width:90%;max-width:300px}
   button{font-size:12px;padding:0 10px}
   .filters{gap:5px}
   .chip{padding:5px 10px;font-size:11px}
   .export-bar{width:100%;justify-content:flex-end}
-  #resumen-content table{font-size:0}
-  #resumen-content thead{display:none}
-  #resumen-content tbody{display:flex;flex-direction:column;gap:6px}
-  #resumen-content tbody tr{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 10px;gap:2px}
-  #resumen-content tbody tr td{display:flex;justify-content:space-between;padding:2px 0;border:none;font-size:12px;text-align:right}
-  #resumen-content tbody tr td:first-child{font-size:13px;font-weight:700;justify-content:flex-start;text-align:left}
-  #resumen-content tbody tr[style*="f9f9f7"]{background:var(--blue-light);padding:6px 10px}
-  #resumen-content tbody tr[style*="f9f9f7"] td{font-size:11px;display:block;text-align:left}
 }
 </style>
 </head>
@@ -237,13 +216,13 @@ button.primary:hover{filter:brightness(1.1)}
     <div id="banner-tareas"></div>
     <div id="gerente-form" style="display:none">
       <div class="card">
-        <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:#185FA5">👨‍💼 Gerente — Bryan Pineda</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--blue)">👨‍💼 Gerente — Bryan Pineda</div>
         <div class="two-col">
           <div style="display:flex;flex-direction:column;gap:8px">
             <div class="field"><label>Agente SAC</label>
               <select id="inp-agent" onchange="updateArea()"><option value="">Seleccionar...</option></select>
             </div>
-            <div style="font-size:11px;color:#888;min-height:14px" id="area-hint"></div>
+            <div style="font-size:11px;color:var(--text-soft);min-height:14px" id="area-hint"></div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
               <div class="field"><label>Turno</label>
                 <select id="inp-turno"><option value="">Turno</option><option value="AM">☀️ AM</option><option value="PM">🌙 PM</option></select>
@@ -260,7 +239,7 @@ button.primary:hover{filter:brightness(1.1)}
               <input id="inp-task" type="text" placeholder="Escribe para ver sugerencias..." autocomplete="off"
                 oninput="acTaskSearch()" onfocus="acTaskSearch()" onblur="setTimeout(()=>hideTaskAC(),200)" onkeydown="acTaskKey(event)">
               <div class="ac-dd" id="ac-task"></div>
-              <div style="font-size:10px;color:#aaa;margin-top:3px">💡 Sugerencias al escribir — o crea una nueva</div>
+              <div style="font-size:10px;color:var(--text-soft);margin-top:3px">💡 Sugerencias al escribir — o crea una nueva</div>
             </div>
             <button class="primary" onclick="addTask()" style="width:100%;justify-content:center;margin-top:4px" id="btn-add">+ Asignar tarea</button>
           </div>
@@ -280,7 +259,7 @@ button.primary:hover{filter:brightness(1.1)}
     <div id="agente-tareas-view"></div>
 
     <div class="metrics">
-      <div class="metric"><div class="metric-label">Total</div><div class="metric-val" style="color:#185FA5" id="m-total">0</div></div>
+      <div class="metric"><div class="metric-label">Total</div><div class="metric-val" style="color:var(--blue)" id="m-total">0</div></div>
       <div class="metric"><div class="metric-label">Pendientes</div><div class="metric-val" style="color:#854F0B" id="m-pending">0</div></div>
       <div class="metric"><div class="metric-label">Completadas</div><div class="metric-val" style="color:#27500A" id="m-done">0</div></div>
       <div class="metric"><div class="metric-label">Vencidas</div><div class="metric-val" style="color:#b91c1c" id="m-overdue">0</div></div>
@@ -318,7 +297,7 @@ button.primary:hover{filter:brightness(1.1)}
   <div id="tab-vencimientos" style="display:none">
     <div id="banner-venc"></div>
     <div id="venc-form-wrap" class="card" style="display:block">
-      <div style="font-size:13px;font-weight:700;margin-bottom:9px;color:#185FA5">➕ Registrar producto</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:9px;color:var(--blue)">➕ Registrar producto</div>
       <div class="venc-form">
         <div class="field ac-wrap" style="min-width:110px;max-width:140px">
           <label>Ítem</label>
@@ -338,7 +317,7 @@ button.primary:hover{filter:brightness(1.1)}
       </div>
     </div>
     <div class="metrics">
-      <div class="metric"><div class="metric-label">Productos</div><div class="metric-val" style="color:#185FA5" id="vp-total">0</div></div>
+      <div class="metric"><div class="metric-label">Productos</div><div class="metric-val" style="color:var(--blue)" id="vp-total">0</div></div>
       <div class="metric"><div class="metric-label">🔴 Vencidos</div><div class="metric-val" style="color:#b91c1c" id="vp-rojo">0</div></div>
       <div class="metric"><div class="metric-label">🟠 ≤3d</div><div class="metric-val" style="color:#d97706" id="vp-naranja">0</div></div>
       <div class="metric"><div class="metric-label">🟡 ≤7d</div><div class="metric-val" style="color:#ca8a04" id="vp-amarillo">0</div></div>
@@ -367,8 +346,6 @@ button.primary:hover{filter:brightness(1.1)}
   <!-- TAB RESUMEN -->
   <div id="tab-resumen" style="display:none">
     <div style="display:flex;justify-content:flex-end;margin-bottom:9px;gap:6px">
-      <button onclick="reqAction(exportResumenWord)">⬇ Word</button>
-      <button onclick="reqAction(exportResumenCSV)">⬇ CSV</button>
       <button onclick="window.print()">🖨</button>
     </div>
     <div id="resumen-content"></div>
@@ -419,7 +396,6 @@ const GERENTE_NAME = "Bryan Pineda";
 const REFRESH_INTERVAL = 30000;
 
 const TODAY = new Date(); TODAY.setHours(0,0,0,0);
-let calWeekStart = getMonday(new Date());
 function getMonday(d){const dt=new Date(d);const day=dt.getDay(),diff=dt.getDate()-day+(day===0?-6:1);dt.setDate(diff);dt.setHours(0,0,0,0);return dt;}
 
 const ALL_TASKS=[
@@ -701,7 +677,6 @@ async function refreshTareas(){
     checkNewUrgencies();
     render();
     if(currentTab==="agentes")renderAgentGrid();
-    if(currentTab==="calendario")renderCalendar();
     if(currentTab==="resumen")renderResumen();
     const agenteSel=document.getElementById("agente-select").value;
     if(agenteSel)renderAgenteTareas();
@@ -826,7 +801,7 @@ function showPolicyHint(itemCode){
   if(!hint)return;
   if(!prod||!prod[2]){hint.innerHTML="";return;}
   const pol=policyFor(prod[2]);
-  if(!pol){hint.innerHTML=`<div style="font-size:11px;color:#aaa;margin-top:4px">📦 Proveedor: ${prod[2]} — sin política registrada</div>`;return;}
+  if(!pol){hint.innerHTML=`<div style="font-size:11px;color:var(--text-soft);margin-top:4px">📦 Proveedor: ${prod[2]} — sin política registrada</div>`;return;}
   const color=pol.cambia.toLowerCase().startsWith("si")?"#27500A":pol.cambia.toLowerCase()==="no"?"#b91c1c":"#92400e";
   const bg=pol.cambia.toLowerCase().startsWith("si")?"#EAF3DE":pol.cambia.toLowerCase()==="no"?"#fee2e2":"#fef3c7";
   hint.innerHTML=`<div style="font-size:11px;background:${bg};color:${color};padding:6px 9px;border-radius:7px;margin-top:4px"><b>📦 ${prod[2]}</b> — Cambia: <b>${pol.cambia}</b>${pol.obs?`<br><span style="font-weight:400">${pol.obs}</span>`:""}</div>`;
@@ -876,30 +851,81 @@ async function validarTarea(id){
 function setFilter(f,el){filter=f;document.querySelectorAll("#tab-tareas .chip").forEach(c=>c.classList.remove("active"));el.classList.add("active");render();}
 function setVFilter(f,el){vFilter=f;document.querySelectorAll("#tab-vencimientos .chip").forEach(c=>c.classList.remove("active"));el.classList.add("active");renderVencimientos();}
 
-// AGENTE VIEW
+// AGENTE VIEW — historial semanal
 function renderAgenteTareas(){
   const name=document.getElementById("agente-select").value,wrap=document.getElementById("agente-tareas-view");
   if(!name){wrap.innerHTML="";return;}
   const myTasks=tasks.filter(t=>(t.agente||t.agent)===name);
-  if(!myTasks.length){wrap.innerHTML=`<div class="empty">Sin tareas asignadas por el momento.<br><small style="color:#aaa">Las tareas se actualizan automáticamente cada 30 segundos.</small></div>`;return;}
-  wrap.innerHTML=myTasks.map(t=>{
-    const st=taskStatus(t),[bg,fg]=colorFor(t.agente||t.agent);
-    const turno=t.turno||"",prioridad=t.prioridad||"",tarea=t.tarea||t.task||"";
-    return`<div class="agente-task-card ${st==="overdue"?"overdue":""} ${st==="done"?"done-card":""}">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-        <div class="avatar" style="background:${bg};color:${fg};width:28px;height:28px">${initials(t.agente||t.agent)}</div>
-        <div style="flex:1"><div style="font-size:13px;font-weight:600">${tarea}</div>
-          <div style="font-size:11px;color:#888">${t.cat||catFor(tarea)} ${turno?turnoIcon(turno)+" "+turno:""} ${prioridad?prioIcon(prioridad)+" "+prioridad:""}</div></div>
-        <span class="badge ${st==="done"?"done":st==="overdue"?"overdue":st==="soon"?"soon":"pending"}">${st==="done"?"✓ Completada":st==="overdue"?"🔴 Vencida":st==="soon"?"🟠 Pronto":"⏳ Pendiente"}</span>
-      </div>
-      ${st!=="done"?`<div class="complete-form">
-        <div style="font-size:12px;font-weight:600;color:#444">📸 Enviar evidencia de cumplimiento</div>
-        <input type="file" accept="image/*" capture="environment" style="font-size:12px" onchange="previewPhoto('${t.id}',this)" id="photo-${t.id}">
-        <img id="prev-${t.id}" class="photo-preview">
-        <button style="background:#EAF3DE;color:#27500A;border-color:#9FE1CB;width:100%;justify-content:center" onclick="submitEvidenciaAgente('${t.id}','${name.replace(/'/g,"\\'")}')">✓ Marcar como completada</button>
-      </div>`:`<div style="font-size:11px;color:#27500A;padding:4px 0">✅ Tarea completada. El gerente Bryan Pineda puede validarla.</div>`}
+  if(!myTasks.length){wrap.innerHTML=`<div class="empty">Sin tareas asignadas por el momento.<br><small style="color:var(--text-soft)">Las tareas se actualizan automáticamente cada 30 segundos.</small></div>`;return;}
+
+  const weeks=groupByWeek(myTasks);
+  const streak=streakDias(name);
+  const recurrente=tareaRecurrentePendiente(name);
+  const thisMonday=getMonday(new Date()).toISOString().split("T")[0];
+  const efAhora=eficaciaSemana(name,thisMonday);
+  const efAntes=eficaciaSemana(name,semanaAnterior(thisMonday));
+  let trendHtml="";
+  if(efAhora!==null&&efAntes!==null){
+    const diff=efAhora-efAntes;
+    const arrow=diff>0?"↑":diff<0?"↓":"→";
+    const color=diff>0?"#27500A":diff<0?"#b91c1c":"var(--text-soft)";
+    trendHtml=`<span style="color:${color};font-weight:700">${arrow} ${Math.abs(diff)}% vs semana pasada</span>`;
+  }
+
+  let html=`<div class="card" style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+    <div style="flex:1;min-width:140px">
+      <div style="font-size:11px;color:var(--text-soft);text-transform:uppercase;font-weight:700">🔥 Racha sin vencidas</div>
+      <div style="font-size:22px;font-weight:700;color:${streak>0?'#27500A':'var(--text-soft)'}">${streak} día${streak===1?"":"s"}</div>
+    </div>
+    <div style="flex:1;min-width:140px">
+      <div style="font-size:11px;color:var(--text-soft);text-transform:uppercase;font-weight:700">📈 Eficacia esta semana</div>
+      <div style="font-size:22px;font-weight:700">${efAhora!==null?efAhora+"%":"—"}</div>
+      ${trendHtml?`<div style="font-size:11px;margin-top:2px">${trendHtml}</div>`:""}
+    </div>
+    ${recurrente?`<div style="flex:2;min-width:200px">
+      <div style="font-size:11px;color:var(--text-soft);text-transform:uppercase;font-weight:700">⚠️ Patrón a reforzar</div>
+      <div style="font-size:12px;margin-top:2px"><b>${recurrente.nombre}</b> — pendiente ${recurrente.veces} veces</div>
+    </div>`:""}
+  </div>`;
+
+  weeks.forEach(([wk,wtasks])=>{
+    const vencidas=wtasks.filter(t=>taskStatus(t)==="overdue");
+    const pendientes=wtasks.filter(t=>["pending","soon"].includes(taskStatus(t)));
+    const completadas=wtasks.filter(t=>taskStatus(t)==="done");
+    html+=`<div class="card">
+      <div style="font-size:13px;font-weight:700;color:var(--blue);margin-bottom:10px">📅 ${weekLabel(wk)}</div>
+      ${renderWeekSection("🔴 Vencidas",vencidas,name,true)}
+      ${renderWeekSection("⏳ Pendientes",pendientes,name,true)}
+      ${renderWeekSection("✅ Completadas",completadas,name,false)}
     </div>`;
-  }).join("");
+  });
+
+  wrap.innerHTML=html;
+}
+
+function renderWeekSection(title,items,agentName,showActions){
+  if(!items.length)return"";
+  return `<div style="margin-bottom:10px">
+    <div style="font-size:11px;font-weight:700;color:var(--text-soft);margin-bottom:5px">${title} (${items.length})</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      ${items.map(t=>{
+        const st=taskStatus(t),tarea=t.tarea||t.task||"",turno=t.turno||"",prioridad=t.prioridad||"";
+        return `<div class="agente-task-card ${st==="overdue"?"overdue":""} ${st==="done"?"done-card":""}" style="margin-bottom:0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:${showActions&&st!=="done"?"6px":"0"}">
+            <div style="flex:1"><div style="font-size:13px;font-weight:600">${tarea}</div>
+              <div style="font-size:11px;color:var(--text-soft)">${t.cat||catFor(tarea)} ${turno?turnoIcon(turno)+" "+turno:""} ${prioridad?prioIcon(prioridad)+" "+prioridad:""}</div></div>
+            <span class="badge ${st==="done"?"done":st==="overdue"?"overdue":st==="soon"?"soon":"pending"}">${st==="done"?"✓":st==="overdue"?"🔴":st==="soon"?"🟠":"⏳"}</span>
+          </div>
+          ${showActions&&st!=="done"?`<div class="complete-form">
+            <div style="font-size:12px;font-weight:600;color:var(--text)">📸 Enviar evidencia de cumplimiento</div>
+            <input type="file" accept="image/*" capture="environment" style="font-size:12px" onchange="previewPhoto('${t.id}',this)" id="photo-${t.id}">
+            <img id="prev-${t.id}" class="photo-preview">
+            <button style="background:#EAF3DE;color:#27500A;border-color:#9FE1CB;width:100%;justify-content:center" onclick="submitEvidenciaAgente('${t.id}','${agentName.replace(/'/g,"\\'")}')">✓ Marcar como completada</button>
+          </div>`:""}
+        </div>`;
+      }).join("")}
+    </div>
+  </div>`;
 }
 
 function previewPhoto(id,input){if(!input.files||!input.files[0])return;const r=new FileReader();r.onload=e=>{const img=document.getElementById("prev-"+id);img.src=e.target.result;img.style.display="block";};r.readAsDataURL(input.files[0]);}
@@ -922,10 +948,10 @@ function showHistorial(id){
     ${st==="done"&&!validada&&isGerente?`<button style="height:26px;padding:0 10px;font-size:11px;background:#EAF3DE;color:#27500A;border-color:#9FE1CB" onclick="validarTarea('${id}')">✓ Validar</button>`:""}
     ${validada?`<span class="badge validado">✅ Validada</span>`:""}
   </div>
-  <div style="font-size:11px;color:#888;margin-bottom:8px">Agente: <b>${t.agente||t.agent}</b></div>
-  <div style="font-size:11px;color:#888">Área: ${t.area||areaFor(t.agente||t.agent||"")}</div>
-  ${t.fecha||t.date?`<div style="font-size:11px;color:#888;margin-top:4px">Fecha límite: ${fmtDate(t.fecha||t.date)}</div>`:""}
-  <div style="font-size:12px;color:#aaa;margin-top:10px;padding:8px;background:#f9f9f7;border-radius:8px">ℹ️ El historial completo se guarda en Google Sheets.</div>`;
+  <div style="font-size:11px;color:var(--text-soft);margin-bottom:8px">Agente: <b>${t.agente||t.agent}</b></div>
+  <div style="font-size:11px;color:var(--text-soft)">Área: ${t.area||areaFor(t.agente||t.agent||"")}</div>
+  ${t.fecha||t.date?`<div style="font-size:11px;color:var(--text-soft);margin-top:4px">Fecha límite: ${fmtDate(t.fecha||t.date)}</div>`:""}
+  <div style="font-size:12px;color:var(--text-soft);margin-top:10px;padding:8px;background:var(--blue-light);border-radius:8px">ℹ️ El historial completo se guarda en Google Sheets.</div>`;
   document.getElementById("modal-body").innerHTML=body;
   document.getElementById("modal-overlay").classList.add("open");
 }
@@ -983,7 +1009,7 @@ function render(){
   const list=document.getElementById("list");
   if(!vis.length){list.innerHTML='<div class="empty">📋 Sin tareas para mostrar</div>';updateAlertDots();return;}
   const groups={};vis.forEach(t=>{const c=t.cat||catFor(t.tarea||t.task||"");if(!groups[c])groups[c]=[];groups[c].push(t);});
-  list.innerHTML=Object.entries(groups).map(([cat,items])=>`<div style="margin-bottom:9px"><div style="font-size:11px;font-weight:700;color:#555;background:#f5f5f0;padding:3px 8px;border-radius:5px;display:inline-block;margin-bottom:4px;border:1px solid #e5e5e0">${cat}</div><div style="display:flex;flex-direction:column;gap:4px">${items.map(t=>{
+  list.innerHTML=Object.entries(groups).map(([cat,items])=>`<div style="margin-bottom:9px"><div style="font-size:11px;font-weight:700;color:var(--text-soft);background:var(--blue-light);padding:3px 8px;border-radius:5px;display:inline-block;margin-bottom:4px;border:1px solid var(--border)">${cat}</div><div style="display:flex;flex-direction:column;gap:4px">${items.map(t=>{
     const[bg,fg]=colorFor(t.agente||t.agent),st=taskStatus(t),dias=diasRestantes(t.fecha||t.date);
     const tarea=t.tarea||t.task||"",validada=String(t.validada||"").toLowerCase()==="si";
     return`<div class="task-card ${st==="overdue"?"overdue":st==="soon"?"due-soon":""}" onclick="showHistorial('${t.id}')">
@@ -991,7 +1017,7 @@ function render(){
       <div class="task-body">
         <div class="task-name">${tarea} ${validada?`<span style="font-size:10px;background:#EAF3DE;color:#27500A;padding:1px 5px;border-radius:3px;margin-left:2px">✅</span>`:st==="done"&&!validada?`<span style="font-size:10px;background:#fef3c7;color:#92400e;padding:1px 5px;border-radius:3px;margin-left:2px">⏳ validar</span>`:""}</div>
         <div class="task-sub">📍 ${t.area||areaFor(t.agente||t.agent||"")}</div>
-        <div class="task-meta">${shortName(t.agente||t.agent||"")} ${t.turno?`<span class="badge ${t.turno.toLowerCase()}">${turnoIcon(t.turno)} ${t.turno}</span>`:""} ${t.prioridad?`<span class="badge ${t.prioridad}">${prioIcon(t.prioridad)} ${t.prioridad}</span>`:""} ${(t.fecha||t.date)?`<span style="font-size:10px;background:${st==="overdue"?"#fee2e2":st==="soon"?"#fef3c7":"#f0f0ec"};color:${st==="overdue"?"#b91c1c":st==="soon"?"#92400e":"#666"};padding:1px 5px;border-radius:3px">${st==="overdue"?"Venció "+fmtDate(t.fecha||t.date):st==="soon"?"Vence "+fmtDate(t.fecha||t.date)+" ("+dias+"d)":"Vence "+fmtDate(t.fecha||t.date)}</span>`:""}</div>
+        <div class="task-meta">${shortName(t.agente||t.agent||"")} ${t.turno?`<span class="badge ${t.turno.toLowerCase()}">${turnoIcon(t.turno)} ${t.turno}</span>`:""} ${t.prioridad?`<span class="badge ${t.prioridad}">${prioIcon(t.prioridad)} ${t.prioridad}</span>`:""} ${(t.fecha||t.date)?`<span style="font-size:10px;background:${st==="overdue"?"#fee2e2":st==="soon"?"#fef3c7":"var(--blue-light)"};color:${st==="overdue"?"#b91c1c":st==="soon"?"#92400e":"var(--text-soft)"};padding:1px 5px;border-radius:3px">${st==="overdue"?"Venció "+fmtDate(t.fecha||t.date):st==="soon"?"Vence "+fmtDate(t.fecha||t.date)+" ("+dias+"d)":"Vence "+fmtDate(t.fecha||t.date)}</span>`:""}</div>
       </div>
       <span class="badge ${st==="done"?"done":st==="overdue"?"overdue":st==="soon"?"soon":"pending"}">${st==="done"?"✓":st==="overdue"?"🔴":st==="soon"?"🟠":"⏳"}</span>
       ${isGerente?`<div class="actions" onclick="event.stopPropagation()"><button class="ico-btn" onclick="toggle('${t.id}')">${st==="done"?"↩":"✓"}</button><button class="ico-btn" onclick="remove('${t.id}')">🗑</button></div>`:""}
@@ -1010,22 +1036,8 @@ function showTab(tab,el){
   if(tab==="vencimientos")refreshVencimientos();
 }
 
-// CALENDARIO
-function calMove(dir){calWeekStart=new Date(calWeekStart);calWeekStart.setDate(calWeekStart.getDate()+dir*7);renderCalendar();}
-function calToday(){calWeekStart=getMonday(new Date());renderCalendar();}
-function renderCalendar(){
-  const days=["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"],end=new Date(calWeekStart);end.setDate(end.getDate()+6);
-  document.getElementById("cal-title").textContent=`${calWeekStart.toLocaleDateString("es-NI",{day:"2-digit",month:"short"})} — ${end.toLocaleDateString("es-NI",{day:"2-digit",month:"short",year:"numeric"})}`;
-  document.getElementById("cal-grid").innerHTML=days.map((d,i)=>{
-    const day=new Date(calWeekStart);day.setDate(day.getDate()+i);
-    const ds=day.toISOString().split("T")[0],isToday=ds===TODAY.toISOString().split("T")[0];
-    const dt=tasks.filter(t=>{const f=String(t.fecha||t.date||"");return f===ds||f.startsWith(ds);});
-    return`<div class="cal-day${isToday?" today":""}"><div class="cal-day-header">${d}</div><div class="cal-day-date">${day.getDate()}</div>${dt.map(t=>{const tarea=t.tarea||t.task||"";return`<div class="cal-task ${taskStatus(t)}" onclick="showHistorial('${t.id}')" title="${tarea} — ${shortName(t.agente||t.agent||"")}">${initials(t.agente||t.agent||"")} ${tarea.substring(0,14)}…</div>`;}).join("")}${!dt.length?`<div style="font-size:9px;color:#ddd;text-align:center;margin-top:4px">—</div>`:""}</div>`;
-  }).join("");
-}
-
 // AGENTES
-function toggleAgentDetail(name){selectedAgent=selectedAgent===name?null:name;renderAgentGrid();}
+function toggleAgentDetail(name){selectedAgent=selectedAgent===name?null:name;if(currentTab==="agentes")renderAgentGrid();else renderResumen();}
 function renderAgentGrid(){
   document.getElementById("agent-grid").innerHTML=AGENTS.map(a=>{
     const[bg,fg]=colorFor(a.name),at=tasks.filter(t=>(t.agente||t.agent)===a.name);
@@ -1036,13 +1048,13 @@ function renderAgentGrid(){
     return`<div class="agent-card${isOpen?" selected":""}" onclick="toggleAgentDetail('${a.name.replace(/'/g,"\\'")}')">
       <div class="agent-header">
         <div class="avatar" style="background:${bg};color:${fg};width:36px;height:36px;flex-shrink:0">${initials(a.name)}</div>
-        <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.name}</div><div style="font-size:11px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.area}</div></div>
+        <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.name}</div><div style="font-size:11px;color:var(--text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.area}</div></div>
         <div style="text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:3px">
           ${ov?`<span class="badge overdue" style="font-size:10px">🔴 ${ov}</span>`:""}
           ${pend?`<span class="badge pending" style="font-size:10px">${pend} pend.</span>`:""}
           ${pendVal?`<span class="badge pendval" style="font-size:10px">⏳ ${pendVal} x validar</span>`:""}
           ${done?`<span class="badge done" style="font-size:10px">${done} comp.</span>`:""}
-          ${tot?`<div class="pbar" style="width:65px"><div class="pfill" style="width:${pct}%"></div></div><div style="font-size:10px;color:#aaa;text-align:right;margin-top:2px">${pct}%</div>`:""}
+          ${tot?`<div class="pbar" style="width:65px"><div class="pfill" style="width:${pct}%"></div></div><div style="font-size:10px;color:var(--text-soft);text-align:right;margin-top:2px">${pct}%</div>`:""}
         </div>
       </div>
       <div class="agent-detail${isOpen?" open":""}">${taskRows}</div>
@@ -1073,50 +1085,81 @@ function renderVencimientos(){
   updateAlertDots();
 }
 
-// RESUMEN
+// RESUMEN — historial semanal + comparativo de agentes
 function renderResumen(){
-  const total=tasks.length,done=tasks.filter(t=>taskStatus(t)==="done").length,pending=tasks.filter(t=>["pending","soon"].includes(taskStatus(t))).length,overdue=tasks.filter(t=>taskStatus(t)==="overdue").length,validated=tasks.filter(t=>String(t.validada||"").toLowerCase()==="si").length,pct=total?Math.round(done/total*100):0;
-  const fecha=new Date().toLocaleDateString("es-NI",{day:"2-digit",month:"long",year:"numeric"});
-  const vRojo=productos.filter(p=>semaforoKey(diasRestantes(p.date))==="rojo").length,vNaranja=productos.filter(p=>semaforoKey(diasRestantes(p.date))==="naranja").length;
-  const agentRows=AGENTS.map(a=>{
-    const at=tasks.filter(t=>(t.agente||t.agent)===a.name),d=at.filter(t=>taskStatus(t)==="done").length,ov=at.filter(t=>taskStatus(t)==="overdue").length,p=at.filter(t=>["pending","soon"].includes(taskStatus(t))).length,val=at.filter(t=>String(t.validada||"").toLowerCase()==="si").length,tot=at.length,ef=tot?Math.round(d/tot*100):0;
-    let r=`<tr><td style="font-weight:500;padding:7px 8px">${a.name}</td><td style="padding:7px 8px;font-size:12px;color:#888">${a.area}</td><td style="text-align:center">${tot||"—"}</td><td style="text-align:center;color:#854F0B">${p||"—"}</td><td style="text-align:center;color:#b91c1c">${ov||"—"}</td><td style="text-align:center;color:#27500A">${d||"—"}</td><td style="text-align:center;color:#185FA5">${val||"—"}</td><td style="text-align:center">${tot?ef+"%":"—"}</td></tr>`;
-    at.forEach(t=>{const tarea=t.tarea||t.task||"";r+=`<tr style="background:#f9f9f7"><td colspan="2" style="padding:4px 8px 4px 18px;font-size:11px;color:#555">↳ ${tarea} ${t.turno?turnoIcon(t.turno):""} ${t.prioridad?prioIcon(t.prioridad):""}</td><td colspan="5" style="font-size:11px;color:#888;padding:4px 8px">${t.cat||catFor(tarea)} · ${fmtDate(t.fecha||t.date)}</td><td style="text-align:center">${String(t.validada||"").toLowerCase()==="si"?"✅":taskStatus(t)==="done"?"✓":"⏳"}</td></tr>`;});
-    return r;
-  }).join("");
-  document.getElementById("resumen-content").innerHTML=`
-    <div class="card"><div style="font-size:16px;font-weight:700;margin-bottom:4px">Resumen · ${fecha}</div>
-    <div style="font-size:12px;color:#888;margin-bottom:10px">Gerente: ${GERENTE_NAME} · <span style="color:#34d399">● En tiempo real</span></div>
-    <div class="metrics" style="margin:0">
-      <div class="metric"><div class="metric-label">Total</div><div class="metric-val" style="color:#185FA5">${total}</div></div>
-      <div class="metric"><div class="metric-label">Pendientes</div><div class="metric-val" style="color:#854F0B">${pending}</div></div>
-      <div class="metric"><div class="metric-label">Vencidas</div><div class="metric-val" style="color:#b91c1c">${overdue}</div></div>
-      <div class="metric"><div class="metric-label">Completadas</div><div class="metric-val" style="color:#27500A">${done}</div></div>
-      <div class="metric"><div class="metric-label">Validadas</div><div class="metric-val" style="color:#185FA5">${validated}</div></div>
-      <div class="metric"><div class="metric-label">Eficacia</div><div class="metric-val">${pct}%</div><div class="pbar"><div class="pfill" style="width:${pct}%"></div></div></div>
-      <div class="metric"><div class="metric-label">Prod. vencidos</div><div class="metric-val" style="color:#b91c1c">${vRojo}</div></div>
-      <div class="metric"><div class="metric-label">Por vencer</div><div class="metric-val" style="color:#d97706">${vNaranja}</div></div>
-    </div></div>
-    <div class="card"><div style="font-size:14px;font-weight:600;margin-bottom:10px">Detalle por agente</div>
-    <table style="width:100%;border-collapse:collapse;font-size:13px">
-      <thead><tr style="border-bottom:2px solid #e5e5e0">
-        <th style="padding:7px 8px;text-align:left;color:#888">Agente</th><th style="text-align:left;color:#888">Área</th>
-        <th style="text-align:center;color:#888">Total</th><th style="text-align:center;color:#888">Pend.</th>
-        <th style="text-align:center;color:#888">Venc.</th><th style="text-align:center;color:#888">Comp.</th>
-        <th style="text-align:center;color:#888">Valid.</th><th style="text-align:center;color:#888">Eficacia</th>
-      </tr></thead><tbody>${agentRows}</tbody>
-    </table></div>`;
+  const thisMonday=getMonday(new Date()).toISOString().split("T")[0];
+
+  // Ranking de eficacia esta semana
+  const ranking=AGENTS.map(a=>{
+    const ef=eficaciaSemana(a.name,thisMonday);
+    const at=tasks.filter(t=>(t.agente||t.agent)===a.name && weekKey(t.fecha||t.date)===thisMonday);
+    return {name:a.name,area:a.area,ef,total:at.length,streak:streakDias(a.name)};
+  }).filter(r=>r.total>0).sort((a,b)=>(b.ef||0)-(a.ef||0));
+
+  let html=`<div class="card">
+    <div style="font-size:14px;font-weight:700;margin-bottom:2px">🏆 Ranking de eficacia — esta semana</div>
+    <div style="font-size:11px;color:var(--text-soft);margin-bottom:10px">${weekLabel(thisMonday)}</div>
+    ${ranking.length?ranking.map((r,i)=>{
+      const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":`${i+1}°`;
+      const [bg,fg]=colorFor(r.name);
+      return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+        <div style="font-size:16px;width:28px;text-align:center">${medal}</div>
+        <div class="avatar" style="background:${bg};color:${fg};width:30px;height:30px">${initials(r.name)}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.name}</div>
+          <div style="font-size:10px;color:var(--text-soft)">🔥 ${r.streak}d sin vencidas</div>
+        </div>
+        <div style="font-size:16px;font-weight:700;color:${r.ef>=80?'#27500A':r.ef>=50?'#92400e':'#b91c1c'}">${r.ef}%</div>
+      </div>`;
+    }).join(""):`<div class="empty">Sin datos de tareas esta semana</div>`}
+  </div>`;
+
+  // Historial semanal por agente
+  html+=`<div class="card"><div style="font-size:14px;font-weight:700;margin-bottom:10px">📅 Historial semanal por agente</div>`;
+  AGENTS.forEach(a=>{
+    const at=tasks.filter(t=>(t.agente||t.agent)===a.name);
+    if(!at.length)return;
+    const weeks=groupByWeek(at).slice(0,4);
+    const recurrente=tareaRecurrentePendiente(a.name);
+    const isOpen=selectedAgent===a.name;
+    const [bg,fg]=colorFor(a.name);
+    html+=`<div class="agent-card${isOpen?" selected":""}" style="margin-bottom:8px" onclick="toggleAgentDetail('${a.name.replace(/'/g,"\\'")}')">
+      <div class="agent-header">
+        <div class="avatar" style="background:${bg};color:${fg};width:32px;height:32px">${initials(a.name)}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600">${a.name}</div>
+          <div style="font-size:10px;color:var(--text-soft)">🔥 ${streakDias(a.name)}d sin vencidas ${recurrente?` · ⚠️ ${recurrente.nombre.substring(0,30)}${recurrente.nombre.length>30?"…":""} (${recurrente.veces}x)`:""}</div>
+        </div>
+      </div>
+      <div class="agent-detail${isOpen?" open":""}">
+        ${weeks.map(([wk,wtasks])=>{
+          const done=wtasks.filter(t=>taskStatus(t)==="done").length;
+          const ov=wtasks.filter(t=>taskStatus(t)==="overdue").length;
+          const pend=wtasks.filter(t=>["pending","soon"].includes(taskStatus(t))).length;
+          const ef=wtasks.length?Math.round(done/wtasks.length*100):0;
+          return `<div style="padding:6px 0;border-bottom:1px solid var(--border)">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px">
+              <span style="font-weight:600">${weekLabel(wk)}</span>
+              <span style="font-weight:700;color:${ef>=80?'#27500A':ef>=50?'#92400e':'#b91c1c'}">${ef}%</span>
+            </div>
+            <div style="font-size:10px;color:var(--text-soft);margin-top:2px">✅ ${done} completadas · ⏳ ${pend} pendientes · 🔴 ${ov} vencidas</div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>`;
+  });
+  html+=`</div>`;
+
+  document.getElementById("resumen-content").innerHTML=html;
 }
 
 // EXPORTS
 function exportCSV(){if(!tasks.length){alert("No hay tareas.");return;}let csv="ID,Categoría,Tarea,Agente,Área,Turno,Prioridad,Fecha,Estado,Validada\n";tasks.forEach(t=>{const tarea=t.tarea||t.task||"";csv+=`${t.id},"${catFor(tarea)}","${tarea}","${t.agente||t.agent}","${t.area||areaFor(t.agente||t.agent||"")}","${t.turno||""}","${t.prioridad||""}","${t.fecha||t.date||""}","${taskStatus(t)==="done"?"Completada":taskStatus(t)==="overdue"?"Vencida":"Pendiente"}","${String(t.validada||"").toLowerCase()==="si"?"Sí":"No"}"\n`;});download("SAC_Tareas.csv","data:text/csv;charset=utf-8,"+encodeURIComponent(csv));}
 function exportAgentesCSV(){let csv="Agente,Área,Total,Pendientes,Vencidas,Completadas,Validadas,Eficacia\n";AGENTS.forEach(a=>{const at=tasks.filter(t=>(t.agente||t.agent)===a.name),d=at.filter(t=>taskStatus(t)==="done").length,ov=at.filter(t=>taskStatus(t)==="overdue").length,p=at.filter(t=>["pending","soon"].includes(taskStatus(t))).length,val=at.filter(t=>String(t.validada||"").toLowerCase()==="si").length,ef=at.length?Math.round(d/at.length*100):0;csv+=`"${a.name}","${a.area}",${at.length},${p},${ov},${d},${val},${at.length?ef+"%":"—"}\n`;});download("SAC_Agentes.csv","data:text/csv;charset=utf-8,"+encodeURIComponent(csv));}
 function exportVencCSV(){if(!productos.length){alert("Sin productos.");return;}let csv="Ítem,Descripción,Cantidad,Agente,Fecha venc.,Días,Estado,Proveedor,Cambio\n";productos.forEach(p=>{const dias=diasRestantes(p.date),sem=semaforoInfo(dias);const prod=CATALOG.find(r=>r[0]===p.item);const pol=prod?policyFor(prod[2]):null;csv+=`"${p.item||""}","${p.desc}","${p.qty}","${p.agent||""}","${p.date||""}","${dias!==null?dias:"—"}","${sem.label}","${prod?prod[2]:""}","${pol?pol.cambia:""}"\n`;});download("SAC_Vencimientos.csv","data:text/csv;charset=utf-8,"+encodeURIComponent(csv));}
-function exportResumenCSV(){exportAgentesCSV();}
 function exportWord(){if(!tasks.length){alert("No hay tareas.");return;}const fecha=new Date().toLocaleDateString("es-NI",{day:"2-digit",month:"long",year:"numeric"});const rows=tasks.map(t=>{const tarea=t.tarea||t.task||"";return`<tr><td>${t.id}</td><td>${catFor(tarea)}</td><td>${tarea}</td><td>${t.agente||t.agent}</td><td>${t.turno||"—"}</td><td>${t.prioridad||"—"}</td><td>${fmtDate(t.fecha||t.date)}</td><td>${taskStatus(t)==="done"?"Completada":taskStatus(t)==="overdue"?"Vencida":"Pendiente"}</td><td>${String(t.validada||"").toLowerCase()==="si"?"Sí":"No"}</td></tr>`;}).join("");const html=wordDoc("Control SAC — Tareas",fecha,`<table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:11pt"><tr style="background:#185FA5;color:#fff"><th>ID</th><th>Cat.</th><th>Tarea</th><th>Agente</th><th>Turno</th><th>Prioridad</th><th>Fecha</th><th>Estado</th><th>Validada</th></tr>${rows}</table>`);download("SAC_Tareas.doc","data:application/msword;charset=utf-8,"+encodeURIComponent(html));}
 function exportAgentesWord(){const fecha=new Date().toLocaleDateString("es-NI",{day:"2-digit",month:"long",year:"numeric"});const rows=AGENTS.map(a=>{const at=tasks.filter(t=>(t.agente||t.agent)===a.name),d=at.filter(t=>taskStatus(t)==="done").length,ov=at.filter(t=>taskStatus(t)==="overdue").length,p=at.filter(t=>["pending","soon"].includes(taskStatus(t))).length,val=at.filter(t=>String(t.validada||"").toLowerCase()==="si").length,ef=at.length?Math.round(d/at.length*100):0;return`<tr><td>${a.name}</td><td>${a.area}</td><td>${at.length||0}</td><td>${p||0}</td><td>${ov||0}</td><td>${d||0}</td><td>${val||0}</td><td>${at.length?ef+"%":"—"}</td></tr>`;}).join("");const html=wordDoc("Control SAC — Agentes",fecha,`<table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:11pt"><tr style="background:#185FA5;color:#fff"><th>Agente</th><th>Área</th><th>Total</th><th>Pend.</th><th>Venc.</th><th>Comp.</th><th>Valid.</th><th>Eficacia</th></tr>${rows}</table>`);download("SAC_Agentes.doc","data:application/msword;charset=utf-8,"+encodeURIComponent(html));}
 function exportVencWord(){const fecha=new Date().toLocaleDateString("es-NI",{day:"2-digit",month:"long",year:"numeric"});const rows=productos.map(p=>{const dias=diasRestantes(p.date),sem=semaforoInfo(dias),color=sem.cls==="sem-rojo"?"#b91c1c":sem.cls==="sem-naranja"?"#d97706":sem.cls==="sem-amarillo"?"#ca8a04":"#27500A";const prod=CATALOG.find(r=>r[0]===p.item);const pol=prod?policyFor(prod[2]):null;return`<tr><td>${p.item||"—"}</td><td>${p.desc}</td><td>${p.qty}</td><td>${p.agent?shortName(p.agent):"—"}</td><td>${fmtDate(p.date)}</td><td style="color:${color};font-weight:bold">${sem.label}</td><td>${prod?prod[2]:"—"}</td><td>${pol?pol.cambia:"—"}</td></tr>`;}).join("");const html=wordDoc("Control SAC — Vencimientos",fecha,`<table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:11pt"><tr style="background:#185FA5;color:#fff"><th>Ítem</th><th>Descripción</th><th>Cant.</th><th>Agente</th><th>Fecha venc.</th><th>Estado</th><th>Proveedor</th><th>Cambio</th></tr>${rows}</table>`);download("SAC_Vencimientos.doc","data:application/msword;charset=utf-8,"+encodeURIComponent(html));}
-function exportResumenWord(){const fecha=new Date().toLocaleDateString("es-NI",{day:"2-digit",month:"long",year:"numeric"});const total=tasks.length,done=tasks.filter(t=>taskStatus(t)==="done").length,ov=tasks.filter(t=>taskStatus(t)==="overdue").length,pend=tasks.filter(t=>["pending","soon"].includes(taskStatus(t))).length,val=tasks.filter(t=>String(t.validada||"").toLowerCase()==="si").length,pct=total?Math.round(done/total*100):0;const agRows=AGENTS.map(a=>{const at=tasks.filter(t=>(t.agente||t.agent)===a.name),d=at.filter(t=>taskStatus(t)==="done").length,o=at.filter(t=>taskStatus(t)==="overdue").length,p=at.filter(t=>["pending","soon"].includes(taskStatus(t))).length,v=at.filter(t=>String(t.validada||"").toLowerCase()==="si").length,ef=at.length?Math.round(d/at.length*100):0;let r=`<tr><td><b>${a.name}</b></td><td>${a.area}</td><td>${at.length||0}</td><td>${p||0}</td><td>${o||0}</td><td>${d||0}</td><td>${v||0}</td><td>${at.length?ef+"%":"—"}</td></tr>`;at.forEach(t=>{const tarea=t.tarea||t.task||"";r+=`<tr style="background:#f5f5f5"><td colspan="2" style="padding-left:14px">↳ ${tarea}</td><td colspan="4">${fmtDate(t.fecha||t.date)} · ${t.turno||""} ${t.prioridad||""}</td><td colspan="2">${String(t.validada||"").toLowerCase()==="si"?"✅ Validada":taskStatus(t)==="done"?"Completada":taskStatus(t)==="overdue"?"Vencida":"Pendiente"}</td></tr>`;});return r;}).join("");const html=wordDoc("Control SAC — Resumen",fecha,`<h2>Métricas</h2><table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse"><tr><th>Total</th><th>Pendientes</th><th>Vencidas</th><th>Completadas</th><th>Validadas</th><th>Eficacia</th></tr><tr><td>${total}</td><td>${pend}</td><td>${ov}</td><td>${done}</td><td>${val}</td><td>${pct}%</td></tr></table><h2>Detalle por agente</h2><table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;width:100%"><tr style="background:#185FA5;color:#fff"><th>Agente</th><th>Área</th><th>Total</th><th>Pend.</th><th>Venc.</th><th>Comp.</th><th>Valid.</th><th>Eficacia</th></tr>${agRows}</table>`);download("SAC_Resumen.doc","data:application/msword;charset=utf-8,"+encodeURIComponent(html));}
 function wordDoc(titulo,fecha,body){return`<html xmlns:o='urn:schemas-microsoft-com:office:office'><head><meta charset='utf-8'><title>${titulo}</title><style>body{font-family:Calibri,sans-serif;font-size:12pt}h1{font-size:16pt;color:#185FA5}h2{font-size:13pt;color:#185FA5;margin-top:14pt}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:5pt}th{background:#185FA5;color:#fff}</style></head><body><h1>${titulo}</h1><p style="color:#888;font-size:10pt">Gerente: ${GERENTE_NAME} · Generado el ${fecha}</p>${body}</body></html>`;}
 function download(fn,du){const a=document.createElement("a");a.href=du;a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);}
 
@@ -1148,7 +1191,6 @@ function generateIcon(size){
   ctx.closePath();
   ctx.fillStyle=grad;
   ctx.fill();
-  // círculo naranja con check
   const cx=size/2,cy=size/2,cr=size*0.32;
   const grad2=ctx.createLinearGradient(cx-cr,cy-cr,cx+cr,cy+cr);
   grad2.addColorStop(0,"#F58220");
