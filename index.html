@@ -227,7 +227,6 @@ button.primary:hover{filter:brightness(1.1)}
 <div class="container">
   <div class="tabs">
     <div class="tab active" onclick="showTab('tareas',this)">📋 Tareas <span class="alert-dot" id="dot-tareas"></span></div>
-    <div class="tab" onclick="showTab('calendario',this)">📅 Calendario</div>
     <div class="tab" onclick="showTab('agentes',this)">👥 Agentes</div>
     <div class="tab" onclick="showTab('vencimientos',this)">🏷 Vencimientos <span class="alert-dot" id="dot-venc"></span></div>
     <div class="tab" onclick="showTab('resumen',this)">📊 Resumen</div>
@@ -303,22 +302,6 @@ button.primary:hover{filter:brightness(1.1)}
       </div>
     </div>
     <div class="task-list" id="list"><div class="loading">⏳ Cargando tareas desde Google Sheets...</div></div>
-  </div>
-
-  <!-- TAB CALENDARIO -->
-  <div id="tab-calendario" style="display:none">
-    <div class="cal-nav">
-      <button onclick="calMove(-1)">‹</button>
-      <h3 id="cal-title"></h3>
-      <button onclick="calMove(1)">›</button>
-      <button onclick="calToday()" style="font-size:12px">Hoy</button>
-    </div>
-    <div class="cal-grid" id="cal-grid"></div>
-    <div style="display:flex;gap:8px;margin-top:10px;font-size:11px;color:#888;flex-wrap:wrap">
-      <span style="background:#FAEEDA;color:#633806;padding:2px 7px;border-radius:4px">⏳ Pendiente</span>
-      <span style="background:#EAF3DE;color:#27500A;padding:2px 7px;border-radius:4px">✓ Completada</span>
-      <span style="background:#fee2e2;color:#b91c1c;padding:2px 7px;border-radius:4px">🔴 Vencida</span>
-    </div>
   </div>
 
   <!-- TAB AGENTES -->
@@ -603,6 +586,73 @@ function taskStatus(t){const estado=String(t.estado||t.status||"").toLowerCase()
 function prioIcon(p){return p==="alta"?"🔴":p==="media"?"🟡":p==="baja"?"🟢":"";}
 function turnoIcon(t){return t==="AM"?"☀️":t==="PM"?"🌙":"";}
 function catFor(task){const c=PRESETS.find(p=>p.tasks.includes(task));return c?c.cat:"✏️ Personalizada";}
+
+// ── HISTORIAL SEMANAL ──────────────────────────────────
+function weekKey(dateInput){
+  const d=dateInput?new Date(String(dateInput).includes("-")?String(dateInput)+"T12:00":dateInput):new Date();
+  if(isNaN(d))return weekKey(new Date());
+  const monday=getMonday(d);
+  return monday.toISOString().split("T")[0];
+}
+function weekLabel(mondayStr){
+  const monday=new Date(mondayStr+"T12:00");
+  const sunday=new Date(monday);sunday.setDate(sunday.getDate()+6);
+  const thisMonday=getMonday(new Date()).toISOString().split("T")[0];
+  const prefix=mondayStr===thisMonday?"Esta semana — ":"";
+  return prefix+`${monday.toLocaleDateString("es-NI",{day:"2-digit",month:"short"})} – ${sunday.toLocaleDateString("es-NI",{day:"2-digit",month:"short"})}`;
+}
+function groupByWeek(taskArr){
+  const groups={};
+  taskArr.forEach(t=>{
+    const wk=weekKey(t.fecha||t.date);
+    if(!groups[wk])groups[wk]=[];
+    groups[wk].push(t);
+  });
+  return Object.entries(groups).sort((a,b)=>b[0].localeCompare(a[0]));
+}
+function streakDias(agentName){
+  const at=tasks.filter(t=>(t.agente||t.agent)===agentName && (t.fecha||t.date));
+  const byDate={};
+  at.forEach(t=>{
+    const f=String(t.fecha||t.date).split("T")[0];
+    if(!byDate[f])byDate[f]=[];
+    byDate[f].push(t);
+  });
+  let streak=0;
+  let d=new Date(TODAY);
+  for(let i=0;i<60;i++){
+    const ds=d.toISOString().split("T")[0];
+    const dayTasks=byDate[ds];
+    if(dayTasks&&dayTasks.length){
+      const hasOverdue=dayTasks.some(t=>taskStatus(t)==="overdue");
+      if(hasOverdue)break;
+      streak++;
+    }
+    d.setDate(d.getDate()-1);
+  }
+  return streak;
+}
+function tareaRecurrentePendiente(agentName){
+  const at=tasks.filter(t=>(t.agente||t.agent)===agentName && taskStatus(t)!=="done");
+  const counts={};
+  at.forEach(t=>{
+    const name=t.tarea||t.task||"";
+    counts[name]=(counts[name]||0)+1;
+  });
+  let max=null,maxCount=1;
+  Object.entries(counts).forEach(([name,c])=>{if(c>maxCount){max=name;maxCount=c;}});
+  return max?{nombre:max,veces:maxCount}:null;
+}
+function eficaciaSemana(agentName,mondayStr){
+  const at=tasks.filter(t=>(t.agente||t.agent)===agentName && weekKey(t.fecha||t.date)===mondayStr);
+  const done=at.filter(t=>taskStatus(t)==="done").length;
+  return at.length?Math.round(done/at.length*100):null;
+}
+function semanaAnterior(mondayStr){
+  const d=new Date(mondayStr+"T12:00");
+  d.setDate(d.getDate()-7);
+  return d.toISOString().split("T")[0];
+}
 
 // SYNC UI
 function setSyncState(state,text){
@@ -954,11 +1004,10 @@ function render(){
 function showTab(tab,el){
   currentTab=tab;
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));el.classList.add("active");
-  ["tareas","calendario","agentes","vencimientos","resumen"].forEach(t=>document.getElementById("tab-"+t).style.display=t===tab?"block":"none");
+  ["tareas","agentes","vencimientos","resumen"].forEach(t=>document.getElementById("tab-"+t).style.display=t===tab?"block":"none");
   if(tab==="agentes")renderAgentGrid();
   if(tab==="resumen")renderResumen();
   if(tab==="vencimientos")refreshVencimientos();
-  if(tab==="calendario")renderCalendar();
 }
 
 // CALENDARIO
