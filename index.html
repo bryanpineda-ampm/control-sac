@@ -1077,7 +1077,11 @@ function showTab(tab,el){
   ["tareas","agentes","vencimientos","resumen"].forEach(t=>document.getElementById("tab-"+t).style.display=t===tab?"block":"none");
   if(tab==="agentes")renderAgentGrid();
   if(tab==="resumen")renderResumen();
-  if(tab==="vencimientos")refreshVencimientos();
+  if(tab==="vencimientos"){
+    // Solo cargar si no hay datos previos, sino refrescar silenciosamente
+    if(!productos.length) document.getElementById(vencView==="general"?"venc-list":"venc-agentes-list").innerHTML=`<div class="loading">⏳ Cargando productos...</div>`;
+    refreshVencimientos();
+  }
 }
 
 function toggleAgentDetail(name){selectedAgent=selectedAgent===name?null:name;if(currentTab==="agentes")renderAgentGrid();else renderResumen();}
