@@ -1131,8 +1131,6 @@ function toggleVencAgent(name){
   else openVencAgents.add(name);
   renderVencAgentes();
 }
-
-// Ordenar productos: vencidos primero, luego por días asc
 function sortProductos(arr){
   const order={rojo:0,naranja:1,amarillo:2,verde:3,gris:4};
   return [...arr].sort((a,b)=>{
