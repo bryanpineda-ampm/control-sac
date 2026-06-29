@@ -821,8 +821,22 @@ function apiCall(params){
 }
 
 async function refreshTareas(){
-  // No borrar datos existentes — solo actualizar silenciosamente
   const data=await apiCall({action:"getTareas"});
+  if(data.ok){
+    const nuevas=data.tareas||[];
+    const changed=JSON.stringify(nuevas)!==JSON.stringify(tasks);
+    tasks=nuevas;
+    checkNewUrgencies();
+    checkAndFireAlerts();
+    if(changed){
+      render();
+      if(currentTab==="agentes")renderAgentGrid();
+      if(currentTab==="resumen")renderResumen();
+      const agenteSel=document.getElementById("agente-select").value;
+      if(agenteSel)renderAgenteTareas();
+    }
+  }else{setSyncState("error","Reintentando...");setTimeout(()=>setSyncState(tasks.length||productos.length?"ok":"error",tasks.length||productos.length?"Conectado ✓":"Sin conexión"),1500);}
+}
   if(data.ok){
     tasks=data.tareas||[];
     checkNewUrgencies();
@@ -836,13 +850,16 @@ async function refreshTareas(){
 }
 
 async function refreshVencimientos(){
-  // No borrar datos existentes — solo actualizar silenciosamente
   const data=await apiCall({action:"getVencimientos"});
   if(data.ok){
-    productos=data.productos||data.vencimientos||[];
+    const nuevos=data.productos||data.vencimientos||[];
+    // Solo redibujar si los datos cambiaron realmente
+    const changed=JSON.stringify(nuevos)!==JSON.stringify(productos);
+    productos=nuevos;
     checkNewUrgencies();
     checkAndFireAlerts();
-    renderVencimientos();
+    if(changed||!document.getElementById("venc-list").innerHTML||document.getElementById("venc-agentes-list").innerHTML==="")
+      renderVencimientos();
   }else{setSyncState("error","Reintentando...");setTimeout(()=>setSyncState(tasks.length||productos.length?"ok":"error",tasks.length||productos.length?"Conectado ✓":"Sin conexión"),1500);}
 }
 
