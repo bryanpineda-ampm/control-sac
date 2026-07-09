@@ -637,7 +637,10 @@ function showTab(tab, el){
   if(tab==="agentes"&&currentStore&&currentStore.isMain)renderAgentGrid();
   if(tab==="resumen")renderResumen();
   if(tab==="agentes-venc")renderVencAgentsList();
-  if(tab==="vencimientos"){populateVencAgentSelect();if(currentStore&&!currentStore.isMain)renderVencimientos();}
+  if(tab==="vencimientos"){
+    populateVencAgentSelect();
+    refreshVencimientos(); // siempre cargar desde Sheets al abrir
+  }
 }
 
 // ══ ROL BOTÓN ════════════════════════════════════════
