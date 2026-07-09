@@ -577,12 +577,15 @@ function setupAppForStore(){
   // Cargar datos
   if(store.isMain){
     populateMainAgentSelects();
+    populateVencAgentSelect();
     refreshTareas();
     startAutoRefresh();
   } else {
     if(!productos[store.code])productos[store.code]=[];
     if(!vencAgents[store.code])vencAgents[store.code]=[];
-    refreshAgentes();
+    refreshAgentes().then(function(){
+      populateVencAgentSelect();
+    });
     refreshVencimientos();
     startAutoRefreshVenc();
   }
@@ -620,7 +623,7 @@ function showTab(tab, el){
   if(tab==="agentes"&&currentStore&&currentStore.isMain)renderAgentGrid();
   if(tab==="resumen")renderResumen();
   if(tab==="agentes-venc")renderVencAgentsList();
-  if(tab==="vencimientos"&&currentStore&&!currentStore.isMain)renderVencimientos();
+  if(tab==="vencimientos"){populateVencAgentSelect();if(currentStore&&!currentStore.isMain)renderVencimientos();}
 }
 
 // ══ ROL BOTÓN ════════════════════════════════════════
@@ -735,14 +738,14 @@ function populateVencAgentSelect(){
   var sel=document.getElementById("v-agent-venc");
   if(!sel)return;
   sel.innerHTML='<option value="">Seleccionar...</option>';
-  // A57 usa los agentes principales de tareas
-  var ag=currentStore.isMain ? MAIN_AGENTS : (vencAgents[currentStore.code]||[]);
+  var ag=currentStore&&currentStore.isMain ? MAIN_AGENTS : (vencAgents[currentStore?currentStore.code:""]||[]);
   ag.forEach(function(a){
     var o=document.createElement("option");
     o.value=a.name;
     o.textContent=a.name;
     sel.appendChild(o);
   });
+  console.log("Agentes cargados:",ag.length,"para",currentStore?currentStore.code:"?");
 }
 
 function addVencAgent(){
