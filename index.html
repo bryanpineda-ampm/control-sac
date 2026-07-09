@@ -975,6 +975,8 @@ function renderVencAgentesPanel(){
 }
 
 // ══ SUPERVISOR ════════════════════════════════════════
+var openSupervisorStore = null;
+
 function renderSupervisor(){
   var totalAll=0,rojoAll=0,naranjaAll=0,amarilloAll=0,celesteAll=0,verdeAll=0;
   STORES.forEach(function(s){
@@ -992,7 +994,7 @@ function renderSupervisor(){
   function storeUrgency(s){var p=productos[s.code]||[];var sc=0;p.forEach(function(x){var d=diasRestantes(x.date);if(d!==null&&d<0)sc+=1000;else if(d!==null&&d<=3)sc+=100;else if(d!==null&&d<=7)sc+=10;else sc+=1;});return sc;}
   var sorted=STORES.slice().sort(function(a,b){return storeUrgency(b)-storeUrgency(a);});
   var html="";
-  sorted.forEach(function(s,i){
+  sorted.forEach(function(s){
     var p=productos[s.code]||[];
     var counts={rojo:0,naranja:0,amarillo:0,celeste:0,verde:0};
     p.forEach(function(x){var k=semaforoKey(diasRestantes(x.date));if(counts[k]!==undefined)counts[k]++;});
@@ -1004,9 +1006,61 @@ function renderSupervisor(){
     if(counts.celeste)miniSem+='<span style="background:#dbeafe;color:#1e40af;padding:2px 7px;border-radius:6px;font-size:12px;font-weight:700">🔵 '+counts.celeste+"</span> ";
     if(counts.verde)miniSem+='<span style="background:#EAF3DE;color:#27500A;padding:2px 7px;border-radius:6px;font-size:12px;font-weight:700">🟢 '+counts.verde+"</span>";
     if(!p.length)miniSem='<span style="font-size:11px;color:var(--text-soft)">Sin registros aún</span>';
-    html+='<div class="store-summary-card" style="'+(hasAlert?"border-left:3px solid #e53e3e":"")+'"><div class="store-summary-header"><span class="store-code-badge">'+s.code+'</span><div style="flex:1;min-width:0;margin-left:8px"><div style="font-size:13px;font-weight:700">'+s.name+'</div><div style="font-size:11px;color:var(--text-soft)">👤 '+s.manager+'</div></div>'+(s.isMain?'<span style="background:#F58220;color:#fff;padding:2px 6px;border-radius:5px;font-size:10px;font-weight:700">★ Principal</span>':'')+'</div><div class="store-summary-body"><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px">'+miniSem+'</div><div style="font-size:11px;color:var(--text-soft)">'+p.length+" producto"+(p.length!==1?"s":"")+" · "+(vencAgents[s.code]||[]).length+" agente"+((vencAgents[s.code]||[]).length!==1?"s":"")+"</div></div></div>";
+
+    var isOpen=openSupervisorStore===s.code;
+
+    // Detalle de productos
+    var detalle="";
+    if(isOpen){
+      if(!p.length){
+        detalle='<div style="padding:10px;font-size:12px;color:var(--text-soft);font-style:italic">Sin productos registrados</div>';
+      } else {
+        detalle='<div style="border-top:1px solid var(--border)">';
+        sortProductos(p).forEach(function(x){
+          var dias=diasRestantes(x.date),sem=semaforoInfo(dias);
+          var borderColor=sem.cls==="sem-rojo"?"#e53e3e":sem.cls==="sem-naranja"?"var(--orange)":sem.cls==="sem-amarillo"?"#ca8a04":sem.cls==="sem-celeste"?"#1e40af":"#34d399";
+          detalle+='<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);border-left:3px solid '+borderColor+'">';
+          detalle+='<div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">'+x.desc+'</div><div style="font-size:10px;color:var(--text-soft)">'+(x.agent||"Sin agente")+" · Cant: "+x.qty+"</div></div>";
+          detalle+='<div style="text-align:right;flex-shrink:0"><span class="semaforo '+sem.cls+'" style="font-size:10px">'+semIcon(sem.cls)+" "+sem.label+'</span><div style="font-size:10px;color:var(--text-soft);margin-top:2px">'+fmtDate(x.date)+"</div></div>";
+          detalle+="</div>";
+        });
+        detalle+="</div>";
+      }
+    }
+
+    html+='<div class="store-summary-card'+(isOpen?" selected":"")+'" style="'+(hasAlert?"border-left:3px solid #e53e3e":"")+'" onclick="toggleSupervisorStore(\''+s.code+'\')">'+
+      '<div class="store-summary-header">'+
+      '<span class="store-code-badge">'+s.code+'</span>'+
+      '<div style="flex:1;min-width:0;margin-left:8px">'+
+      '<div style="font-size:13px;font-weight:700">'+s.name+'</div>'+
+      '<div style="font-size:11px;color:var(--text-soft)">👤 '+s.manager+'</div>'+
+      '</div>'+
+      (s.isMain?'<span style="background:#F58220;color:#fff;padding:2px 6px;border-radius:5px;font-size:10px;font-weight:700">★ Principal</span>':'')+
+      '</div>'+
+      '<div class="store-summary-body">'+
+      '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px">'+miniSem+'</div>'+
+      '<div style="font-size:11px;color:var(--text-soft)">'+p.length+" producto"+(p.length!==1?"s":"")+" · "+(vencAgents[s.code]||[]).length+" agente"+((vencAgents[s.code]||[]).length!==1?"s":"")+'</div>'+
+      '</div>'+
+      detalle+
+    '</div>';
   });
   document.getElementById("supervisor-grid").innerHTML=html;
+}
+
+function toggleSupervisorStore(code){
+  if(openSupervisorStore===code){
+    openSupervisorStore=null;
+  } else {
+    openSupervisorStore=code;
+    // Cargar productos de esa tienda si no los tiene
+    if(!(productos[code]||[]).length){
+      apiCall({action:"getVencimientos",storeCode:code}).then(function(data){
+        if(data.ok){productos[code]=data.productos||[];renderSupervisor();}
+      });
+      return;
+    }
+  }
+  renderSupervisor();
 }
 
 // ══ TAREAS A57 ════════════════════════════════════════
