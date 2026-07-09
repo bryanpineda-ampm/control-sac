@@ -336,6 +336,7 @@ button.danger{background:#fee2e2;color:#b91c1c;border-color:#fca5a5}
         <div class="chip" onclick="setVFilter('verde',this)">🟢 OK</div>
         <div class="export-bar">
           <button id="btn-venc-view" onclick="toggleVencView()" style="background:var(--blue);color:#fff;border-color:var(--blue-dark);font-size:12px">👥 Por Agente</button>
+          <button onclick="verHistorial()" style="font-size:12px">📋 Historial</button>
           <button onclick="exportVencCSV()" style="font-size:12px">⬇ CSV</button>
         </div>
       </div>
@@ -426,7 +427,7 @@ button.danger{background:#fee2e2;color:#b91c1c;border-color:#fca5a5}
 
 <script>
 // ══ CONFIGURACIÓN ══════════════════════════════════════
-var API_URL="https://script.google.com/macros/s/AKfycbzjWcBQn60NrcTYTMpQ95IT5OA6H_t5w55EFeFBZ_tT-pQfG587Veo3ZOLitsO2Xt3w/exec";
+var API_URL="https://script.google.com/macros/s/AKfycbzJAAm7Sq0tTV5SCP-4lyncX1fTWI_Y3hQA0iNUTR6swCSTohm0We4iM_pG-vzt-lPE/exec";
 var SUPERVISOR_PIN="9999";
 var SUPERVISOR_NAMES="Bryan Pineda · Yury Reyes";
 
@@ -991,7 +992,40 @@ function renderSupervisor(){
     '<div class="metric"><div class="metric-label">🔵 ≤15d</div><div class="metric-val" style="color:#1e40af">'+celesteAll+"</div></div>"+
     '<div class="metric"><div class="metric-label">🟢 OK</div><div class="metric-val" style="color:#27500A">'+verdeAll+"</div></div>";
 
-  function storeUrgency(s){var p=productos[s.code]||[];var sc=0;p.forEach(function(x){var d=diasRestantes(x.date);if(d!==null&&d<0)sc+=1000;else if(d!==null&&d<=3)sc+=100;else if(d!==null&&d<=7)sc+=10;else sc+=1;});return sc;}
+  var container=document.getElementById("supervisor-grid");
+  // Cargar productos de todas las tiendas para el ranking
+  var pending=STORES.length;
+  STORES.forEach(function(s){
+    if((productos[s.code]||[]).length>0){pending--;if(pending===0){buildSupervisorUI();}}
+    else{
+      apiCall({action:"getVencimientos",storeCode:s.code}).then(function(data){
+        if(data.ok)productos[s.code]=data.productos||[];
+        pending--;
+        if(pending===0)buildSupervisorUI();
+      });
+    }
+  });
+
+  function buildSupervisorUI(){
+    // Métricas globales
+    var totalAll=0,rojoAll=0,naranjaAll=0,amarilloAll=0,celesteAll=0,verdeAll=0;
+    STORES.forEach(function(s){
+      var p=productos[s.code]||[];totalAll+=p.length;
+      p.forEach(function(x){var k=semaforoKey(diasRestantes(x.date));if(k==="rojo")rojoAll++;else if(k==="naranja")naranjaAll++;else if(k==="amarillo")amarilloAll++;else if(k==="celeste")celesteAll++;else verdeAll++;});
+    });
+    document.getElementById("supervisor-metrics").innerHTML=
+      '<div class="metric"><div class="metric-label">Total</div><div class="metric-val" style="color:var(--blue)">'+totalAll+"</div></div>"+
+      '<div class="metric"><div class="metric-label">🔴 Vencidos</div><div class="metric-val" style="color:#b91c1c">'+rojoAll+"</div></div>"+
+      '<div class="metric"><div class="metric-label">🟠 ≤3d</div><div class="metric-val" style="color:#d97706">'+naranjaAll+"</div></div>"+
+      '<div class="metric"><div class="metric-label">🟡 ≤7d</div><div class="metric-val" style="color:#ca8a04">'+amarilloAll+"</div></div>"+
+      '<div class="metric"><div class="metric-label">🔵 ≤15d</div><div class="metric-val" style="color:#1e40af">'+celesteAll+"</div></div>"+
+      '<div class="metric"><div class="metric-label">🟢 OK</div><div class="metric-val" style="color:#27500A">'+verdeAll+"</div></div>";
+
+    // Ranking
+    var rankingHtml=renderRankingTiendas();
+
+    function storeUrgency(s){var p=productos[s.code]||[];var sc=0;p.forEach(function(x){var d=diasRestantes(x.date);if(d!==null&&d<0)sc+=1000;else if(d!==null&&d<=3)sc+=100;else if(d!==null&&d<=7)sc+=10;else sc+=1;});return sc;}
+    var sorted=STORES.slice().sort(function(a,b){return storeUrgency(b)-storeUrgency(a);});
   var sorted=STORES.slice().sort(function(a,b){return storeUrgency(b)-storeUrgency(a);});
   var html="";
   sorted.forEach(function(s){
@@ -1255,6 +1289,76 @@ function selectProduct(item,desc,supplier){
   var color=pol.cambia.toLowerCase().indexOf("si")===0?"#27500A":pol.cambia.toLowerCase()==="no"?"#b91c1c":"#92400e";
   var bg=pol.cambia.toLowerCase().indexOf("si")===0?"#EAF3DE":pol.cambia.toLowerCase()==="no"?"#fee2e2":"#fef3c7";
   hint.innerHTML='<div style="font-size:11px;background:'+bg+";color:"+color+';padding:5px 8px;border-radius:6px;margin-top:3px"><b>'+supplier+"</b> — Cambia: <b>"+pol.cambia+"</b>"+(pol.obs?" · "+pol.obs:"")+"</div>";
+}
+
+// ══ EDITAR CANTIDAD ══════════════════════════════════
+function editarCantidad(id,qtyActual,desc,agente){
+  var nueva=prompt("Cantidad actual: "+qtyActual+"\nNueva cantidad para:\n"+desc,""+qtyActual);
+  if(nueva===null||nueva==="")return;
+  var n=parseInt(nueva);
+  if(isNaN(n)||n<0){alert("Ingresa una cantidad válida.");return;}
+  apiCall({action:"updateCantidad",storeCode:currentStore.code,id:String(id),qty:String(n),agente:agente||"Agente"}).then(function(res){
+    if(res.ok){
+      refreshVencimientos();
+    }else{alert("❌ Error al actualizar: "+(res.error||""));}
+  });
+}
+
+// ══ HISTORIAL ════════════════════════════════════════
+function verHistorial(){
+  if(!currentStore)return;
+  apiCall({action:"getHistorial",storeCode:currentStore.code}).then(function(data){
+    if(!data.ok){alert("❌ Error al cargar historial.");return;}
+    var h=data.historial||[];
+    var html="";
+    if(!h.length){
+      html='<div class="empty">Sin movimientos registrados aún.</div>';
+    } else {
+      html='<table style="width:100%;border-collapse:collapse;font-size:12px">';
+      html+="<tr style='background:var(--blue-light)'><th style='padding:6px 8px;text-align:left'>Fecha</th><th style='padding:6px 8px;text-align:left'>Agente</th><th style='padding:6px 8px;text-align:left'>Producto</th><th style='padding:6px 8px;text-align:center'>Antes</th><th style='padding:6px 8px;text-align:center'>Después</th><th style='padding:6px 8px;text-align:left'>Acción</th></tr>";
+      h.forEach(function(r){
+        var color=r.accion==="Producto eliminado"?"#b91c1c":r.accion==="Producto agregado"?"#27500A":r.accion==="Redujo cantidad"?"#d97706":"#1e40af";
+        html+="<tr style='border-bottom:1px solid var(--border)'>";
+        html+="<td style='padding:6px 8px'>"+r.fecha+"</td>";
+        html+="<td style='padding:6px 8px'>"+r.agente+"</td>";
+        html+="<td style='padding:6px 8px;font-weight:600'>"+r.producto+"</td>";
+        html+="<td style='padding:6px 8px;text-align:center'>"+r.cantidad_anterior+"</td>";
+        html+="<td style='padding:6px 8px;text-align:center;font-weight:700'>"+r.cantidad_nueva+"</td>";
+        html+="<td style='padding:6px 8px'><span style='color:"+color+";font-weight:600'>"+r.accion+"</span></td>";
+        html+="</tr>";
+      });
+      html+="</table>";
+    }
+    document.getElementById("modal-title").textContent="📋 Historial — "+currentStore.name;
+    document.getElementById("modal-body").innerHTML=html;
+    document.getElementById("modal-overlay").classList.add("open");
+  });
+}
+
+// ══ RANKING TIENDAS (Supervisor) ═════════════════════
+function renderRankingTiendas(){
+  var rankings=STORES.map(function(s){
+    var p=productos[s.code]||[];
+    var total=p.length;
+    var criticos=p.filter(function(x){var k=semaforoKey(diasRestantes(x.date));return k==="rojo"||k==="naranja";}).length;
+    var score=total===0?100:Math.round((total-criticos)/total*100);
+    return{store:s,total:total,criticos:criticos,score:score};
+  }).sort(function(a,b){return b.score-a.score;});
+
+  var html='<div class="card"><div style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--blue)">🏆 Ranking — Control de Vencimientos</div>';
+  rankings.forEach(function(r,i){
+    var medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":(i+1)+"°";
+    var color=r.score>=80?"#27500A":r.score>=50?"#d97706":"#b91c1c";
+    var bg=r.score>=80?"#EAF3DE":r.score>=50?"#fef3c7":"#fee2e2";
+    html+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">';
+    html+='<div style="font-size:18px;width:30px;text-align:center">'+medal+'</div>';
+    html+='<div style="flex:1"><div style="font-size:13px;font-weight:700">'+r.store.code+' — '+r.store.name+'</div>';
+    html+='<div style="font-size:11px;color:var(--text-soft)">'+r.total+' productos · '+r.criticos+' críticos</div></div>';
+    html+='<div style="background:'+bg+';color:'+color+';padding:4px 10px;border-radius:8px;font-size:14px;font-weight:700">'+r.score+'%</div>';
+    html+="</div>";
+  });
+  html+="</div>";
+  return html;
 }
 
 // ══ EXPORTS ══════════════════════════════════════════
