@@ -551,7 +551,7 @@ function renderStoreSelector(){
   var grid=document.getElementById("store-grid");
   grid.innerHTML=STORES.map(function(s){
     return'<button class="sel-btn'+(s.isMain?" mine":"")+'" onclick="selectStore(\''+s.code+'\')">'+
-      '<div class="sel-name">'+s.name+(s.isMain?" ★":"")+'</div>'+
+      '<div class="sel-name">'+s.code+' — '+s.name+(s.isMain?" ★":"")+'</div>'+
       '<div class="sel-mgr">'+s.manager+'</div>'+
     '</button>';
   }).join("");
