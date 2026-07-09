@@ -18,7 +18,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .sel-logo{width:64px;height:64px;background:linear-gradient(135deg,#F58220,#FFB81C);border-radius:16px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:30px;font-weight:700;margin-bottom:14px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
 .sel-title{font-size:22px;font-weight:700;color:#fff;margin-bottom:4px}
 .sel-sub{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:24px}
-.sel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;width:100%;max-width:680px;margin-bottom:12px}
+.sel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%;max-width:600px;margin-bottom:12px}
+@media(max-width:400px){.sel-grid{grid-template-columns:1fr}}
 .sel-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:14px;cursor:pointer;text-align:left;color:#fff;transition:all .15s}
 .sel-btn:hover{background:rgba(255,255,255,.22);transform:translateY(-2px)}
 .sel-btn.mine{background:rgba(245,130,32,.3);border-color:#F58220}
@@ -733,9 +734,15 @@ function updateArea(){var n=document.getElementById("inp-agent").value;document.
 function populateVencAgentSelect(){
   var sel=document.getElementById("v-agent-venc");
   if(!sel)return;
-  var ag=vencAgents[currentStore.code]||[];
   sel.innerHTML='<option value="">Seleccionar...</option>';
-  ag.forEach(function(a){var o=document.createElement("option");o.value=a.name;o.textContent=a.name;sel.appendChild(o);});
+  // A57 usa los agentes principales de tareas
+  var ag=currentStore.isMain ? MAIN_AGENTS : (vencAgents[currentStore.code]||[]);
+  ag.forEach(function(a){
+    var o=document.createElement("option");
+    o.value=a.name;
+    o.textContent=a.name;
+    sel.appendChild(o);
+  });
 }
 
 function addVencAgent(){
