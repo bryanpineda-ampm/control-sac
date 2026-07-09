@@ -511,7 +511,21 @@ function colorFor(i){return COLORS[i%COLORS.length];}
 function areaFor(name){var a=MAIN_AGENTS.filter(function(x){return x.name===name;})[0];return a?a.area:"";}
 function shortName(n){var p=n.split(" ");return p[0]+" "+(p[2]||"");}
 function fmtDate(d){if(!d)return"—";var s=String(d);if(s.indexOf("-")>=0)return new Date(s+"T12:00").toLocaleDateString("es-NI",{day:"2-digit",month:"short",year:"numeric"});return s;}
-function diasRestantes(d){if(!d)return null;var s=String(d);var fd=s.indexOf("-")>=0?new Date(s+"T12:00"):new Date(s);fd.setHours(0,0,0,0);return Math.round((fd-TODAY)/(1000*60*60*24));}
+function diasRestantes(d){
+  if(!d||d==="Invalid Date"||d==="")return null;
+  var s=String(d).trim();
+  // Formato dd/mm/aaaa
+  if(s.match(/^\d{2}\/\d{2}\/\d{4}$/)){
+    var p=s.split("/");s=p[2]+"-"+p[1]+"-"+p[0];
+  }
+  // Formato con hora (Google Sheets a veces devuelve así)
+  if(s.indexOf(" ")>0)s=s.split(" ")[0];
+  if(s.indexOf("T")>0)s=s.split("T")[0];
+  var fd=new Date(s+"T12:00:00");
+  if(isNaN(fd.getTime()))return null;
+  fd.setHours(0,0,0,0);
+  return Math.round((fd-TODAY)/(1000*60*60*24));
+}
 function semaforoInfo(dias){if(dias===null)return{cls:"sem-gris",label:"Sin fecha"};if(dias<0)return{cls:"sem-rojo",label:"Venció hace "+Math.abs(dias)+"d"};if(dias===0)return{cls:"sem-rojo",label:"Vence HOY"};if(dias<=3)return{cls:"sem-naranja",label:dias+"d restantes"};if(dias<=7)return{cls:"sem-amarillo",label:dias+"d restantes"};if(dias<=15)return{cls:"sem-celeste",label:dias+"d restantes"};return{cls:"sem-verde",label:dias+"d restantes"};}
 function semaforoKey(dias){if(dias===null)return"gris";if(dias<=0)return"rojo";if(dias<=3)return"naranja";if(dias<=7)return"amarillo";if(dias<=15)return"celeste";return"verde";}
 function semIcon(cls){return cls==="sem-rojo"?"🔴":cls==="sem-naranja"?"🟠":cls==="sem-amarillo"?"🟡":cls==="sem-celeste"?"🔵":"🟢";}
@@ -819,16 +833,26 @@ function addProducto(){
   var agent=document.getElementById("v-agent-venc").value;
   var date=document.getElementById("v-date").value;
   if(!desc||!date){alert("Ingresa la descripción y fecha de vencimiento.");return;}
+  if(!currentStore){alert("Error: no hay tienda seleccionada.");return;}
   var code=currentStore.code;
   var btn=document.getElementById("btn-venc-add");btn.textContent="⏳ Guardando...";btn.disabled=true;
-  apiCall({action:"addVencimiento",storeCode:code,item:item,desc:desc,qty:qty||"1",agent:agent,date:date}).then(function(res){
+  // Asegurar formato de fecha YYYY-MM-DD
+  var dateFormatted=date;
+  if(date&&date.indexOf("-")<0){
+    // Convertir dd/mm/aaaa a yyyy-mm-dd
+    var parts=date.split("/");
+    if(parts.length===3)dateFormatted=parts[2]+"-"+parts[1]+"-"+parts[0];
+  }
+  apiCall({action:"addVencimiento",storeCode:code,item:item,desc:desc,qty:qty||"1",agent:agent,date:dateFormatted}).then(function(res){
     btn.textContent="+ Agregar";btn.disabled=false;
     if(res.ok){
       ["v-item","v-desc","v-qty","v-date"].forEach(function(id){document.getElementById(id).value="";});
       document.getElementById("v-agent-venc").value="";
       document.getElementById("policy-hint").innerHTML="";
       refreshVencimientos();
-    }else{alert("❌ Error al guardar.");}
+    }else{
+      alert("❌ Error al guardar: "+(res.error||"sin detalle"));
+    }
   });
 }
 
