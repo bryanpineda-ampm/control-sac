@@ -5,1212 +5,837 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#1E5AA8">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Control SAC">
 <title>Control SAC</title>
 <style>
-:root{--blue:#1E5AA8;--blue-dark:#0F3D7A;--blue-light:#E8F0FB;--orange:#F58220;--orange-light:#FFF1E0;--orange-dark:#C4660F;--bg:#f5f5f0;--card:#fff;--border:#e5e5e0;--text:#1a1a1a;--text-soft:#888;}
-[data-theme="dark"]{--bg:#11161d;--card:#1a2230;--border:#2a3441;--text:#e8eaed;--text-soft:#9aa5b1;--blue-light:#1c2d45;--orange-light:#3a2a18;}
+:root{--blue:#1E5AA8;--blue-dark:#0F3D7A;--blue-light:#E8F0FB;--orange:#F58220;--orange-light:#FFF1E0;--orange-dark:#C4660F;--bg:#f5f5f0;--card:#fff;--border:#e5e5e0;--text:#1a1a1a;--text-soft:#888}
+[data-theme=dark]{--bg:#11161d;--card:#1a2230;--border:#2a3441;--text:#e8eaed;--text-soft:#9aa5b1;--blue-light:#1c2d45;--orange-light:#3a2a18}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-/* SELECTOR */
-.selector-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue) 100%)}
-.sel-logo{width:64px;height:64px;background:linear-gradient(135deg,#F58220,#FFB81C);border-radius:16px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:30px;font-weight:700;margin-bottom:14px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
-.sel-title{font-size:22px;font-weight:700;color:#fff;margin-bottom:4px}
-.sel-sub{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:24px}
-.sel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%;max-width:600px;margin-bottom:12px}
-@media(max-width:400px){.sel-grid{grid-template-columns:1fr}}
-.sel-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:14px;cursor:pointer;text-align:left;color:#fff;transition:all .15s}
-.sel-btn:hover{background:rgba(255,255,255,.22);transform:translateY(-2px)}
-.sel-btn.mine{background:rgba(245,130,32,.3);border-color:#F58220}
-.sel-code{font-size:10px;color:rgba(255,255,255,.6);font-weight:700;margin-bottom:2px}
-.sel-name{font-size:13px;font-weight:700;margin-bottom:2px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.sel-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px;background:linear-gradient(135deg,var(--blue-dark),var(--blue))}
+.sel-logo{width:64px;height:64px;background:linear-gradient(135deg,#F58220,#FFB81C);border-radius:16px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:30px;font-weight:700;margin-bottom:14px}
+.sel-title{font-size:22px;font-weight:700;color:#fff;margin-bottom:4px;text-align:center}
+.sel-sub{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:20px;text-align:center}
+.sel-list{display:flex;flex-direction:column;gap:8px;width:100%;max-width:420px;margin-bottom:12px}
+.sel-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:8px 14px;cursor:pointer;text-align:left;color:#fff;width:100%}
+.sel-btn.mine{background:rgba(245,130,32,.35);border-color:#F58220}
+.sel-name{font-size:13px;font-weight:700;margin-bottom:1px}
 .sel-mgr{font-size:11px;color:rgba(255,255,255,.65)}
-.sel-supervisor{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:10px 20px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;margin-top:4px}
-.sel-supervisor:hover{background:rgba(255,255,255,.2)}
-/* HEADER */
-header{background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dark) 100%);padding:12px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sel-sup{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:10px 20px;color:#fff;font-size:13px;font-weight:600;cursor:pointer;width:100%;max-width:420px}
+header{background:linear-gradient(135deg,var(--blue),var(--blue-dark));padding:12px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 header h1{font-size:16px;font-weight:700;color:#fff}
 .hsub{font-size:11px;color:rgba(255,255,255,.7)}
-.hbtn{font-size:11px;padding:4px 10px;border-radius:10px;font-weight:700;cursor:pointer;border:none;white-space:nowrap}
-.hbtn.orange{background:var(--orange);color:#fff}
-.hbtn.ghost{background:rgba(255,255,255,.2);color:#fff}
-.hbtn.active{background:var(--orange);color:#fff}
-.theme-toggle{width:30px;height:30px;border-radius:50%;border:none;background:rgba(255,255,255,.2);color:#fff;cursor:pointer;font-size:14px;flex-shrink:0}
-/* CONTAINER */
-.container{max-width:980px;margin:0 auto;padding:16px 14px}
+.hbtn{font-size:11px;padding:4px 10px;border-radius:10px;font-weight:700;cursor:pointer;border:none;background:rgba(255,255,255,.2);color:#fff;white-space:nowrap}
+.hbtn.on{background:var(--orange)}
+.thm{width:30px;height:30px;border-radius:50%;border:none;background:rgba(255,255,255,.2);color:#fff;cursor:pointer;font-size:14px;flex-shrink:0}
+.sync{font-size:11px;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:5px}
+.sdot{width:8px;height:8px;border-radius:50%;background:#34d399;animation:pulse 2s infinite}
+.sdot.sy{background:var(--orange);animation:spin 1s linear infinite}
+.sdot.er{background:#f87171;animation:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pi{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+.wrap{max-width:980px;margin:0 auto;padding:16px 14px}
 .tabs{display:flex;border-bottom:1px solid var(--border);background:var(--card);border-radius:10px 10px 0 0;overflow-x:auto}
-.tab{padding:11px 14px;font-size:13px;cursor:pointer;color:var(--text-soft);border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:500;white-space:nowrap;display:flex;align-items:center;gap:5px}
-.tab.active{color:var(--blue);border-bottom-color:var(--orange)}
+.tab{padding:11px 14px;font-size:13px;cursor:pointer;color:var(--text-soft);border-bottom:2px solid transparent;margin-bottom:-1px;font-weight:500;white-space:nowrap}
+.tab.on{color:var(--blue);border-bottom-color:var(--orange)}
 .tab:hover{background:var(--blue-light)}
-.alert-dot{width:7px;height:7px;background:var(--orange);border-radius:50%;display:none}
-.alert-dot.show{display:inline-block;animation:pulse 1.6s infinite}
-/* CARD */
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px}
-.field{display:flex;flex-direction:column;gap:3px;flex:1;min-width:120px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px;animation:fu .3s ease}
+.fld{display:flex;flex-direction:column;gap:3px;flex:1;min-width:120px}
 label{font-size:11px;color:var(--text-soft);font-weight:600;text-transform:uppercase;letter-spacing:.03em}
 input,select{padding:7px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);background:var(--card);width:100%;height:36px;font-family:inherit}
 input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-light)}
 button{height:36px;padding:0 14px;border:1px solid var(--border);border-radius:8px;font-size:13px;cursor:pointer;background:var(--card);color:var(--text);display:flex;align-items:center;gap:5px;white-space:nowrap;font-weight:500}
 button:hover{background:var(--blue-light)}
 button:active{transform:scale(.96)}
-button.primary{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;border-color:var(--blue-dark)}
-button.danger{background:#fee2e2;color:#b91c1c;border-color:#fca5a5}
-/* METRICS */
-.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;margin-bottom:14px}
-.metric{background:var(--blue-light);border-radius:10px;padding:10px;text-align:center}
-.metric-label{font-size:10px;color:var(--text-soft);margin-bottom:2px}
-.metric-val{font-size:20px;font-weight:700}
+.btn-p{background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;border-color:var(--blue-dark)}
+.btn-d{background:#fee2e2;color:#b91c1c;border-color:#fca5a5}
+.mets{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;margin-bottom:14px}
+.met{background:var(--blue-light);border-radius:10px;padding:10px;text-align:center}
+.met-l{font-size:10px;color:var(--text-soft);margin-bottom:2px}
+.met-v{font-size:20px;font-weight:700}
 .pbar{height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
 .pfill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--orange),var(--blue));transition:width .4s}
-/* FILTERS */
-.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.fils{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
 .chip{padding:5px 12px;border-radius:20px;font-size:12px;border:1px solid var(--border);cursor:pointer;background:var(--card);color:var(--text-soft);font-weight:500}
-.chip.active{background:var(--orange);color:#fff;border-color:var(--orange-dark)}
-/* SEMAFORO */
-.semaforo{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:7px;font-size:11px;font-weight:600}
-.sem-rojo{background:#fee2e2;color:#b91c1c}
-.sem-naranja{background:var(--orange-light);color:var(--orange-dark)}
-.sem-amarillo{background:#fefce8;color:#713f12}
-.sem-celeste{background:#dbeafe;color:#1e40af}
-.sem-verde{background:#EAF3DE;color:#27500A}
-.sem-gris{background:#f3f4f6;color:#6b7280}
-[data-theme="dark"] .sem-celeste{background:#1e3a5f;color:#93c5fd}
-[data-theme="dark"] .sem-gris{background:#2a3441;color:#9aa5b1}
-/* BANNERS */
-.alert-banner{background:#fee2e2;border:1px solid #fca5a5;border-radius:9px;padding:9px 12px;margin-bottom:10px;display:flex;align-items:center;gap:7px;font-size:12px;color:#b91c1c}
-.warn-banner{background:var(--orange-light);border:1px solid var(--orange);border-radius:9px;padding:9px 12px;margin-bottom:8px;display:flex;align-items:center;gap:7px;font-size:12px;color:var(--orange-dark)}
-.lock-banner{background:var(--blue-light);border:1px solid var(--blue);border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--blue-dark)}
-/* TABLA */
-.venc-table{width:100%;border-collapse:collapse;font-size:12px}
-.venc-table th{text-align:left;padding:7px 9px;border-bottom:2px solid var(--border);font-size:10px;color:var(--text-soft);font-weight:700;text-transform:uppercase}
-.venc-table td{padding:7px 9px;border-bottom:1px solid var(--border);vertical-align:middle}
-.venc-table tr:hover td{background:var(--blue-light)}
-/* AGENT CARDS */
-.agent-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card);margin-bottom:8px;cursor:pointer}
-.agent-card.selected{border:2px solid var(--blue)}
-.agent-card:hover{border-color:var(--blue)}
-.agent-header{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--blue-light)}
-.agent-detail{padding:9px 12px;border-top:1px solid var(--border);display:none}
-.agent-detail.open{display:block}
-.avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
-/* TASK CARDS */
-.task-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;align-items:flex-start;gap:10px;cursor:pointer}
-.task-card.overdue{border-left:3px solid #e53e3e;background:#fff8f8}
-[data-theme="dark"] .task-card.overdue{background:#2a1818}
-.task-card.due-soon{border-left:3px solid var(--orange);background:var(--orange-light)}
-.task-card:hover{border-color:var(--blue);transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.06)}
-.task-body{flex:1;min-width:0}
-.task-name{font-size:13px;font-weight:600}
-.task-sub{font-size:11px;color:var(--text-soft);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.task-meta{font-size:11px;color:var(--text-soft);margin-top:2px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
-.badge{padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600;white-space:nowrap;flex-shrink:0}
-.badge.pending{background:#FAEEDA;color:#633806}
-.badge.done{background:#EAF3DE;color:#27500A}
-.badge.overdue{background:#fee2e2;color:#b91c1c}
-.badge.soon{background:var(--orange-light);color:var(--orange-dark)}
-.badge.alta{background:#fee2e2;color:#b91c1c}
-.badge.media{background:#fef3c7;color:#92400e}
-.badge.baja{background:#EAF3DE;color:#27500A}
-.badge.am{background:var(--blue-light);color:var(--blue-dark)}
-.badge.pm{background:#CECBF6;color:#3C3489}
-.badge.validado{background:#EAF3DE;color:#27500A}
-.ico-btn{width:28px;height:28px;border:1px solid var(--border);border-radius:7px;background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px}
-.ico-btn:hover{background:var(--blue-light)}
-.empty{text-align:center;padding:2rem;color:var(--text-soft);font-size:13px}
-.loading{text-align:center;padding:2rem;color:var(--text-soft);font-size:13px}
-/* AC */
-.ac-wrap{position:relative}
-.ac-dd{position:absolute;top:100%;left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);z-index:999;max-height:190px;overflow-y:auto;display:none;margin-top:2px}
-.ac-item{padding:7px 11px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border)}
-.ac-item:hover,.ac-item.highlighted{background:var(--blue-light)}
-.ac-item span{font-size:11px;color:var(--text-soft);display:block}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:620px){.two-col{grid-template-columns:1fr}}
-/* FORM ROW */
-.form-row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}
-/* SUPERVISOR */
-.supervisor-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
-.store-summary-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:transform .12s}
-.store-summary-card:hover{transform:translateY(-2px);border-color:var(--blue)}
-.store-summary-header{padding:12px 14px;background:var(--blue-light);display:flex;align-items:center;gap:10px}
-.store-summary-body{padding:10px 14px}
-.store-code-badge{font-size:11px;font-weight:700;color:var(--blue);background:rgba(30,90,168,.12);padding:2px 8px;border-radius:6px}
-/* PIN */
-.pin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;display:none;align-items:center;justify-content:center}
-.pin-overlay.open{display:flex}
-.pin-box{background:var(--card);border-radius:16px;padding:24px;width:300px;text-align:center}
-.pin-box h3{font-size:16px;font-weight:700;margin-bottom:4px}
-.pin-box p{font-size:13px;color:var(--text-soft);margin-bottom:16px}
-.pin-dots{display:flex;justify-content:center;gap:10px;margin-bottom:16px}
-.pin-dot{width:14px;height:14px;border-radius:50%;background:var(--border);transition:background .15s}
-.pin-dot.filled{background:var(--blue)}
-.pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.pin-key{height:52px;border:1px solid var(--border);border-radius:10px;background:var(--card);font-size:20px;font-weight:600;cursor:pointer;color:var(--text)}
-.pin-key:hover{background:var(--blue-light)}
-.pin-error{color:#e53e3e;font-size:12px;margin-top:8px;min-height:16px}
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:none;align-items:center;justify-content:center;padding:14px}
-.modal-overlay.open{display:flex}
-.modal{background:var(--card);border-radius:14px;padding:20px;width:100%;max-width:420px;max-height:85vh;overflow-y:auto}
-.modal h3{font-size:14px;font-weight:700;margin-bottom:12px;padding-right:24px}
-.modal-close{float:right;cursor:pointer;font-size:20px;color:var(--text-soft);line-height:1}
-/* AGENTE TASK */
-.agente-task-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px}
-.agente-task-card.overdue{border-left:3px solid #e53e3e}
-.agente-task-card.done-card{opacity:.6}
-.complete-form{background:var(--blue-light);border-radius:9px;padding:12px;margin-top:8px;display:flex;flex-direction:column;gap:8px;border:1px solid var(--border)}
-/* SYNC */
-.sync-indicator{font-size:11px;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:5px}
-.sync-dot{width:8px;height:8px;border-radius:50%;background:#34d399;animation:pulse 2s infinite}
-.sync-dot.syncing{background:var(--orange);animation:spin 1s linear infinite}
-.sync-dot.error{background:#f87171;animation:none}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-@keyframes popIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
-/* EXPORT BAR */
-.export-bar{display:flex;gap:5px;flex-wrap:wrap;margin-left:auto}
-/* MOBILE */
+.chip.on{background:var(--orange);color:#fff;border-color:var(--orange-dark)}
+.sem{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:7px;font-size:11px;font-weight:600}
+.sr{background:#fee2e2;color:#b91c1c}.sn{background:var(--orange-light);color:var(--orange-dark)}.sa{background:#fefce8;color:#713f12}.sc{background:#dbeafe;color:#1e40af}.sv{background:#EAF3DE;color:#27500A}.sg{background:#f3f4f6;color:#6b7280}
+[data-theme=dark] .sc{background:#1e3a5f;color:#93c5fd}[data-theme=dark] .sg{background:#2a3441;color:#9aa5b1}
+.ab{background:#fee2e2;border:1px solid #fca5a5;border-radius:9px;padding:9px 12px;margin-bottom:10px;display:flex;align-items:center;gap:7px;font-size:12px;color:#b91c1c}
+.wb{background:var(--orange-light);border:1px solid var(--orange);border-radius:9px;padding:9px 12px;margin-bottom:8px;display:flex;align-items:center;gap:7px;font-size:12px;color:var(--orange-dark)}
+.lb{background:var(--blue-light);border:1px solid var(--blue);border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--blue-dark)}
+.vtbl{width:100%;border-collapse:collapse;font-size:12px}
+.vtbl th{text-align:left;padding:7px 9px;border-bottom:2px solid var(--border);font-size:10px;color:var(--text-soft);font-weight:700;text-transform:uppercase}
+.vtbl td{padding:7px 9px;border-bottom:1px solid var(--border);vertical-align:middle}
+.vtbl tr:hover td{background:var(--blue-light)}
+.ac{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card);margin-bottom:8px;cursor:pointer}
+.ac.sel{border:2px solid var(--blue)}
+.ac:hover{border-color:var(--blue)}
+.ach{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--blue-light)}
+.acd{padding:9px 12px;border-top:1px solid var(--border);display:none}
+.acd.op{display:block}
+.av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.tc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;align-items:flex-start;gap:10px;cursor:pointer}
+.tc.ov{border-left:3px solid #e53e3e;background:#fff8f8}
+[data-theme=dark] .tc.ov{background:#2a1818}
+.tc.so{border-left:3px solid var(--orange);background:var(--orange-light)}
+.tc:hover{border-color:var(--blue);transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.06)}
+.tb{flex:1;min-width:0}
+.tn{font-size:13px;font-weight:600}
+.ts{font-size:11px;color:var(--text-soft);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tm{font-size:11px;color:var(--text-soft);margin-top:2px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.bdg{padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600;white-space:nowrap;flex-shrink:0}
+.bdg.pe{background:#FAEEDA;color:#633806}.bdg.dn{background:#EAF3DE;color:#27500A}.bdg.ov{background:#fee2e2;color:#b91c1c}.bdg.so{background:var(--orange-light);color:var(--orange-dark)}.bdg.al{background:#fee2e2;color:#b91c1c}.bdg.me{background:#fef3c7;color:#92400e}.bdg.ba{background:#EAF3DE;color:#27500A}.bdg.am{background:var(--blue-light);color:var(--blue-dark)}.bdg.pm{background:#CECBF6;color:#3C3489}.bdg.va{background:#EAF3DE;color:#27500A}
+.ib{width:28px;height:28px;border:1px solid var(--border);border-radius:7px;background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px}
+.ib:hover{background:var(--blue-light)}
+.emp{text-align:center;padding:2rem;color:var(--text-soft);font-size:13px}
+.lod{text-align:center;padding:2rem;color:var(--text-soft);font-size:13px}
+.acw{position:relative}
+.acdd{position:absolute;top:100%;left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);z-index:999;max-height:190px;overflow-y:auto;display:none;margin-top:2px}
+.aci{padding:7px 11px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border)}
+.aci:hover,.aci.hi{background:var(--blue-light)}
+.aci span{font-size:11px;color:var(--text-soft);display:block}
+.fr{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}
+.tc2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:620px){.tc2{grid-template-columns:1fr}}
+.sg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+.sc-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer}
+.sc-card:hover{border-color:var(--blue)}
+.sc-card.sel{border:2px solid var(--blue)}
+.sc-hdr{padding:12px 14px;background:var(--blue-light);display:flex;align-items:center;gap:10px}
+.sc-bdy{padding:10px 14px}
+.sc-badge{font-size:11px;font-weight:700;color:var(--blue);background:rgba(30,90,168,.12);padding:2px 8px;border-radius:6px}
+.atc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px}
+.atc.ov{border-left:3px solid #e53e3e}
+.atc.dn{opacity:.6}
+.cof{background:var(--blue-light);border-radius:9px;padding:12px;margin-top:8px;display:flex;flex-direction:column;gap:8px;border:1px solid var(--border)}
+.ebar{display:flex;gap:5px;flex-wrap:wrap;margin-left:auto}
+.pin-ov{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;display:none;align-items:center;justify-content:center}
+.pin-ov.op{display:flex}
+.pin-bx{background:var(--card);border-radius:16px;padding:24px;width:300px;text-align:center;animation:pi .2s ease}
+.pin-bx h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.pin-bx p{font-size:13px;color:var(--text-soft);margin-bottom:16px}
+.pdots{display:flex;justify-content:center;gap:10px;margin-bottom:16px}
+.pdot{width:14px;height:14px;border-radius:50%;background:var(--border);transition:background .15s}
+.pdot.fi{background:var(--blue)}
+.pkp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pk{height:52px;border:1px solid var(--border);border-radius:10px;background:var(--card);font-size:20px;font-weight:600;cursor:pointer;color:var(--text)}
+.pk:hover{background:var(--blue-light)}
+.perr{color:#e53e3e;font-size:12px;margin-top:8px;min-height:16px}
+.mod-ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:none;align-items:center;justify-content:center;padding:14px}
+.mod-ov.op{display:flex}
+.mod{background:var(--card);border-radius:14px;padding:20px;width:100%;max-width:600px;max-height:85vh;overflow-y:auto;animation:pi .2s ease}
+.mod h3{font-size:14px;font-weight:700;margin-bottom:12px;padding-right:24px}
+.mc{float:right;cursor:pointer;font-size:20px;color:var(--text-soft);line-height:1}
 @media(max-width:640px){
   header{padding:10px 12px;gap:7px}
-  .container{padding:8px 6px}
-  .metrics{grid-template-columns:repeat(3,1fr);gap:6px}
-  .metric-val{font-size:17px}
+  .wrap{padding:8px 6px}
+  .mets{grid-template-columns:repeat(3,1fr);gap:6px}
+  .met-v{font-size:17px}
   .card{padding:12px;margin-bottom:10px}
-  .sel-grid{grid-template-columns:1fr 1fr}
-  .supervisor-grid{grid-template-columns:1fr}
-  .venc-table thead{display:none}
-  .venc-table tbody{display:flex;flex-direction:column;gap:8px;padding:8px}
-  .venc-table tr{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;gap:4px}
-  .venc-table td{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border:none;font-size:12px;text-align:right}
-  .venc-table td:before{content:attr(data-label);font-size:10px;color:var(--text-soft);font-weight:700;text-transform:uppercase;text-align:left}
-  .form-row{flex-direction:column}
-  .pin-box{width:92%}
-  .modal{margin:0 6px;padding:14px}
+  .sg-grid{grid-template-columns:1fr}
+  .vtbl thead{display:none}
+  .vtbl tbody{display:flex;flex-direction:column;gap:8px;padding:8px}
+  .vtbl tr{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;gap:4px}
+  .vtbl td{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border:none;font-size:12px;text-align:right}
+  .vtbl td:before{content:attr(data-label);font-size:10px;color:var(--text-soft);font-weight:700;text-transform:uppercase;text-align:left}
+  .fr{flex-direction:column}
+  .pin-bx{width:92%}
+  .mod{margin:0 6px;padding:14px}
   button{font-size:12px}
   .chip{padding:5px 9px;font-size:11px}
-  .export-bar{width:100%;justify-content:flex-end;margin-top:4px}
+  .ebar{width:100%;justify-content:flex-end;margin-top:4px}
 }
-@media print{header,button,.tabs,.filters,.export-bar,.modal-overlay,.pin-overlay{display:none!important}body{background:#fff}.container{padding:0}}
 </style>
 </head>
 <body>
 
-<!-- ══ PANTALLA SELECTOR ══ -->
-<div id="screen-selector" class="selector-screen">
+<div id="s-sel" class="sel-screen">
   <div class="sel-logo">✓</div>
   <div class="sel-title">Control SAC</div>
   <div class="sel-sub">Selecciona tu tienda para continuar</div>
-  <div class="sel-grid" id="store-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:580px;margin-bottom:12px;padding:0 4px"></div>
-  <button class="sel-supervisor" onclick="openSupervisor()">🔭 Acceso Supervisor de Zona</button>
+  <div id="store-grid" class="sel-list"></div>
+  <button class="sel-sup" onclick="openSup()">🔭 Acceso Supervisor de Zona</button>
 </div>
 
-<!-- ══ APP PRINCIPAL ══ -->
-<div id="screen-app" style="display:none">
+<div id="s-app" style="display:none">
   <header>
     <div style="width:30px;height:30px;background:linear-gradient(135deg,#F58220,#FFB81C);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:700;flex-shrink:0">✓</div>
-    <div style="flex:1;min-width:0">
-      <h1>Control SAC</h1>
-      <div class="hsub" id="app-store-label">—</div>
-    </div>
-    <div class="sync-indicator" id="sync-indicator" style="display:none">
-      <div class="sync-dot" id="sync-dot"></div>
-      <span id="sync-text">Conectado</span>
-    </div>
-    <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle">🌙</button>
-    <button class="hbtn ghost" id="app-role-btn" onclick="handleRoleBtn()">🔐 Gerente</button>
-    <button class="hbtn ghost" onclick="goHome()">🏠</button>
+    <div style="flex:1;min-width:0"><h1>Control SAC</h1><div class="hsub" id="app-lbl">—</div></div>
+    <div class="sync" id="sync-ind" style="display:none"><div class="sdot" id="sdot"></div><span id="stxt">OK</span></div>
+    <button class="thm" onclick="toggleTheme()" id="thm-btn">🌙</button>
+    <button class="hbtn" id="role-btn" onclick="handleRole()">🔐 Gerente</button>
+    <button class="hbtn" onclick="goHome()">🏠</button>
   </header>
-
-  <div class="container">
-    <div class="tabs" id="app-tabs">
-      <!-- tabs se insertan dinámicamente -->
-    </div>
-
-    <!-- TAB TAREAS (solo A57) -->
-    <div id="tab-tareas" style="display:none">
-      <div id="banner-tareas"></div>
-      <div id="gerente-form" style="display:none">
+  <div class="wrap">
+    <div class="tabs" id="app-tabs"></div>
+    <div id="t-tareas" style="display:none">
+      <div id="ban-tar"></div>
+      <div id="g-form" style="display:none">
         <div class="card">
           <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--blue)">👨‍💼 Gerente — Bryan Pineda</div>
-          <div class="two-col">
+          <div class="tc2">
             <div style="display:flex;flex-direction:column;gap:8px">
-              <div class="field"><label>Agente SAC</label><select id="inp-agent" onchange="updateArea()"><option value="">Seleccionar...</option></select></div>
-              <div style="font-size:11px;color:var(--text-soft);min-height:14px" id="area-hint"></div>
+              <div class="fld"><label>Agente SAC</label><select id="i-agent" onchange="updArea()"><option value="">Seleccionar...</option></select></div>
+              <div style="font-size:11px;color:var(--text-soft);min-height:14px" id="area-h"></div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
-                <div class="field"><label>Turno</label><select id="inp-turno"><option value="">Turno</option><option value="AM">☀️ AM</option><option value="PM">🌙 PM</option></select></div>
-                <div class="field"><label>Prioridad</label><select id="inp-prioridad"><option value="">Prioridad</option><option value="alta">🔴 Alta</option><option value="media">🟡 Media</option><option value="baja">🟢 Baja</option></select></div>
+                <div class="fld"><label>Turno</label><select id="i-turno"><option value="">Turno</option><option value="AM">☀️ AM</option><option value="PM">🌙 PM</option></select></div>
+                <div class="fld"><label>Prioridad</label><select id="i-prio"><option value="">Prioridad</option><option value="alta">🔴 Alta</option><option value="media">🟡 Media</option><option value="baja">🟢 Baja</option></select></div>
               </div>
-              <div class="field"><label>Fecha límite</label><input id="inp-date" type="date"></div>
+              <div class="fld"><label>Fecha límite</label><input id="i-date" type="date"></div>
             </div>
             <div style="display:flex;flex-direction:column;gap:8px">
-              <div class="field ac-wrap">
-                <label>Tarea</label>
-                <input id="inp-task" type="text" placeholder="Escribe para ver sugerencias..." autocomplete="off" oninput="acTaskSearch()" onfocus="acTaskSearch()" onblur="setTimeout(function(){hideTaskAC()},200)" onkeydown="acTaskKey(event)">
-                <div class="ac-dd" id="ac-task"></div>
+              <div class="fld acw"><label>Tarea</label>
+                <input id="i-task" type="text" placeholder="Escribe para ver sugerencias..." autocomplete="off" oninput="acTS()" onfocus="acTS()" onblur="setTimeout(function(){hideTA()},200)" onkeydown="acTK(event)">
+                <div class="acdd" id="ac-task"></div>
               </div>
-              <button class="primary" onclick="addTask()" style="width:100%;justify-content:center;margin-top:4px" id="btn-add">+ Asignar tarea</button>
+              <button class="btn-p" onclick="addTask()" style="width:100%;justify-content:center;margin-top:4px" id="btn-add">+ Asignar tarea</button>
             </div>
           </div>
         </div>
       </div>
-      <div id="agente-selector-wrap">
-        <div class="lock-banner" id="agente-lock-msg">🔒 Vista Agente — Solo puedes ver y enviar evidencia.</div>
+      <div id="ag-sel-wrap">
+        <div class="lb">🔒 Vista Agente — Solo puedes ver y enviar evidencia.</div>
         <div class="card" style="padding:12px;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
-          <div class="field" style="max-width:240px"><label>¿Quién eres?</label><select id="agente-select" onchange="renderAgenteTareas()"><option value="">Selecciona tu nombre...</option></select></div>
-          <button onclick="refreshTareas()" style="font-size:12px">🔄 Actualizar</button>
+          <div class="fld" style="max-width:240px"><label>¿Quién eres?</label><select id="ag-sel" onchange="rendAgTar()"><option value="">Selecciona tu nombre...</option></select></div>
+          <button onclick="refreshT()" style="font-size:12px">🔄</button>
         </div>
       </div>
-      <div id="agente-tareas-view"></div>
-      <div class="metrics">
-        <div class="metric"><div class="metric-label">Total</div><div class="metric-val" style="color:var(--blue)" id="m-total">0</div></div>
-        <div class="metric"><div class="metric-label">Pendientes</div><div class="metric-val" style="color:#854F0B" id="m-pending">0</div></div>
-        <div class="metric"><div class="metric-label">Completadas</div><div class="metric-val" style="color:#27500A" id="m-done">0</div></div>
-        <div class="metric"><div class="metric-label">Vencidas</div><div class="metric-val" style="color:#b91c1c" id="m-overdue">0</div></div>
-        <div class="metric"><div class="metric-label">Eficacia</div><div class="metric-val" id="m-pct">—</div><div class="pbar"><div class="pfill" id="m-bar" style="width:0%"></div></div></div>
+      <div id="ag-tar-view"></div>
+      <div class="mets">
+        <div class="met"><div class="met-l">Total</div><div class="met-v" style="color:var(--blue)" id="m-tot">0</div></div>
+        <div class="met"><div class="met-l">Pendientes</div><div class="met-v" style="color:#854F0B" id="m-pen">0</div></div>
+        <div class="met"><div class="met-l">Completadas</div><div class="met-v" style="color:#27500A" id="m-don">0</div></div>
+        <div class="met"><div class="met-l">Vencidas</div><div class="met-v" style="color:#b91c1c" id="m-ov">0</div></div>
+        <div class="met"><div class="met-l">Eficacia</div><div class="met-v" id="m-pct">—</div><div class="pbar"><div class="pfill" id="m-bar" style="width:0%"></div></div></div>
       </div>
-      <div class="filters">
-        <div class="chip active" onclick="setFilter('all',this)">Todas</div>
-        <div class="chip" onclick="setFilter('pending',this)">Pendientes</div>
-        <div class="chip" onclick="setFilter('done',this)">Completadas</div>
-        <div class="chip" onclick="setFilter('overdue',this)">🔴 Vencidas</div>
-        <div class="chip" onclick="setFilter('alta',this)">🔴 Alta</div>
-        <div class="chip" onclick="setFilter('am',this)">☀️ AM</div>
-        <div class="chip" onclick="setFilter('pm',this)">🌙 PM</div>
-        <div class="export-bar">
-          <button onclick="reqGerenteAction(exportCSV)">⬇ CSV</button>
-          <button onclick="reqGerenteAction(exportWord)">⬇ Word</button>
-          <button onclick="refreshTareas()" style="font-size:12px">🔄</button>
+      <div class="fils">
+        <div class="chip on" onclick="setF('all',this)">Todas</div>
+        <div class="chip" onclick="setF('pending',this)">Pendientes</div>
+        <div class="chip" onclick="setF('done',this)">Completadas</div>
+        <div class="chip" onclick="setF('overdue',this)">🔴 Vencidas</div>
+        <div class="chip" onclick="setF('alta',this)">🔴 Alta</div>
+        <div class="chip" onclick="setF('am',this)">☀️ AM</div>
+        <div class="chip" onclick="setF('pm',this)">🌙 PM</div>
+        <div class="ebar">
+          <button onclick="reqG(expCSV)">⬇ CSV</button>
+          <button onclick="refreshT()" style="font-size:12px">🔄</button>
         </div>
       </div>
-      <div class="task-list" id="list"><div class="loading">⏳ Cargando tareas...</div></div>
+      <div id="t-list"><div class="lod">⏳ Cargando tareas...</div></div>
     </div>
-
-    <!-- TAB AGENTES (solo A57) -->
-    <div id="tab-agentes" style="display:none">
-      <div style="display:flex;justify-content:flex-end;margin-bottom:9px;gap:6px">
-        <button onclick="refreshTareas()">🔄 Actualizar</button>
-        <button onclick="reqGerenteAction(exportAgentesCSV)">⬇ CSV</button>
-      </div>
-      <div class="agent-grid" id="agent-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px"></div>
+    <div id="t-agentes" style="display:none">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:9px;gap:6px"><button onclick="refreshT()">🔄</button><button onclick="reqG(expAgCSV)">⬇ CSV</button></div>
+      <div id="ag-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px"></div>
     </div>
-
-    <!-- TAB VENCIMIENTOS -->
-    <div id="tab-vencimientos" style="display:none">
-      <div id="banner-venc" style="margin-top:10px"></div>
-      <div class="card" style="margin-top:10px" id="venc-form-card">
+    <div id="t-venc" style="display:none">
+      <div id="ban-venc" style="margin-top:10px"></div>
+      <div class="card" style="margin-top:10px">
         <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--blue)">➕ Registrar producto</div>
-        <div class="form-row">
-          <div class="field ac-wrap" style="min-width:110px;max-width:150px">
-            <label>Ítem</label>
-            <input id="v-item" type="text" placeholder="Buscar..." autocomplete="off" oninput="acSearch('item')" onfocus="acSearch('item')" onblur="setTimeout(function(){hideAC('item')},200)">
-            <div class="ac-dd" id="ac-item"></div>
+        <div class="fr">
+          <div class="fld acw" style="min-width:110px;max-width:150px"><label>Ítem</label>
+            <input id="v-item" type="text" placeholder="Buscar..." autocomplete="off" oninput="acS('item')" onfocus="acS('item')" onblur="setTimeout(function(){hideAC('item')},200)">
+            <div class="acdd" id="ac-item"></div>
           </div>
-          <div class="field ac-wrap" style="flex:2;min-width:150px">
-            <label>Descripción</label>
-            <input id="v-desc" type="text" placeholder="Buscar descripción..." autocomplete="off" oninput="acSearch('desc')" onfocus="acSearch('desc')" onblur="setTimeout(function(){hideAC('desc')},200)">
-            <div class="ac-dd" id="ac-desc"></div>
-            <div id="policy-hint"></div>
+          <div class="fld acw" style="flex:2;min-width:150px"><label>Descripción</label>
+            <input id="v-desc" type="text" placeholder="Buscar descripción..." autocomplete="off" oninput="acS('desc')" onfocus="acS('desc')" onblur="setTimeout(function(){hideAC('desc')},200)">
+            <div class="acdd" id="ac-desc"></div>
+            <div id="pol-hint"></div>
           </div>
-          <div class="field" style="min-width:65px;max-width:80px"><label>Cant.</label><input id="v-qty" type="number" min="1" placeholder="0"></div>
-          <div class="field" style="min-width:120px"><label>Agente</label><select id="v-agent-venc"><option value="">Seleccionar...</option></select></div>
-          <div class="field" style="min-width:120px;max-width:145px"><label>Fecha venc.</label><input id="v-date" type="date"></div>
-          <button class="primary" onclick="addProducto()" id="btn-venc-add" style="flex-shrink:0;margin-top:13px">+ Agregar</button>
+          <div class="fld" style="min-width:65px;max-width:80px"><label>Cant.</label><input id="v-qty" type="number" min="1" placeholder="0"></div>
+          <div class="fld" style="min-width:120px"><label>Agente</label><select id="v-ag"><option value="">Seleccionar...</option></select></div>
+          <div class="fld" style="min-width:120px;max-width:145px"><label>Fecha venc.</label><input id="v-date" type="date"></div>
+          <button class="btn-p" onclick="addProd()" id="btn-venc" style="flex-shrink:0;margin-top:13px">+ Agregar</button>
         </div>
       </div>
-      <div class="metrics">
-        <div class="metric"><div class="metric-label">Total</div><div class="metric-val" style="color:var(--blue)" id="vp-total">0</div></div>
-        <div class="metric"><div class="metric-label">🔴 Vencidos</div><div class="metric-val" style="color:#b91c1c" id="vp-rojo">0</div></div>
-        <div class="metric"><div class="metric-label">🟠 ≤3d</div><div class="metric-val" style="color:#d97706" id="vp-naranja">0</div></div>
-        <div class="metric"><div class="metric-label">🟡 ≤7d</div><div class="metric-val" style="color:#ca8a04" id="vp-amarillo">0</div></div>
-        <div class="metric"><div class="metric-label">🔵 ≤15d</div><div class="metric-val" style="color:#1e40af" id="vp-celeste">0</div></div>
-        <div class="metric"><div class="metric-label">🟢 OK</div><div class="metric-val" style="color:#27500A" id="vp-verde">0</div></div>
+      <div class="mets">
+        <div class="met"><div class="met-l">Total</div><div class="met-v" style="color:var(--blue)" id="vp-tot">0</div></div>
+        <div class="met"><div class="met-l">🔴 Vencidos</div><div class="met-v" style="color:#b91c1c" id="vp-roj">0</div></div>
+        <div class="met"><div class="met-l">🟠 ≤3d</div><div class="met-v" style="color:#d97706" id="vp-nar">0</div></div>
+        <div class="met"><div class="met-l">🟡 ≤7d</div><div class="met-v" style="color:#ca8a04" id="vp-ama">0</div></div>
+        <div class="met"><div class="met-l">🔵 ≤15d</div><div class="met-v" style="color:#1e40af" id="vp-cel">0</div></div>
+        <div class="met"><div class="met-l">🟢 OK</div><div class="met-v" style="color:#27500A" id="vp-ver">0</div></div>
       </div>
-      <div class="filters">
-        <div class="chip active" onclick="setVFilter('all',this)">Todos</div>
-        <div class="chip" onclick="setVFilter('rojo',this)">🔴 Vencidos</div>
-        <div class="chip" onclick="setVFilter('naranja',this)">🟠 ≤3d</div>
-        <div class="chip" onclick="setVFilter('amarillo',this)">🟡 ≤7d</div>
-        <div class="chip" onclick="setVFilter('celeste',this)">🔵 ≤15d</div>
-        <div class="chip" onclick="setVFilter('verde',this)">🟢 OK</div>
-        <div class="export-bar">
-          <button id="btn-venc-view" onclick="toggleVencView()" style="background:var(--blue);color:#fff;border-color:var(--blue-dark);font-size:12px">👥 Por Agente</button>
-          <button onclick="exportVencCSV()" style="font-size:12px">⬇ CSV</button>
+      <div class="fils">
+        <div class="chip on" onclick="setVF('all',this)">Todos</div>
+        <div class="chip" onclick="setVF('rojo',this)">🔴 Vencidos</div>
+        <div class="chip" onclick="setVF('naranja',this)">🟠 ≤3d</div>
+        <div class="chip" onclick="setVF('amarillo',this)">🟡 ≤7d</div>
+        <div class="chip" onclick="setVF('celeste',this)">🔵 ≤15d</div>
+        <div class="chip" onclick="setVF('verde',this)">🟢 OK</div>
+        <div class="ebar">
+          <button id="vw-btn" onclick="togVW()" style="background:var(--blue);color:#fff;border-color:var(--blue-dark);font-size:12px">👥 Por Agente</button>
+          <button onclick="verHist()" style="font-size:12px">📋 Historial</button>
+          <button onclick="expVencCSV()" style="font-size:12px">⬇ CSV</button>
         </div>
       </div>
-      <div id="venc-view-general">
+      <div id="vw-gen">
         <div class="card" style="padding:0;overflow:hidden">
-          <table class="venc-table">
-            <thead><tr><th>Ítem</th><th>Descripción</th><th>Cant.</th><th>Agente</th><th>Vence</th><th>Días</th><th>Estado</th><th>Cambio</th><th></th></tr></thead>
-            <tbody id="venc-list"></tbody>
-          </table>
-          <div id="venc-empty" class="empty" style="display:none">🏷 Sin productos registrados</div>
+          <table class="vtbl"><thead><tr><th>Ítem</th><th>Descripción</th><th>Cant.</th><th>Agente</th><th>Vence</th><th>Días</th><th>Estado</th><th>Cambio</th><th></th></tr></thead>
+          <tbody id="venc-list"></tbody></table>
+          <div id="venc-emp" class="emp" style="display:none">🏷 Sin productos registrados</div>
         </div>
       </div>
-      <div id="venc-view-agentes" style="display:none"><div id="venc-agentes-list"></div></div>
+      <div id="vw-ag" style="display:none"><div id="venc-ag-list"></div></div>
     </div>
-
-    <!-- TAB AGENTES VENC (otras tiendas) -->
-    <div id="tab-agentes-venc" style="display:none">
-      <div id="gerente-agentes-panel" style="display:none">
+    <div id="t-ag-venc" style="display:none">
+      <div id="g-ag-panel" style="display:none">
         <div class="card">
           <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--blue)">➕ Agregar agente</div>
-          <div class="form-row">
-            <div class="field"><label>Nombre del agente</label><input id="new-agent-name" type="text" placeholder="Nombre completo..."></div>
-            <div class="field" style="max-width:180px"><label>Área</label><input id="new-agent-area" type="text" placeholder="Área asignada..."></div>
-            <button class="primary" onclick="addVencAgent()" style="flex-shrink:0;margin-top:13px">+ Agregar</button>
+          <div class="fr">
+            <div class="fld"><label>Nombre</label><input id="new-ag-name" type="text" placeholder="Nombre completo..."></div>
+            <div class="fld" style="max-width:180px"><label>Área</label><input id="new-ag-area" type="text" placeholder="Área..."></div>
+            <button class="btn-p" onclick="addVAg()" style="flex-shrink:0;margin-top:13px">+ Agregar</button>
           </div>
         </div>
       </div>
-      <div id="venc-agents-list"></div>
+      <div id="vag-list"></div>
     </div>
-
-    <!-- TAB RESUMEN (solo A57) -->
-    <div id="tab-resumen" style="display:none">
-      <div style="display:flex;justify-content:flex-end;margin-bottom:9px"><button onclick="window.print()">🖨</button></div>
-      <div id="resumen-content"></div>
+    <div id="t-res" style="display:none">
+      <div id="res-cont"></div>
     </div>
   </div>
 </div>
 
-<!-- ══ SUPERVISOR ══ -->
-<div id="screen-supervisor" style="display:none">
+<div id="s-sup" style="display:none">
   <header>
     <div style="width:30px;height:30px;background:linear-gradient(135deg,#F58220,#FFB81C);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:700;flex-shrink:0">✓</div>
-    <div style="flex:1">
-      <h1>Control SAC</h1>
-      <div class="hsub">🔭 Supervisor de Zona</div>
-    </div>
-    <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle2">🌙</button>
-    <button class="hbtn ghost" onclick="goHome()">🏠</button>
+    <div style="flex:1"><h1>Control SAC</h1><div class="hsub">🔭 Supervisor — Bryan Pineda · Yury Reyes</div></div>
+    <button class="thm" onclick="toggleTheme()" id="thm-btn2">🌙</button>
+    <button class="hbtn" onclick="goHome()">🏠</button>
   </header>
-  <div class="container">
-    <div class="card">
-      <div style="font-size:14px;font-weight:700;margin-bottom:4px;color:var(--blue)">📊 Panel de Zona — Todas las Tiendas</div>
-      <div style="font-size:11px;color:var(--text-soft);margin-bottom:12px">Bryan Pineda · Yury Reyes — Supervisores</div>
-      <div class="metrics" id="supervisor-metrics"></div>
-    </div>
-    <div style="font-size:12px;font-weight:700;color:var(--text-soft);margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em">Tiendas — ordenadas por urgencia</div>
-    <div class="supervisor-grid" id="supervisor-grid"></div>
+  <div class="wrap">
+    <div class="card"><div style="font-size:14px;font-weight:700;margin-bottom:4px;color:var(--blue)">📊 Panel de Zona</div><div class="mets" id="sup-mets"></div></div>
+    <div style="font-size:12px;font-weight:700;color:var(--text-soft);margin-bottom:10px;text-transform:uppercase">Tiendas — por urgencia</div>
+    <div class="sg-grid" id="sup-grid"><div class="lod">⏳ Cargando...</div></div>
   </div>
 </div>
 
-<!-- PIN -->
-<div class="pin-overlay" id="pin-overlay">
-  <div class="pin-box">
-    <h3 id="pin-title">🔐 Acceso</h3>
-    <p id="pin-sub">Ingresa tu PIN de 4 dígitos</p>
-    <div class="pin-dots" id="pin-dots">
-      <div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div>
-      <div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
+<div class="pin-ov" id="pin-ov">
+  <div class="pin-bx">
+    <h3 id="pin-ttl">🔐 Acceso</h3><p id="pin-sub">PIN de 4 dígitos</p>
+    <div class="pdots" id="pdots"><div class="pdot" id="pd0"></div><div class="pdot" id="pd1"></div><div class="pdot" id="pd2"></div><div class="pdot" id="pd3"></div></div>
+    <div class="pkp">
+      <button class="pk" onclick="pP('1')">1</button><button class="pk" onclick="pP('2')">2</button><button class="pk" onclick="pP('3')">3</button>
+      <button class="pk" onclick="pP('4')">4</button><button class="pk" onclick="pP('5')">5</button><button class="pk" onclick="pP('6')">6</button>
+      <button class="pk" onclick="pP('7')">7</button><button class="pk" onclick="pP('8')">8</button><button class="pk" onclick="pP('9')">9</button>
+      <button class="pk" onclick="pCan()">✕</button><button class="pk" onclick="pP('0')">0</button><button class="pk" onclick="pDel()">⌫</button>
     </div>
-    <div class="pin-keypad">
-      <button class="pin-key" onclick="pinPress('1')">1</button><button class="pin-key" onclick="pinPress('2')">2</button><button class="pin-key" onclick="pinPress('3')">3</button>
-      <button class="pin-key" onclick="pinPress('4')">4</button><button class="pin-key" onclick="pinPress('5')">5</button><button class="pin-key" onclick="pinPress('6')">6</button>
-      <button class="pin-key" onclick="pinPress('7')">7</button><button class="pin-key" onclick="pinPress('8')">8</button><button class="pin-key" onclick="pinPress('9')">9</button>
-      <button class="pin-key" onclick="pinCancel()">✕</button><button class="pin-key" onclick="pinPress('0')">0</button><button class="pin-key" onclick="pinDel()">⌫</button>
-    </div>
-    <div class="pin-error" id="pin-error"></div>
+    <div class="perr" id="perr"></div>
   </div>
 </div>
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
-  <div class="modal">
-    <span class="modal-close" onclick="closeHistorial()">✕</span>
-    <h3 id="modal-title"></h3>
-    <div id="modal-body"></div>
-  </div>
+<div class="mod-ov" id="mod-ov" onclick="closeMod(event)">
+  <div class="mod"><span class="mc" onclick="closeMod2()">✕</span><h3 id="mod-ttl"></h3><div id="mod-bdy"></div></div>
 </div>
 
 <script>
-// ══ CONFIGURACIÓN ══════════════════════════════════════
-var API_URL="https://script.google.com/macros/s/AKfycbzjWcBQn60NrcTYTMpQ95IT5OA6H_t5w55EFeFBZ_tT-pQfG587Veo3ZOLitsO2Xt3w/exec";
-var SUPERVISOR_PIN="9999";
-var SUPERVISOR_NAMES="Bryan Pineda · Yury Reyes";
-
+var API="https://script.google.com/macros/s/AKfycbzJAAm7Sq0tTV5SCP-4lyncX1fTWI_Y3hQA0iNUTR6swCSTohm0We4iM_pG-vzt-lPE/exec";
+var SUP_PIN="9999";
 var STORES=[
-  {code:"A46",name:"Juigalpa Centro", manager:"Yasli Salazar",    pinGerente:"4621", pinAgente:"4638", isMain:false},
-  {code:"A50",name:"Nueva Guinea",    manager:"Mariela Bautista", pinGerente:"5032", pinAgente:"5027", isMain:false},
-  {code:"A55",name:"Juigalpa Puma",   manager:"Idalia Leiva",     pinGerente:"5514", pinAgente:"5561", isMain:false},
-  {code:"A58",name:"San Carlos",      manager:"Luizhangella Tenorio", pinGerente:"5873", pinAgente:"5843", isMain:false},
-  {code:"A57",name:"Bluefields",      manager:"Bryan Pineda",     pinGerente:"2809", pinAgente:"5719", isMain:true},
-  {code:"A64",name:"Santo Tomás",     manager:"Steven Arguello",  pinGerente:"6448", pinAgente:"6452", isMain:false},
-  {code:"A67",name:"San Benito",      manager:"Maykeling Reyes",  pinGerente:"6719", pinAgente:"6784", isMain:false},
-  {code:"A87",name:"Rama",            manager:"Edder Lopez",      pinGerente:"8756", pinAgente:"8731", isMain:false}
+  {code:"A46",name:"Juigalpa Centro",manager:"Yasli Salazar",pinG:"4621",pinA:"4638",isMain:false},
+  {code:"A50",name:"Nueva Guinea",manager:"Mariela Bautista",pinG:"5032",pinA:"5027",isMain:false},
+  {code:"A55",name:"Juigalpa Puma",manager:"Idalia Leiva",pinG:"5514",pinA:"5561",isMain:false},
+  {code:"A58",name:"San Carlos",manager:"Luizhangella Tenorio",pinG:"5873",pinA:"5843",isMain:false},
+  {code:"A57",name:"Bluefields",manager:"Bryan Pineda",pinG:"2809",pinA:"5719",isMain:true},
+  {code:"A64",name:"Santo Tomas",manager:"Steven Arguello",pinG:"6448",pinA:"6452",isMain:false},
+  {code:"A67",name:"San Benito",manager:"Maykeling Reyes",pinG:"6719",pinA:"6784",isMain:false},
+  {code:"A87",name:"Rama",manager:"Edder Lopez",pinG:"8756",pinA:"8731",isMain:false}
 ];
-
 var COLORS=[["#B5D4F4","#0C447C"],["#9FE1CB","#085041"],["#FAC775","#633806"],["#F4C0D1","#72243E"],["#CECBF6","#3C3489"],["#F5C4B3","#712B13"],["#C0DD97","#27500A"],["#F7C1C1","#791F1F"]];
+var TASKS_DEF=["Mantener limpio el parqueo y entrada de la tienda","Limpiar puertas, ventanas y areas visibles al cliente","Mantener los pisos limpios durante todo el turno","Mantener los banos limpios, abastecidos y ordenados","Realizar frenteo de la gondola asignada","Abastecer la gondola asignada segun necesidad de inventario","Colocar productos siguiendo la planimetria establecida","Mantener visibles los precios de todos los productos","Organizar cabeceras y exhibiciones promocionales","Mantener ordenados los productos en exhibicion","Rotular promociones vigentes en el area asignada","Corregir espacios vacios mediante reposicion inmediata","Mantener limpia el area de preparacion de alimentos","Limpiar microondas, tostador y equipos de servicio","Mantener ordenada y atractiva el area de Food Service","Mantener limpia y ordenada el area de caja","Atender clientes siguiendo el protocolo de servicio","Ofrecer promociones y productos de impulso en cada venta","Mantener abastecidos los productos de impulso en caja","Entregar el area de trabajo limpia y organizada al finalizar el turno"];
+var MAIN_AG=[{name:"Dennis Javier Crespo Reyes",area:"Beer Cave"},{name:"Esteban Justino Rivas Rivas",area:"Gondola de Diana, Dinant"},{name:"George Harrington Wilson Fuigeroa",area:"Cuarto Frio CDN, LALA"},{name:"Jhonny Joel Omeir Sequeira",area:"Cuarto Frio FEMSA"},{name:"Edgar Brigido Guzman Duarte",area:"Gondola de Aseo"},{name:"Angel Gabriel Munguia Ramirez",area:"Food Service"},{name:"Elsy Yaleska Castillo Pineda",area:"Gondola Alimentos"},{name:"Emely Nickole Vidaurry Taylor",area:"Cabeceras de caja"},{name:"Yeslin Yaliz Flores Duarte",area:"Mi Bankito"},{name:"Gustavo Alfonso Alvarez Aguirre",area:"Mi Bankito CDN"}];
+var CAT=[["018200000164","Budweiser Lata 355ml","CCN"],["702596000111","Tona Botella x6","CCN"],["641194004308","Tona Ultra Lata 350ml","CCN"],["641194000119","Victoria Clasica Botella x6","CCN"],["764009007315","Heineken Botella x6","CCN"],["7441003500532","Coca Cola 1 litro","FEMSA"],["7441003500488","Coca Cola Clasica 600ml","FEMSA"],["7441003500235","Coca Cola Lata","FEMSA"],["7441003518230","Coca Cola Zero 354ml","FEMSA"],["7441003520233","Fanta Naranja Lata 354ml","FEMSA"],["070847019800","Monster Green Lata 473ml","FEMSA"],["070847019848","Monster Ultra 473ml","FEMSA"],["9002490204006","Red Bull 250ml","CLNSA-DCP"],["677585001083","Pepsi 500ml","CABCORP"],["677585008075","Pepsi 1 litro","CABCORP"],["7401005907753","Adrenaline Rush 355ml","CABCORP"],["036731039453","Gatorade Lima Limon 500ml","CABCORP"],["036731039460","Gatorade Naranja 500ml","CABCORP"],["026964900026","Agua Luna 600ml","CLNSA-FDC"],["7502268547349","Electrolit Lima Limon 625ml","IMFARSA"],["7502268547608","Electrolit Fresa 625ml","IMFARSA"],["849806001220","Four Loko Fruit Ponch 473ml","CLNSA-DCP"],["764009801814","Smirnoff Ice 355ml","CCN"],["7441002649904","Atun Gaviota Agua 140gr","OCAL"],["7441002638007","Atun Gaviota Vegetales 140gr","OCAL"],["705805031630","Mantequilla La Perfecta","LALA"],["705805032057","Yogurt Bebible Fresa","LALA"],["705805032194","Yogurt Bat Fresa 125gr","LALA"],["705805033160","Cajeta de leche La Perfecta","LALA"],["7441001609466","Helado Chocolate 1/2 Galon","CONGELADOS"],["7441001609640","Helado Fresa 1/4 Galon","CONGELADOS"],["7441001604300","Cono Alaska Vainilla 70gr","CONGELADOS"],["7441001610288","Sundae Chocolate 130gr","CONGELADOS"],["7441001602047","Deligurt Arandano 200ml","CONGELADOS"],["7441029500301","Pan para Hot Dogs 325gr","BIMBO"],["7441029518375","Pan Blanco Monarca 440gr","BIMBO"],["7441029508444","Tortillas Rapiditas 12pzs","BIMBO"],["7434004520418","Empanadas de Queso 10und","Chelitas"],["637213202251","Salchicha Parrillera 360gr","Delmor"],["637213606042","Chorizo Criollo 227gr","Delmor"],["7441008933182","Salchichon Con chile 200gr","SIGMA"],["8445291646049","Cafe Presto 50gr","NESTLE"],["7501072202727","Dog Chow Adult Raza Grande 2kg","NESTLE"],["023100051048","Pedigree Original 2kg","CSSA"],["023100041049","Pedigree Cachorro 2kg","CSSA"],["7501032925154","Raid Accion Total 400ml","DICEGSA"],["637662101150","Jabon Marfil 275gr","ECHAMORRO"],["099176003700","Lavaplatos Dona Blanca 340gr","DIINSA"],["028400019903","Doritos Nachos Cheese 1oz","CDN"],["028400022231","Cheetos Crunchy 35gr","CDN"],["721282411215","Lays original 105gr","CDN"],["038000846731","Pringles Original 40gr","ECHAMORRO"],["750894602780","Zambos Casera 155gr","DINANT"],["750894601059","Chicharrones Autentico 110gr","DINANT"],["748757000378","Alboroto 206gr","DIANA"],["748757001566","Elotito con limon 157gr","DIANA"],["748757000200","Jalapenos 160gr","DIANA"],["748757009449","Mani con Limon Diana 80gr","DIANA"],["7861002900117","Ferrero Rocher 100gr","OCAL"],["7622210426963","Halls Cereza","MONDELEZ"],["034000249862","Hersheys Chocolate","DICEGSA"],["80052760","Kinder Bueno 43gr","OCAL"],["80051671","Nutella 200gr","OCAL"],["7622201390211","Ritz Original 12und","MONDELEZ"],["7590011151110","Oreo Regular 12und","MONDELEZ"],["086581002510","Galleta Club Extra 9und","POZUELO"],["086581006280","Galleta Maria 12und","POZUELO"],["7441163404695","Galletas Nucitas 315gr","POZUELO"],["7431001003036","Mani Con Sal 80gr","CLNSA-DCP"],["7431001003043","Mani Con Chile 80gr","CLNSA-DCP"],["7431001001186","Party Mix 170gr","CLNSA-DCP"],["633148100013","Tajin Clasico 142gr","CONTESA"],["7439201379623","Nachitos 75gr","HOREB"],["7432678902318","Platanfritos 220gr","HOREB"],["7433200865064","Hojaldritas Valdez 100gr","VALDEZ"],["7433200865057","Rosquillas Valdez 100gr","VALDEZ"]];
+var POL={"CCN":{c:"Si",o:"Reportar antes de vencer"},"FEMSA":{c:"Cambio/Debito",o:"Reportar por correo hasta 3 dias antes"},"CABCORP":{c:"No",o:""},"CLNSA-DCP":{c:"No",o:""},"CLNSA-FDC":{c:"No",o:"Solo seltzer notificado 1 mes antes"},"OCAL":{c:"No",o:"Apoya si se comunico con proveedor"},"BIMBO":{c:"Cambio/Debito",o:"Reportar 15 dias antes en Managua, 35 dias foraneas"},"Chelitas":{c:"Si",o:"Reportar 15 dias antes"},"Delmor":{c:"Si debita",o:"Producto debe entregarse con 15 dias antes de vencer"},"SIGMA":{c:"Si",o:"Reportar con 8 dias de anticipacion"},"NESTLE":{c:"No",o:""},"CSSA":{c:"No",o:""},"DICEGSA":{c:"No",o:""},"DIINSA":{c:"No",o:""},"ECHAMORRO":{c:"No",o:""},"CONGELADOS":{c:"Si debita",o:"Despues de 15 dias vencido no realiza debito"},"LALA":{c:"Si",o:"Reportar 3 a 5 dias antes de vencer"},"DINANT":{c:"No",o:""},"DIANA":{c:"No",o:"Solo chicharrones vencidos"},"MONDELEZ":{c:"No",o:""},"POZUELO":{c:"No",o:"Solo producto nuevo por arreglo comercial"},"HOREB":{c:"No",o:""},"VALDEZ":{c:"Si",o:"Solo por fecha borrosa"},"CONTESA":{c:"No",o:""},"IMFARSA":{c:"No",o:""}};
 
-var ALL_TASKS=["Mantener limpio el parqueo y entrada de la tienda","Limpiar puertas, ventanas y áreas visibles al cliente","Mantener los pisos limpios durante todo el turno","Mantener los baños limpios, abastecidos y ordenados","Realizar frenteo de la góndola asignada","Abastecer la góndola asignada según necesidad de inventario","Colocar productos siguiendo la planimetría establecida","Mantener visibles los precios de todos los productos","Organizar cabeceras y exhibiciones promocionales","Mantener ordenados los productos en exhibición","Rotular promociones vigentes en el área asignada","Corregir espacios vacíos mediante reposición inmediata","Mantener limpia el área de preparación de alimentos","Limpiar microondas, tostador y equipos de servicio","Mantener ordenada y atractiva el área de Food Service","Mantener limpia y ordenada el área de caja","Atender clientes siguiendo el protocolo de servicio","Ofrecer promociones y productos de impulso en cada venta","Mantener abastecidos los productos de impulso en caja","Entregar el área de trabajo limpia y organizada al finalizar el turno"];
+function policyFor(s){if(!s)return null;if(POL[s])return POL[s];var k=Object.keys(POL).filter(function(k){return s.toLowerCase().indexOf(k.toLowerCase())>=0||k.toLowerCase().indexOf(s.toLowerCase())>=0;})[0];return k?POL[k]:null;}
 
-var PRESETS=[{cat:"🧹 Limpieza e Imagen",tasks:["Mantener limpio el parqueo y entrada de la tienda","Limpiar puertas, ventanas y áreas visibles al cliente","Mantener los pisos limpios durante todo el turno","Mantener los baños limpios, abastecidos y ordenados"]},{cat:"🛒 Góndola y Exhibición",tasks:["Realizar frenteo de la góndola asignada","Abastecer la góndola asignada según necesidad de inventario","Colocar productos siguiendo la planimetría establecida","Mantener visibles los precios de todos los productos","Organizar cabeceras y exhibiciones promocionales","Mantener ordenados los productos en exhibición","Rotular promociones vigentes en el área asignada","Corregir espacios vacíos mediante reposición inmediata"]},{cat:"🍔 Food Service",tasks:["Mantener limpia el área de preparación de alimentos","Limpiar microondas, tostador y equipos de servicio","Mantener ordenada y atractiva el área de Food Service"]},{cat:"💳 Caja y Atención",tasks:["Mantener limpia y ordenada el área de caja","Atender clientes siguiendo el protocolo de servicio","Ofrecer promociones y productos de impulso en cada venta","Mantener abastecidos los productos de impulso en caja","Entregar el área de trabajo limpia y organizada al finalizar el turno"]}];
+var CS=null,isG=false,tasks=[],prods={},vagents={},filt="all",vFilt="all",vView="gen",opVAg=new Set(),opSupSt=null,selAg=null,curTab="",acIdx=-1,pBuf="",pCb=null,pMode="",rTimer=null;
+var TODAY=new Date();TODAY.setHours(0,0,0,0);
 
-var MAIN_AGENTS=[{name:"Dennis Javier Crespo Reyes",area:"Beer Cave"},{name:"Esteban Justino Rivas Rivas",area:"Góndola de Diana, Dinant, Gomitas, Semillas"},{name:"George Harrington Wilson Fuigeroa",area:"Cuarto Frío (CDN, LALA)"},{name:"Jhonny Joel Omeir Sequeira",area:"Cuarto Frío (FEMSA, CABCORB)"},{name:"Edgar Brigido Guzmán Duarte",area:"Góndola de Aseo, Cabeceras CCN"},{name:"Angel Gabriel Munguia Ramirez",area:"Food Service"},{name:"Elsy Yaleska Castillo Pineda",area:"Góndola de Alimentos y Galletas"},{name:"Emely Nickole Vidaurry Taylor",area:"Cabeceras de caja, Mueble de hogar"},{name:"Yeslin Yaliz Flores Duarte",area:"Mi Bankito, Mueble de CDN"},{name:"Gustavo Alfonso Alvarez Aguirre",area:"Mi Bankito, Mueble de CDN"}];
+function toggleTheme(){var h=document.documentElement,d=h.getAttribute("data-theme")==="dark";d?h.removeAttribute("data-theme"):h.setAttribute("data-theme","dark");var i=d?"🌙":"☀️";["thm-btn","thm-btn2"].forEach(function(id){var b=document.getElementById(id);if(b)b.textContent=i;});}
+(function(){var h=new Date().getHours();if(h>=19||h<6)document.documentElement.setAttribute("data-theme","dark");setTimeout(function(){var i=document.documentElement.getAttribute("data-theme")==="dark"?"☀️":"🌙";["thm-btn","thm-btn2"].forEach(function(id){var b=document.getElementById(id);if(b)b.textContent=i;});},50);})();
 
-var CATALOG=[["018200000164","Budweiser Lata 355ml","CCN Cervezas"],["7436004000600","Caja Victoria 100 Años x12","CCN Cervezas"],["7434003450006","Cerveza 19 Dias Botella 350ml","CCN Cervezas"],["7436004000112","Cerveza Boreal Botella x6","CCN Cervezas"],["7436004000075","Cerveza Boreal Lata 350ml","CCN Cervezas"],["7401000702049","Cerveza Gallo Botellax6","CCN Cervezas"],["7401000711461","Cerveza Gallo Latax6","CCN Cervezas"],["7434003450044","Cerveza La Lola 350ml","CCN Cervezas"],["7434003450020","Cerveza Lado Oscuro 350ml","CCN Cervezas"],["7501064191725","Cerveza Modelo Esp Botella x 6","Aceite El Real S.A"],["7501064112546","Cerveza Modelo Esp Lata Und","Aceite El Real S.A"],["4066600611301","Cerveza Paulaner Weissbier","CCN Cervezas"],["7501049936945","Cerveza Sol Botella x 6","CCN Cervezas"],["7434003450051","Cerveza Wangky Yang 350ml","CCN Cervezas"],["7503024460681","Corona Botella x 6","Aceite El Real S.A"],["7501064198380","Coronita Botella x6","Aceite El Real S.A"],["849806001220","Four Loko Fruit Ponch 473ml","CLNSA-DCP"],["849806001206","Four Loko Sandía 473ml","CLNSA-DCP"],["8712000056544","Heineken 0.0 350ml","CCN Cervezas"],["764009007315","Heineken Botella x 6","CCN Cervezas"],["764009011138","Heineken Lata x 6","CCN Cervezas"],["641194013003","Miller Lite Botella 330ml","CCN Cervezas"],["641194013041","Miller Lite Lata x6","CCN Cervezas"],["5410228144755","Stella Artois Botella x 6","Aceite El Real S.A"],["702596000111","Toña Botella x 6","CCN Cervezas"],["7436004000242","Toña Chelada Limon y Sal 350ml","CCN Cervezas"],["7436004000228","Toña Chelada Limon y Sal 4pack","CCN Cervezas"],["641194170287","Toña Lata 473ml 1 unidad","CCN Cervezas"],["641194171215","Toña Lata 473ml x4","CCN Cervezas"],["641194170355","Toña Lata x 12","CCN Cervezas"],["641194170218","Toña Lata x 6","CCN Cervezas"],["641194171390","Toña Light Botella x6","CCN Cervezas"],["641194171345","Toña Light Lata 6x5","CCN Cervezas"],["7436004000235","Toña Michelada Original 350ml","CCN Cervezas"],["7436004000211","Toña Michelada Original 4pack","CCN Cervezas"],["7436004000365","Toña Michelada Tamarindo","CCN Cervezas"],["7436004000372","Toña Michelada Tamarindo 4pack","CCN Cervezas"],["641194171666","Toña Ultra 4pack 350ml","CCN Cervezas"],["641194004308","Toña Ultra Lata 350ml","CCN Cervezas"],["641194101588","Victoria Clásic Lata x 6","CCN Cervezas"],["641194000119","Victoria Clasica Botella x 6","CCN Cervezas"],["641194171192","Victoria Clasica Lata 15x12","CCN Cervezas"],["641194030031","Victoria Clasica Lata 473 ml","CCN Cervezas"],["641194101144","Victoria Frost Botella x 6","CCN Cervezas"],["641194101328","Victoria Frost Lata 473 ml 1ud","CCN Cervezas"],["641194010125","Victoria Frost Lata 6x5","CCN Cervezas"],["641194010040","Victoria Frost Lata x 9","CCN Cervezas"],["7436004000518","Victoria Hoppy Lager Botella","CCN Cervezas"],["764009047830","Adan & Eva Maracuyá&Piña 355ml","CCN Cervezas"],["764009047847","Adan & Eva Rose con Vodka 355m","CCN Cervezas"],["764009045577","Adan&Eva Frutos Rojos Lata 355","CCN Cervezas"],["64119418200","Bamboo Daiquiri 6PK","CCN Cervezas"],["764009024497","Bamboo Daiquiri Fresa Lat 350m","CCN Cervezas"],["764009045171","Bamboo Frutos Mixtos 473ml","CCN Cervezas"],["64119418020","Bamboo Mojito 6PK","CCN Cervezas"],["764009011671","Bamboo Mojito Lata 350 ml x 1","CCN Cervezas"],["764009047984","Bamboo Piña Colada 350ml","CCN Cervezas"],["64119400021","Bamboo Piña Colada 6PK","CCN Cervezas"],["764009045188","Bamboo Sandía 473ml","CCN Cervezas"],["7436004000181","Bamboo Surtido 6pack","CCN Cervezas"],["764009020512","Bliss Happy Mix Botella 350ml","CCN Cervezas"],["7434003450532","Catrin Condenada Limonada 355m","CCN Cervezas"],["7434003450471","Catrin Pera Traicionera 355ml","CCN Cervezas"],["7434003450594","Catrin Toronja Lujuriosa 355ml","CCN Cervezas"],["849806005365","Four Loko Sandia 355ml","CLNSA-DCP"],["849806005273","Four Loko Uva 355ml","CLNSA-DCP"],["7422111061917","Livit Fresa 355ml","CLNSA-DCP"],["7422111063676","Livit Fresa 473ml","CLNSA-DCP"],["7422111061900","Livit Manzana Verde 355ml","CLNSA-DCP"],["7422111063669","Livit Manzana Verde 473ml","CLNSA-DCP"],["7422111061924","Livit Piña 355ml","CLNSA-DCP"],["7422111063683","Livit Piña 473ml","CLNSA-DCP"],["026964880519","Plata Green Apple 340ml","CLNSA-FDC"],["026964880526","Plata Limón Hierbabuena 340ml","CLNSA-FDC"],["026964105940","Plata Ponche de Frutas 340ml","CLNSA-FDC"],["026964880502","Plata Ron Cola 340ml","CLNSA-FDC"],["026964105353","Premium Seltzer Black Cherryx6","CLNSA-FDC"],["026964106534","Premium Seltzer Durazno x6","CLNSA-FDC"],["7434003840647","Premium Seltzer Limon x6","CLNSA-FDC"],["026964106312","Premium Seltzer Mandarina x6","CLNSA-FDC"],["026964095200","Premium Seltzer Mango x6","CLNSA-FDC"],["026964105360","Premium Seltzer Maracuyá x6","CLNSA-FDC"],["7434003840654","Premium Seltzer Naranja X6","CLNSA-FDC"],["7434003840661","Premium Seltzer Original X6","CLNSA-FDC"],["026964080223","Premium Seltzer Sandia x6","CLNSA-FDC"],["7432003901122","PremiumSeltzer TropiBrry 6pack","CLNSA-FDC"],["764009801814","Smirnoff Ice Botella 355 ml","CCN Cervezas"],["764009013101","Smirnoff Ice Gree Apple 355ml","CCN Cervezas"],["764009013118","Smirnoff Ice Green Apple Lata","CCN Cervezas"],["764009020468","Smirnoff Ice Guarana Lata 350m","CCN Cervezas"],["764009800312","Smirnoff Ice Original 355ml","CCN Cervezas"],["764009014757","Smirnoff Raspberry Bote 355ml","CCN Cervezas"],["641194004025","Spark Hard Seltzer Limón 350ml","CCN Cervezas"],["641194004001","Spark Hard Seltzer Manda 350ml","CCN Cervezas"],["641194004063","Spark Hard Seltzer Raspb 350ml","CCN Cervezas"],["641194004384","Spark Hard Seltzer Sandia 350m","CCN Cervezas"],["641194004049","Spark HardSeltzer ManVerd 350m","CCN Cervezas"],["641194004162","Spark Limon Hierba Buena 6PK","CCN Cervezas"],["641194004179","Spark Mandarina 6PK","CCN Cervezas"],["641194004254","Spark Manzana Verde 6PK","CCN Cervezas"],["641194004186","Spark Raspberry 6PK","CCN Cervezas"],["7436004000433","Spark Triple Berry 350ml","CCN Cervezas"],["641194004391","Spark Watermelon 6PK","CCN Cervezas"],["750894620845","Aceite Mazola Plus 700ml 18s","DINANT"],["637662401205","Aceite Rico 1 litro","ECHAMORRO INDUSTRIAL"],["760573070052","Aceitunas Simples Sasson 200g","CONTESA"],["7441002638007","ATUN GAVIOTA CN VEGETALES 140G","OCAL"],["7441002638014","ATUN GAVIOTA EN ACEITE 140 GR","OCAL"],["7441002649904","ATUN GAVIOTA EN AGUA 140 GR","OCAL"],["638253682690","Azúcar San Antonio 2kilogramos","CLNSA-DCP"],["8445291646049","Café Presto Frasco 50 gramos","NESTLE"],["760861002727","Café Selecto Clásico 400g","CSSA"],["760861000273","Café Selecto Superior 400g","CSSA"],["705805033160","Cajeta de leche La Perfecta","LALA Nicaragua S.A"],["637213606042","Chorizo Criollo 227 grs","Delmor"],["705805011892","Crema Acida La Perfecta 420g","LALA Nicaragua S.A"],["7441001602047","Deligurt Arandano 200 ml","CONGELADOS S.A"],["7441001602139","Deligurt Frutas Tropical 200 m","CONGELADOS S.A"],["7441001635069","Deligurt Griego Arandano 150m","CONGELADOS S.A"],["7441001635083","Deligurt Griego Fresa 150m","CONGELADOS S.A"],["7406268000272","Deligurt In Line Fresa 200 ml","CONGELADOS S.A"],["7434000057147","Docena de Huevo San Francisco","INDUSTRIA SAN FRANCISCO, SA"],["7434004520418","Empanadas de Queso PCH 10 und","Las Chelitas"],["7441029500417","Empanizador Bimbo 165 gramos","VTA.DE PRODUCTOS REFRESCANTES"],["7501008000731","Kellogg´s Corns Flakes 150g","OCAL"],["7501008075487","Kelloggs Choco Krispis 220 gra","OCAL"],["7501008075951","Kelloggs Froot Loop 140 gramos","OCAL"],["7501008075944","Kelloggs Zucaritas 200gramos","OCAL"],["705805031630","Mantequilla La Perfecta 4 uds","LALA Nicaragua S.A"],["7411000204740","Mayonesa Doypack 180gr","DICEGSA"],["8445291737976","Nescafe Clásico stick 20x1.7gr","NESTLE"],["7501058631442","Nescafé Clásico Vasos 120 gr","NESTLE"],["7441029518375","Pan Blanco Monarca 440g","VTA.DE PRODUCTOS REFRESCANTES"],["7441029523614","Pan Blanco 500gr","VTA.DE PRODUCTOS REFRESCANTES"],["7441029500202","Pan con Ajonjolí Hambur 8 uds","VTA.DE PRODUCTOS REFRESCANTES"],["7441029500301","Pan para Hot Dogs 325 gramos","VTA.DE PRODUCTOS REFRESCANTES"],["7441029500400","Pan Tostado Bimbo 210 gramos","VTA.DE PRODUCTOS REFRESCANTES"],["871192003229","Quesillo Bajo Grasa 340 gr","CONGELADOS S.A"],["7441001606069","Queso Crema Americano 100g","CONGELADOS S.A"],["7441001607363","Queso Crema Americano 210g","CONGELADOS S.A"],["7441001606274","Queso Mozzarella 8 Rebanadas","CONGELADOS S.A"],["637213202251","Salchicha Parrillera 360 Grs","Delmor"],["7441008933182","Salchichon C/chile 200gr","SIGMA ALIMENTOS"],["7441008933212","Salchichon C/Tocino 200gr","SIGMA ALIMENTOS"],["7441002601049","SARDIMAR SARDINA OVALADA 15 OZ","OCAL"],["7441002601001","Sardina en Tomate Dulce 160g","OCAL"],["7441002601018","Sardina en Tomate Picante 160g","OCAL"],["633148100617","Tajin Chamoy Picante 475ml","CONTESA"],["633148100013","Tajin En Polvo Clasico 142 Gr","CONTESA"],["633148599305","Tajin Escarchador 120GR","CONTESA"],["633148104547","Tajín Habanero 45gr","CONTESA"],["7441029555653","Tortillas Grandes 5 piezas","VTA.DE PRODUCTOS REFRESCANTES"],["7441029508444","Tortillas Rapiditas 12 piezas","VTA.DE PRODUCTOS REFRESCANTES"],["7441001639593","Yogurt Deleite Creme Brulee 17","CONGELADOS S.A"],["7441001634987","Yogurt Deleite Pie de Limón170","CONGELADOS S.A"],["705805032194","Yogurt Bat Fresa 125 gramos","LALA Nicaragua S.A"],["705805032057","Yogurt Bebible con Fresa LP","LALA Nicaragua S.A"],["705805032156","Yogurt Bebible Fresa LP 200g","LALA Nicaragua S.A"],["705805032163","Yogurt Bebible Manzana LP 200g","LALA Nicaragua S.A"],["7441001601750","Yogurt Top Arandano 150g","CONGELADOS S.A"],["7441001601811","Yogurt Top Arroz&Chocolat 150g","CONGELADOS S.A"],["7401005907753","Adrenaline Rush 355ml","CABCORP"],["7401005914928","Agua Ensa 500ml","CABCORP"],["026964880540","Agua Luna Con Gas 355ml","CLNSA-FDC"],["026964105834","Agua Luna Con Gas 6pack","CLNSA-FDC"],["026964880557","Agua Luna Con Gas Fresa 355ml","CLNSA-FDC"],["026964900019","Agua Luna Purificada 1000ml","CLNSA-FDC"],["026964900002","Agua Luna Purificada 1500ml","CLNSA-FDC"],["026964900026","Agua Luna Purificada 600ml","CLNSA-FDC"],["7441003590816","Alpina Botella Plastica 2Lts","FEMSA"],["7441003598171","Alpina Sparkling Calala 354ml","FEMSA"],["7441003598164","Alpina Sparkling Manzana 354ml","FEMSA"],["7441003590533","Alpina Tapa Rosca 1 litro","FEMSA"],["7441003590465","Alpina Tapa Rosca 600ml","FEMSA"],["7441003500532","Coca Cola 1 litro","FEMSA"],["7441003500815","Coca Cola 2 litros","FEMSA"],["7441003500150","Coca Cola 3 litros","FEMSA"],["7441003500488","Coca Cola Clásica 600ml","FEMSA"],["7441003500235","Coca Cola Lata 1 Unidad","FEMSA"],["7441003518810","Coca Cola Sin Azúcar 2 litros","FEMSA"],["7441003518483","Coca Cola Sin Azúcar 600ml","FEMSA"],["7441003518230","Coca Cola Zero 354ml 1 unidad","FEMSA"],["7502268547608","Electrolit Fresa Botella 625ml","IMFARSA"],["7502268547387","Electrolit Fresa-Kiwi Bot 625m","IMFARSA"],["7502268547349","Electrolit Lima - Limon 625 ml","IMFARSA"],["7502268547622","Electrolit Maracuyá 625ml","IMFARSA"],["7502268547370","Electrolit Mora Azul Bot 625ml","IMFARSA"],["7502268547400","Electrolit Nar-Mandarina 625ml","IMFARSA"],["7503046131842","Electrolit Ponche dFrutas 625m","IMFARSA"],["7502268547356","Electrolit Uva Botella 625ml","IMFARSA"],["7441003520233","Fanta Naranja Lata 354ml","FEMSA"],["7441003522435","Fanta Roja 500 ml","FEMSA"],["7441003522237","Fanta Roja Lata 355 ml","FEMSA"],["024474006818","Gatorade Berry Blue 500ml","CABCORP"],["036731039477","Gatorade Fruit Punch 500ml","CABCORP"],["036731039453","Gatorade Lima Limón 500 ml","CABCORP"],["036731039460","Gatorade Naranja 500ml","CABCORP"],["036731039484","Gatorade Uva 500ml","CABCORP"],["070847019800","Monster Green Lata 473 ml","FEMSA"],["070847033967","Monster Mango Loco 473ml","FEMSA"],["070847890836","Monster Pineapple 473ml","FEMSA"],["070847027133","Monster Pipeline Punch 473ml","FEMSA"],["070847019848","Monster Ultra 473ml","FEMSA"],["884394002495","OKF Aloe Sugar Free 1500 ml","CLNSA-DCP"],["884394000798","OKF Aloe Vera Standard 1500 ml","CLNSA-DCP"],["884394000774","OKF Aloe Vera Standard 500 ml","CLNSA-DCP"],["884394007414","OKF Farmers Coco 500ml","CLNSA-DCP"],["884394007391","OKF Farmers Fresa 500ml","CLNSA-DCP"],["884394007353","OKF Farmers Pomegranate 500ml","CLNSA-DCP"],["884394007759","OKF Farmers Sandia 500ml","CLNSA-DCP"],["677585008075","Pepsi 1 litro","CABCORP"],["7401005912016","Pepsi 1.5 litros","CABCORP"],["677585008044","Pepsi 3 litros","CABCORP"],["677585001083","Pepsi 500 ml","CABCORP"],["7401005908538","Pepsi Black 355ml","CABCORP"],["7401005904011","Pepsi Lata 355 ml","CABCORP"],["810116123445","Prime Cherry Freeze 500ml","CLNSA-DCP"],["850040427080","Prime Ice Pop 500ml","CLNSA-DCP"],["9002490212148","Red Bull 355 ml","CLNSA-DCP"],["9002490100490","Red Bull Energy 4 Pack","CLNSA-DCP"],["9002490204006","Red Bull Energy Drink 250 ml","CLNSA-DCP"],["677585002059","Rojita 3 Litros Pet","CABCORP"],["677585002028","Rojita 500 ml","CABCORP"],["677585002066","Rojita Botella 1 litro","CABCORP"],["8002270000188","Sanpellegrino 750 ml","CLNSA-DCP"],["677585006057","Seven Up 500 ml","CABCORP"],["7401005910173","Te Lipton Limon 500 ml","CABCORP"],["764009002129","Tropical Limón 500ml","CDN"],["764009000590","Tropical Mango 350 ml","CDN"],["764009001306","Tropical Manzana 350 ml","CDN"],["026964105001","Vitalit Fresa Kiwi 600ml","CLNSA-DCP"],["026964105186","Vitalit Mora Azul 600ml","CLNSA-DCP"],["026964105193","Vitalit Mora Silvestre 600ml","CLNSA-DCP"],["026964105025","Vitalit NaranMandarina 600ml","CLNSA-DCP"],["026964105032","Vitalit Uva 600ml","CLNSA-DCP"],["748757000378","Alboroto Bolsa 206 gramos","Distribuidora Managua S.A"],["7622300267667","Aveny Brand Belvita 5 unidades","Aceite El Real S.A"],["7431001000561","Barra Ajonjolí Krunchy Und 27g","CLNSA-DCP"],["7431001000530","Barra de maní Krunchy Und 27g","CLNSA-DCP"],["7431001000592","Barra Nueces Mx Krunch Und 27g","CLNSA-DCP"],["721282301059","Cheetos Crunchy 120G","CDN"],["028400022231","Cheetos Crunchy 35.4 gramos","CDN"],["028400069601","Cheetos Flamin Hot 8.0 Oz","CDN"],["721282406563","Cheetos Poffs Queso 142g","CDN"],["750894601059","Chicharrones Autentico 110g","DINANT"],["7441107100706","Chicharrones Kitty 20g","CLNSA-DCP"],["7441107100713","Chicharrones Kitty 60g","CLNSA-DCP"],["750894601196","Chicharrones Picositos 110g","DINANT"],["034000702343","Chocolate Almendras 1.44 onz","DICEGSA"],["7500443004366","Chocolate Arcor Rocklets 20 P","CDN"],["7500443004014","Chocolate Bon o Bon 20 piezas","CDN"],["7500443005950","Chocolate Bon o Bon Blanco 5ud","CDN"],["7502230942356","Chocolate Bon o Bon Leche 30 U","CDN"],["028400017091","Doritos Cooler Ranch 7 Oz","CDN"],["028400017299","Doritos Nachos Cheese  7 onzas","CDN"],["028400019903","Doritos Nachos Cheese 1.125 oz","CDN"],["721282300434","Doritos Queso 150 Gr","CDN"],["748757001566","Elotito con limón 157gr","Distribuidora Managua S.A"],["748757001580","Elotito con piquete 157gr","Distribuidora Managua S.A"],["748757010865","FavoriMix Crunch 80g","Distribuidora Managua S.A"],["748757002020","Favorimix Pachanga 240g","Distribuidora Managua S.A"],["748757004444","Favorimix Queso 119g","Distribuidora Managua S.A"],["748757010858","FavoriMix Semillas 80g","Distribuidora Managua S.A"],["8000500246641","Ferrero Collection Caja T7","OCAL"],["7861002900117","Ferrero Rocher 100 gramos","OCAL"],["8000500378502","Ferrero Rocher T10 125g","OCAL"],["8000500126936","Ferrero Rocher T4 50gr","OCAL"],["8000500160466","Ferrero Rocher T6 Cubo 75Gr","OCAL"],["7622210426963","Halls Cereza Caja","Aceite El Real S.A"],["7622210427199","Halls Fruit Mix 25.2g","Aceite El Real S.A"],["7622210427014","Halls Fruit Mix Caja","Aceite El Real S.A"],["7622210426970","Halls Menta Caja","Aceite El Real S.A"],["7622210427137","Halls mora 25g","Aceite El Real S.A"],["034000249862","HERSHEYS Chocolate con leche","DICEGSA"],["034000212743","Hersheys Miniatures 136 G","DICEGSA"],["748757000200","Jalapeños bolsa 160 gramos","Distribuidora Managua S.A"],["748757006080","Jalapeños Bolsa 45g","Distribuidora Managua S.A"],["748757011862","Jalapeños Chilimon 145gr","Distribuidora Managua S.A"],["80052760","Kinder Bueno 43 gramos","OCAL"],["80051831","Kinder Sorpresa Natoons 20gr","OCAL"],["80741251","Kinder Sorpresa Niña 20 Gramos","OCAL"],["80741244","Kinder Sorpresa Niño 20 Gramos","OCAL"],["034000140251","Kisses 137gr","DICEGSA"],["03412107","Kisses Milk Chocolate 1.55 oz","DICEGSA"],["748757008787","Korchips Con Chile Bolsa 180gr","Distribuidora Managua S.A"],["028400017688","Lays Barbecue 6.5 onzas","CDN"],["028400019927","Lays Classic Original 1 onza","CDN"],["028400017145","Lays Classic Original 6.5 Oz","CDN"],["721282411215","Lays original 105g","CDN"],["040000514480","M&M Milk 1.69 onzas","CSSA"],["040000002376","M&Ms Chocolate Minis 30.6g","CSSA"],["040000514510","M&Ms Peanut 1.74 onzas","CSSA"],["040000017325","M&Ms Peanut 5.3 onzas","CSSA"],["040000001447","M&Ms Peanut Butter 1.63onz","CSSA"],["7431001001339","Mani Brander Cervecero 150gr","CLNSA-DCP"],["7431001000196","Mani Brander Con Limón&Sal120g","CLNSA-DCP"],["7431001003043","Mani Con Chile 80 gr","CLNSA-DCP"],["748757009449","Mani con Limón Diana 80 grs","Distribuidora Managua S.A"],["7431001003616","Mani con Limon y Sal 80 gr","CLNSA-DCP"],["7431001003036","Mani Con Sal 80 gr","CLNSA-DCP"],["760573092719","Maní con Sal 80g","CONTESA"],["748757009432","Maní Con Sal Diana Bolsa 80grs","Distribuidora Managua S.A"],["7431001003395","Mani Japones Bolsa 80 gr","CLNSA-DCP"],["748757009463","Maní Japonés Diana 100grs","Distribuidora Managua S.A"],["75068325","Mentos Caramelo Fresa","OCAL"],["75068318","Mentos Caramelo Frutas","OCAL"],["75068271","Mentos Caramelo Menta","OCAL"],["75072520","Mentos Fresh Mint 30g","OCAL"],["7503023533669","Mentos Frutas 3 Rollos 87.12g","OCAL"],["7503023533676","Mentos Menta 3 Rollos 87.12g","OCAL"],["040000602040","Milky Way Barra 52.2 gramos","CSSA"],["016000264601","Nature Valley Avena Miel 253gr","OCAL"],["016000413146","Nature Valley AvenaChocolate6U","OCAL"],["016000407619","Nature Valley Chocolate 210gs","OCAL"],["016000439801","Nature Valley Fruta yNuez 210g","OCAL"],["80050100","Nutella & Go 52 gramos","OCAL"],["80051671","Nutella Crema de Avellana 200g","OCAL"],["7622201693190","Oreo Tubular Bolsa 126 GR","Aceite El Real S.A"],["748757006356","Origenes Mix 55g","Distribuidora Managua S.A"],["748757011664","Origenes Papas con Sal 45g","Distribuidora Managua S.A"],["748757007490","Origenes Yuca con Sal 60g","Distribuidora Managua S.A"],["748757002013","Pachanga Mix 115g","Distribuidora Managua S.A"],["7441163404695","Galletas Nucitas 315g","POZUELO"],["038000201158","Pringles Bonus Crem&Cebolla 14","ECHAMORRO INDUSTRIAL"],["038000201141","Pringles Bonus Original 149 Gr","ECHAMORRO INDUSTRIAL"],["038000846748","Pringles Crema & Cebolla 40g","ECHAMORRO INDUSTRIAL"],["038000845253","Pringles Crema & Cebolla 71 gr","ECHAMORRO INDUSTRIAL"],["038000184949","Pringles Crema&Cebolla 124 Grs","ECHAMORRO INDUSTRIAL"],["038000846731","Pringles Original 40 gramos","ECHAMORRO INDUSTRIAL"],["038000845246","Pringles Original 67 gr","ECHAMORRO INDUSTRIAL"],["038000846755","Pringles Sabor Queso 40 gramos","ECHAMORRO INDUSTRIAL"],["750894613687","Ranchita Buffalo Ranch 150gr","DINANT"],["750894602421","Ranchita Familiar Queso 150g","DINANT"],["750894613151","Ranchitas Nacho Cinemas 300gr","DINANT"],["750894608331","Ranchitas Naturales 300g","DINANT"],["034000702329","Reeses 2 Cups 42gr","DICEGSA"],["03424801","Reeses Botonetas 43gr","DICEGSA"],["7622201390594","Ritz con Queso 12 unidades","Aceite El Real S.A"],["7622201390211","Ritz Original Bolsa 12 uds","Aceite El Real S.A"],["040000514251","Snicker Barra 52.7 gramos","CSSA"],["040000002635","Snicker King Size 3.29 onzas","CSSA"],["7500810030332","Takis Intense Nacho 56gr","VTA.DE PRODUCTOS REFRESCANTES"],["750894611256","Taquerito Chile Toreado 80 gr","DINANT"],["750894613212","Taquerito Dragón Fuego 180gr","DINANT"],["750894609505","Taqueritos Chile Toreado 180g","DINANT"],["750894609499","Taqueritos Queso Fusion 180gr","DINANT"],["80969143","Tic Tac Menta 14.5GR","OCAL"],["80941361","Tic Tac Naranja 14.5 Gr","OCAL"],["80883531","Tic Tac sabor frutas 14.5Gr","OCAL"],["748757000101","Tocinito Bolsa 142 gramos","Distribuidora Managua S.A"],["7410031312967","Torti Chips Chile Limón 150gr","CSSA"],["7410031311809","Torti Chips Limón 150gr","CSSA"],["7622201764395","Chips Ahoy x6","Aceite El Real S.A"],["7702007007749","Choco Cookies & Cream 534g","POZUELO"],["040000004356","Twix Barra 1.79 onzas","CSSA"],["748757002150","Yucatekas Bolsa 100g","Distribuidora Managua S.A"],["748757001467","Popotitos con mantequilla 110g","Distribuidora Managua S.A"],["750894611768","Yummipops Palomitas Queso 120g","DINANT"],["750894613427","Zambo Plátano Tajin 140g","DINANT"],["750894602780","Zambos Casera Familiar 155g","DINANT"],["750894600267","Zambos Picosita Familiar 110g","DINANT"],["750894600717","Zambos Salsa Verde Fami 155g","DINANT"],["750894606627","Zibas Anillito Papas BBQ 150gr","DINANT"],["750894609826","Zibas Papas Fritas Clási 80g","DINANT"],["7441001610950","Alaska Fresa 1/4 Galon","CONGELADOS S.A"],["7441001604317","Cono Alaska Chocolate 70 gr","CONGELADOS S.A"],["7441001604300","Cono Alaska Vainilla 70 gr","CONGELADOS S.A"],["7441001609053","Cono Krunchy 75 gramos","CONGELADOS S.A"],["7441001648267","Cono Krunchy Extreme 75g","CONGELADOS S.A"],["7441001609466","Helado Chocolate 1/2 Galon","CONGELADOS S.A"],["7441001609640","Helado Fresa 1/4 Galon","CONGELADOS S.A"],["7441001607851","Helado Krunchy 1/4 GL","CONGELADOS S.A"],["7441001649813","Helado Mini Sandwich menta 48g","CONGELADOS S.A"],["7441001609497","Helado Vainilla 1/2 Gl","CONGELADOS S.A"],["7441001609626","Helado Vainilla 1/4 GL","CONGELADOS S.A"],["7441001610943","Helado Alaska Fresa 60 GRS","CONGELADOS S.A"],["7441001610967","Helado Alaska Vainilla 60 GRS","CONGELADOS S.A"],["7441001610295","Sundae Caramelo 130 gramos","CONGELADOS S.A"],["7441001610288","Sundae Chocolate 130 gramos","CONGELADOS S.A"],["7441001646881","Mini Sundae Alaska 70g","CONGELADOS S.A"],["7441001631719","Paleta Alaska Chocobanano 75g","CONGELADOS S.A"],["7441001610097","Paleta Cero Grado 75 gramos","CONGELADOS S.A"],["7441001610660","Paleta Choco Bigger 100 gramos","CONGELADOS S.A"],["7441001610493","Paleta Choco Snak 60 GRS","CONGELADOS S.A"],["7441001610684","Paleta Mmio 70 gramos","CONGELADOS S.A"],["7622202034619","Paleta Payaso 43.5 gramos","Aceite El Real S.A"],["7441001642678","Paleta Tapita 85gr","CONGELADOS S.A"],["7441001619663","Sundae Churchill 140g","CONGELADOS S.A"],["7441001610530","Deleite Caramelo Fudge 565g","CONGELADOS S.A"],["7441001610554","Deleite Chocobón 565 gramos","CONGELADOS S.A"],["7441001610509","Deleite Higo 565 gramos","CONGELADOS S.A"],["7441001610516","Deleite Naranja Holandesa 565g","CONGELADOS S.A"],["7441001610141","Cremolete de Fresa 65 gramos","CONGELADOS S.A"],["7441001610158","Cremolete de Naranja 75 gramos","CONGELADOS S.A"],["7441001609022","Tasa Trist 100 gramos","CONGELADOS S.A"],["7441001615672","Helado Ron Con Pasas 1/4 Gl","CONGELADOS S.A"],["7441001609671","Helado Vainilla Caramel 1/4 GL","CONGELADOS S.A"],["7441001609664","Helado Vainilla Chocola 1/4 GL","CONGELADOS S.A"],["7441001609633","Helado Vainilla & Chips 1/4 GL","CONGELADOS S.A"],["7441001609503","Helado Vainilla Chips 1/2 Gl","CONGELADOS S.A"],["7441001609541","Helado Veteado Caramelo 1/2 Gl","CONGELADOS S.A"],["7441001609534","Helado Veteado Chocolat 1/2 Gl","CONGELADOS S.A"],["7441001609480","Helado Combinado Limon 1/2 Gl","CONGELADOS S.A"],["7441001610110","Chocoleta 75 gramos","CONGELADOS S.A"],["748757000651","Nougat Fresa 191 gr","Distribuidora Managua S.A"],["748757001191","Goma Pino Bolsa 125 gramos","Distribuidora Managua S.A"],["748757001153","Caramelos de Leche 154grs","Distribuidora Managua S.A"],["748757001238","Centavitos Bolsa 93 gramos","Distribuidora Managua S.A"],["748757000545","Cereza 140 Gr","Distribuidora Managua S.A"],["748757000576","Gomitas Diana 110grs","Distribuidora Managua S.A"],["748757000088","Churritos Bolsa 97 gramos","Distribuidora Managua S.A"],["748757006462","Churritos Bolsa 32grs","Distribuidora Managua S.A"],["748757000248","Palitos barbacoa Diana","Distribuidora Managua S.A"],["748757001634","Palitos Chilimon Bolsa169 GR","Distribuidora Managua S.A"],["748757000538","Perla Diana 150grs","Distribuidora Managua S.A"],["748757000149","Quesitos Bolsa 131 gramos","Distribuidora Managua S.A"],["748757000125","Maiz Chino Picante Bolsa 121gr","Distribuidora Managua S.A"],["748757000224","Nachos Bolsa 160 Gramos","Distribuidora Managua S.A"],["748757006097","Nachos Bolsa 45 grs","Distribuidora Managua S.A"],["748757006608","Chicharrones Criollo Pican 45g","Distribuidora Managua S.A"],["748757006684","Galleta Picnic Vainilla x12und","Distribuidora Managua S.A"],["748757006677","Picnic Fresa Paquete 12 UND","Distribuidora Managua S.A"],["748757012067","Mis Sabores Bolitas Pizza 65g","Distribuidora Managua S.A"],["748757012043","Mis Sabores Chimichurri 135g","Distribuidora Managua S.A"],["748757012050","Mis Sabores Taco al Pastor 135","Distribuidora Managua S.A"],["748757012036","Mis Sabores Yuca sabor Asado95","Distribuidora Managua S.A"],["748757010315","Toztecas Fire Pops 150g","Distribuidora Managua S.A"],["748757010292","Toztecas Fire Spots 175g","Distribuidora Managua S.A"],["748757010278","Toztecas Gomitas 80g","Distribuidora Managua S.A"],["748757008404","Toztecas Max 42gr","Distribuidora Managua S.A"],["748757007919","Toztecas Bolsa Bolsa 166 gr","Distribuidora Managua S.A"],["7441005702873","Mani con Chile Pro 80gr","DIINSA"],["7441005712704","Maní Japones Chile PRO 80gr","DIINSA"],["7441005712698","Maní Japones Limón PRO 80gr","DIINSA"],["7441005703054","Maní Limón Pro Bolsa 80gr","DIINSA"],["7441005702231","Maní Salado Pro Bolsa 80gr","DIINSA"],["7441005702255","Maní Garapiñado Pro 80gr","DIINSA"],["7441005714838","Platano maduro Pro bolsa 70.9g","DIINSA"],["7441005702200","Semilla Mixta PRO 80g","DIINSA"],["7441005702194","Marañon Pro 80 gr","DIINSA"],["7441029507348","Dulce de leche Mr Brown 60g","VTA.DE PRODUCTOS REFRESCANTES"],["7441029507355","Relleno Chocolate Mr Brown 55g","VTA.DE PRODUCTOS REFRESCANTES"],["7441029515268","Principe Limon Bolsa 85 GR","VTA.DE PRODUCTOS REFRESCANTES"],["7441029506181","Príncipe Chocolate Blanco 85g","VTA.DE PRODUCTOS REFRESCANTES"],["7441029504613","Principe Choco Vainilla 85 GR","VTA.DE PRODUCTOS REFRESCANTES"],["7441029517149","Mini Mix Barrita Fresa 78g","VTA.DE PRODUCTOS REFRESCANTES"],["7441029517002","Mini Mix Barrita Piña 78g","VTA.DE PRODUCTOS REFRESCANTES"],["7441029516951","Sponch Smore 90 Gramos","VTA.DE PRODUCTOS REFRESCANTES"],["7441029503074","Galleta Maria Dulce 1paq 135gr","VTA.DE PRODUCTOS REFRESCANTES"],["7441029502107","Galleta Choco Chipas 37gr","VTA.DE PRODUCTOS REFRESCANTES"],["7441163410764","Galleta Chiky Chips 6 Unid","POZUELO"],["086581010881","Galleta Chiky Chocolate 12 uds","POZUELO"],["086581002510","Galleta Club Extra 9uds","POZUELO"],["7441163412041","Galleta Club Extra Queso 8unid","POZUELO"],["086581007324","Galleta Mantequilla Tenta 190g","POZUELO"],["086581006280","Galleta María Bolsa 12 und","POZUELO"],["086581005382","Galleta Recreo Tubular 167 gr","POZUELO"],["086581001070","Galleta Soda Pozuelo 8 uds","POZUELO"],["086581007690","Galleta Tipo 12 uds","POZUELO"],["7441163411815","Galletas Crema Estrella 12Und","POZUELO"],["7441163416810","Galletas Cremas Dark 12uds","POZUELO"],["7702007007756","Chocolate Tutto Caja 360 gr","POZUELO"],["7702007067057","Choys Mani x12 Unidades","POZUELO"],["7702007067446","Nucita Algodon Azucar 12und","POZUELO"],["7502007061567","Nucita Barra Caja 12 Und 534g","POZUELO"],["7501088211850","Nucita Patitas Display Caja8ud","POZUELO"],["7501088210723","Nucita Trisabor 16und","POZUELO"],["7702007052602","Granuts Party Mix 40 G","POZUELO"],["7702007079548","Granuts Party Mix 180g","POZUELO"],["7702007064227","Granuts Arandamix 130g","POZUELO"],["7702007073911","Tutto Baileys 80g","POZUELO"],["7702007072464","Tutto Chocolov Choco Blanco80g","POZUELO"],["7702007072402","Tutto Chocolovers choco leche","POZUELO"],["7702007090505","Tutto Pops brownie caja 12u","POZUELO"],["7702007090529","TuttoPops pie de limón caja12u","POZUELO"],["7702993048092","Gomitas Trululu Aros 80gr","DICEGSA"],["7702993047583","Gomitas Trululu Fresitas 80gr","DICEGSA"],["7702993028261","Gomitas Trululu Gusanos Ácidos","DICEGSA"],["7702993052242","Trululu Masmelo Relleno Fresa","DICEGSA"],["7431001004255","Mani Carapinado con Ajon 80 gr","CLNSA-DCP"],["7431001001186","Party Mix Brander 170g","CLNSA-DCP"],["7431001000998","Party Mix Brander 80g","CLNSA-DCP"],["7431001004002","Semilla Maranion 80 gramos","CLNSA-DCP"],["7431001003289","Nueces Mixtas Bolsa 80 gr","CLNSA-DCP"],["760573079475","Mezcla de Nuecees Mixta 40 gr","CONTESA"],["760573079482","Nueces Mixta y Semillas 40 gr","CONTESA"],["760573079451","Nuez de Maranion con Sal 40gr","CONTESA"],["760573079468","Nuez de Maranion Horneados 40g","CONTESA"],["760573090296","Cashitas Almendras Horneadas 7","CONTESA"],["760573070656","Pistachos Cashitas 70 gr","CONTESA"],["760573090869","Surtidito Maní Mix 200g","CONTESA"],["760573090890","Surtidito Nueces Mixtas 200g","CONTESA"],["7702007079265","Mezcla Nueces Bolsa 180 GR","POZUELO"],["7702007079296","Mezcla Nueces Bolsa 45 GR","POZUELO"],["750894609536","Mix Semillas & Frutas 80g","DINANT"],["8437005297616","Gomita Dracula 100 gr","CONTESA"],["8436036182861","Gomita Sharks 100 gr","CONTESA"],["8436556397073","Gomitas Trolli Pizza 100gr","CONTESA"],["8436556395130","Gomitas Trolli Pop Eye 75g","CONTESA"],["8437005297623","Gomitas Trolli Sour Glowworms","CONTESA"],["8437000482482","Gomitas Trolli Tropicos 100g","CONTESA"],["8436556391163","Gomitas Trolli Watermelon 100g","CONTESA"],["7590011151110","Galleta Oreo Regular 12 UND","Aceite El Real S.A"],["7622210110251","Galleta Oreo Golden 12 uds","Aceite El Real S.A"],["7702133006647","Galleta Oreo Crema Bolsa 12 ud","Aceite El Real S.A"],["7622202299636","Oreo Rollo Golden Vainilla108g","Aceite El Real S.A"],["7622201390211","Ritz Original Bolsa 12 uds","Aceite El Real S.A"],["7622202232718","Ritz Orginal Taco 70g","Aceite El Real S.A"],["7622202309595","Ritz Queso Rollo 75g","Aceite El Real S.A"],["7622201776626","Trident 5s Sandía Pos 18x8.5g","Aceite El Real S.A"],["7622201776565","Trident 5s Yerba Pos 18x8.5g","Aceite El Real S.A"],["7622202394782","Trident Splash Fresa 171g","Aceite El Real S.A"],["7622202395123","Trident Splash Sandía 171g","Aceite El Real S.A"],["7622202395529","Trident Splash Yerbabuena 171g","Aceite El Real S.A"],["7622201760380","Trident VUP MoraAzul Caja12und","Aceite El Real S.A"],["7622201776602","Trident White Fresa 10.2 gramo","Aceite El Real S.A"],["7622201776695","Trident White Mora 10.2 gramos","Aceite El Real S.A"],["7506105616069","Trident Yerbabuena Caja 12 Und","Aceite El Real S.A"],["7506105606053","Trident  Evup Cool Menta 30.6g","Aceite El Real S.A"],["7439201379623","Nachitos Bolsa 75gr","HOREB"],["7438956478360","Hojaldras Somoteñas Bolsa Grd","HOREB"],["7430281389601","Hojaldras Vilchez 110gr","HOREB"],["7433200865064","Hojaldritas Valdez 100g","VALDEZ Delicias de mi tierra"],["7433200865057","Rosquillas Mixtas Valdez 100g","VALDEZ Delicias de mi tierra"],["7433200865101","Rosquetes Valdez 100g","VALDEZ Delicias de mi tierra"],["7437890456243","Rosquillas Mixtas 30und","HOREB"],["7431480428597","Rosquillas Mixtas 320g","HOREB"],["7438494577488","Rosquillas Somoteñas Bolsa Grd","HOREB"],["7432678902318","Platanfritos Bolsa 220 gr","HOREB"],["7438732157687","Platanfritos Bolsa 75 gr","HOREB"],["734038966037","Platanfritos con Chile 75gr","HOREB"],["7439205784393","Tajifritas bolsa 220 gr","HOREB"],["7436574982375","TostiFritos Chile Bolsa 75gr","HOREB"],["7437843235437","Enchiladas Leonesas 120g","HOREB"],["7439201796239","Enchiladas Leonesas 220g","HOREB"],["7430277379623","Churrimiel 330g","HOREB"],["7430201379620","Churrimiel Bolsa 75g","HOREB"],["7439057895438","Malanga Fritas Bolsa 110g","HOREB"],["7501032905347","Baygon Acción Total 400 ml","DICEGSA"],["7501032907495","Baygon Poder mortal 400ml","DICEGSA"],["7433200221013","Carbón Vegetal 1.5kg","Carbón vegetal"],["7501777001144","CAT CHOW DELREL Pes y Mrc 500g","NESTLE"],["7501777034586","Cat Chow Gatitos Bolsa 500gr","NESTLE"],["7501072217547","Dog chow adult MinisyPeque500g","NESTLE"],["7501072202727","Dog Chow Adult Raza Grande 2kg","NESTLE"],["7501072210289","Dog Chow Adulto pollo 100gr","NESTLE"],["7501072206756","Dog Chow CachorroRaza Grand 2k","NESTLE"],["7501072210296","Dog chow pollo y carne 100gr","NESTLE"],["722304384661","Dogui Carne y Arroz Bolsa 2Kg","Importadora La Espiga"],["7501001155841","Downy Le Ssl Floral 800 ml","ECHAMORRO INDUSTRIAL"],["7423372900205","Gati Atún Adultos 400g","Importadora La Espiga"],["7423372904678","Gati Gatitos 400g","Importadora La Espiga"],["7423372904043","Gati Mar y Tierra Bolsa 1KG","Importadora La Espiga"],["7501032900243","Glade Aerosol Manz&Canel 400ml","DICEGSA"],["7501032924003","Glade Campos De Lavanda 275ml","DICEGSA"],["637662101150","Jabón Marfil Bola Natural 275g","ECHAMORRO INDUSTRIAL"],["637662109217","Lavaplatos Aloe Vera Mar 235g","ECHAMORRO INDUSTRIAL"],["099176003700","Lavaplatos Doña Blanca 340gr","DIINSA"],["023100041049","Pedigree Cachorro 2 kilogramos","CSSA"],["023100051048","Pedigree Original 2 kilogramos","CSSA"],["7501032925154","Raid Acción Total 400ml","DICEGSA"],["706460249316","Pedigree Cachorro Res 100g","CSSA"],["706460000665","Whiskas adultos Atún  85 g","CSSA"],["706460241679","Whiskas cachorros Atún  85g","CSSA"]];
+function ini(n){return n.split(" ").slice(0,2).map(function(w){return w[0];}).join("").toUpperCase();}
+function col(i){return COLORS[i%COLORS.length];}
+function areaOf(n){var a=MAIN_AG.filter(function(x){return x.name===n;})[0];return a?a.area:"";}
+function sn(n){var p=n.split(" ");return p[0]+" "+(p[2]||"");}
+function fd(d){if(!d||d==="Invalid Date")return"—";var s=String(d).trim();if(s.indexOf("-")>=0)return new Date(s+"T12:00").toLocaleDateString("es-NI",{day:"2-digit",month:"short",year:"numeric"});return s;}
+function dr(d){if(!d)return null;var s=String(d).trim();if(s.match(/^\d{2}\/\d{2}\/\d{4}$/)){var p=s.split("/");s=p[2]+"-"+p[1]+"-"+p[0];}if(s.indexOf(" ")>0)s=s.split(" ")[0];if(s.indexOf("T")>0)s=s.split("T")[0];var f=new Date(s+"T12:00:00");if(isNaN(f.getTime()))return null;f.setHours(0,0,0,0);return Math.round((f-TODAY)/(1000*60*60*24));}
+function si(d){if(d===null)return{c:"sg",l:"Sin fecha"};if(d<0)return{c:"sr",l:"Vencio hace "+Math.abs(d)+"d"};if(d===0)return{c:"sr",l:"Vence HOY"};if(d<=3)return{c:"sn",l:d+"d restantes"};if(d<=7)return{c:"sa",l:d+"d restantes"};if(d<=15)return{c:"sc",l:d+"d restantes"};return{c:"sv",l:d+"d restantes"};}
+function sk(d){if(d===null)return"gris";if(d<=0)return"rojo";if(d<=3)return"naranja";if(d<=7)return"amarillo";if(d<=15)return"celeste";return"verde";}
+function semI(c){return c==="sr"?"🔴":c==="sn"?"🟠":c==="sa"?"🟡":c==="sc"?"🔵":"🟢";}
+function ts(t){var e=String(t.estado||t.status||"").toLowerCase();if(e==="completada"||e==="done")return"done";var d=dr(t.fecha||t.date);if(d!==null&&d<0)return"overdue";if(d!==null&&d<=2)return"soon";return"pending";}
+function pi(p){return p==="alta"?"🔴":p==="media"?"🟡":p==="baja"?"🟢":"";}
+function ti(t){return t==="AM"?"☀️":t==="PM"?"🌙":"";}
+function setSS(s,t){var d=document.getElementById("sdot"),x=document.getElementById("stxt");if(!d)return;d.className="sdot"+(s==="sy"?" sy":s==="er"?" er":"");if(x)x.textContent=t;}
+function sortP(arr){var o={rojo:0,naranja:1,amarillo:2,celeste:3,verde:4,gris:5};return arr.slice().sort(function(a,b){var da=dr(a.date),db=dr(b.date),ka=sk(da),kb=sk(db);if(o[ka]!==o[kb])return o[ka]-o[kb];if(da===null&&db===null)return 0;if(da===null)return 1;if(db===null)return-1;return da-db;});}
 
-var SUPPLIER_POLICIES={"Aceite El Real S.A":{cambia:"No",obs:"Aplica si el proveedor entrega a cedi con 5 meses antes de vencer."},"CABCORP":{cambia:"No",obs:""},"CLNSA-DCP":{cambia:"No",obs:""},"CLNSA-FDC":{cambia:"No",obs:"Solo cambia productos seltzer si es notificado 1 mes antes."},"CONTESA":{cambia:"No",obs:""},"CSSA":{cambia:"No",obs:""},"DICEGSA":{cambia:"No",obs:"Aplica si es arreglo con el proveedor por medio de comercial."},"DIINSA":{cambia:"No",obs:"Cambia solo producto nuevo y notificado 3 meses antes de vencer."},"DINANT":{cambia:"No",obs:""},"Distribuidora Managua S.A":{cambia:"No",obs:"Solo aplica chicharrones vencidos."},"ECHAMORRO INDUSTRIAL":{cambia:"No",obs:""},"FEMSA":{cambia:"Cambio/Debito",obs:"Reportar por correo hasta 3 días antes o hasta el mismo día de vencimiento."},"HOREB":{cambia:"No",obs:""},"IMFARSA":{cambia:"No",obs:""},"Importadora La Espiga":{cambia:"No",obs:"Solo por mala presentación y daño de fábrica."},"NESTLE":{cambia:"No",obs:""},"OCAL":{cambia:"No",obs:"Apoya si la tienda se comunicó con el proveedor."},"POZUELO":{cambia:"No",obs:"Aplica si es producto nuevo por medio de arreglo con comercial."},"CCN Cervezas":{cambia:"Si",obs:"Reportar antes de vencer. No cambio por mala rotación Toña-Victoria Frost 2 meses antes de vencer."},"CDN":{cambia:"Si",obs:"Solo vencido, chopeado mínimo y con fecha visible."},"CONGELADOS S.A":{cambia:"Si debita",obs:"Después de 15 días de vencido no realiza débito."},"Delmor":{cambia:"Si debita",obs:"Reportar con anticipación. Producto debe ser entregado con 15 días antes de vencer."},"Las Chelitas":{cambia:"Si",obs:"Reportar 15 días antes de vencer."},"LALA Nicaragua S.A":{cambia:"Si",obs:"Reportar 3 a 5 días antes de vencer."},"SIGMA ALIMENTOS":{cambia:"Si",obs:"Reportar con 8 días de anticipación."},"VTA.DE PRODUCTOS REFRESCANTES":{cambia:"Cambio/Debito",obs:"Reportar 15 días antes en Managua y 35 días en tiendas foráneas."},"VALDEZ Delicias de mi tierra":{cambia:"Si",obs:"Solo por fecha borrosa."},"INDUSTRIA SAN FRANCISCO, SA":{cambia:"No",obs:""}};
-
-function policyFor(supplier){
-  if(!supplier)return null;
-  if(SUPPLIER_POLICIES[supplier])return SUPPLIER_POLICIES[supplier];
-  var keys=Object.keys(SUPPLIER_POLICIES);
-  var norm=function(s){return s.toLowerCase().replace(/[^a-z0-9]/g,"");};
-  var ns=norm(supplier);
-  var match=keys.filter(function(k){return norm(k)===ns;})[0];
-  if(!match)match=keys.filter(function(k){return norm(k).indexOf(ns)>=0||ns.indexOf(norm(k))>=0;})[0];
-  return match?SUPPLIER_POLICIES[match]:null;
-}
-
-// ══ ESTADO ══════════════════════════════════════════
-var currentStore=null;
-var userRole=""; // "gerente" | "agente" | "supervisor"
-var tasks=[], productos={}, vencAgents={};
-var tasks_loaded=false;
-var filter="all", vFilter="all", vencView="general";
-var openVencAgents=new Set(), selectedAgent=null, currentTab="";
-var acTaskIdx=-1;
-var pinBuffer="", pinCallback=null, pinMode="";
-var isGerente=false;
-var TODAY=new Date(); TODAY.setHours(0,0,0,0);
-var refreshTimer=null;
-
-// ══ STORAGE ═════════════════════════════════════════
-function saveData(){
-  try{
-    localStorage.setItem("sac_productos",JSON.stringify(productos));
-    localStorage.setItem("sac_venc_agents",JSON.stringify(vencAgents));
-  }catch(e){}
-}
-function loadData(){
-  try{
-    var p=localStorage.getItem("sac_productos");if(p)productos=JSON.parse(p);
-    var a=localStorage.getItem("sac_venc_agents");if(a)vencAgents=JSON.parse(a);
-  }catch(e){}
-}
-
-// ══ TEMA ════════════════════════════════════════════
-function toggleTheme(){
-  var html=document.documentElement,isDark=html.getAttribute("data-theme")==="dark";
-  isDark?html.removeAttribute("data-theme"):html.setAttribute("data-theme","dark");
-  var icon=isDark?"🌙":"☀️";
-  ["theme-toggle","theme-toggle2"].forEach(function(id){var b=document.getElementById(id);if(b)b.textContent=icon;});
-}
-(function(){
-  var hour=new Date().getHours();
-  if(hour>=19||hour<6)document.documentElement.setAttribute("data-theme","dark");
-  var icon=document.documentElement.getAttribute("data-theme")==="dark"?"☀️":"🌙";
-  ["theme-toggle","theme-toggle2"].forEach(function(id){var b=document.getElementById(id);if(b)b.textContent=icon;});
-})();
-
-// ══ HELPERS ═════════════════════════════════════════
-function initials(n){return n.split(" ").slice(0,2).map(function(w){return w[0];}).join("").toUpperCase();}
-function colorFor(i){return COLORS[i%COLORS.length];}
-function areaFor(name){var a=MAIN_AGENTS.filter(function(x){return x.name===name;})[0];return a?a.area:"";}
-function shortName(n){var p=n.split(" ");return p[0]+" "+(p[2]||"");}
-function fmtDate(d){if(!d)return"—";var s=String(d);if(s.indexOf("-")>=0)return new Date(s+"T12:00").toLocaleDateString("es-NI",{day:"2-digit",month:"short",year:"numeric"});return s;}
-function diasRestantes(d){
-  if(!d||d==="Invalid Date"||d==="")return null;
-  var s=String(d).trim();
-  // Formato dd/mm/aaaa
-  if(s.match(/^\d{2}\/\d{2}\/\d{4}$/)){
-    var p=s.split("/");s=p[2]+"-"+p[1]+"-"+p[0];
-  }
-  // Formato con hora (Google Sheets a veces devuelve así)
-  if(s.indexOf(" ")>0)s=s.split(" ")[0];
-  if(s.indexOf("T")>0)s=s.split("T")[0];
-  var fd=new Date(s+"T12:00:00");
-  if(isNaN(fd.getTime()))return null;
-  fd.setHours(0,0,0,0);
-  return Math.round((fd-TODAY)/(1000*60*60*24));
-}
-function semaforoInfo(dias){if(dias===null)return{cls:"sem-gris",label:"Sin fecha"};if(dias<0)return{cls:"sem-rojo",label:"Venció hace "+Math.abs(dias)+"d"};if(dias===0)return{cls:"sem-rojo",label:"Vence HOY"};if(dias<=3)return{cls:"sem-naranja",label:dias+"d restantes"};if(dias<=7)return{cls:"sem-amarillo",label:dias+"d restantes"};if(dias<=15)return{cls:"sem-celeste",label:dias+"d restantes"};return{cls:"sem-verde",label:dias+"d restantes"};}
-function semaforoKey(dias){if(dias===null)return"gris";if(dias<=0)return"rojo";if(dias<=3)return"naranja";if(dias<=7)return"amarillo";if(dias<=15)return"celeste";return"verde";}
-function semIcon(cls){return cls==="sem-rojo"?"🔴":cls==="sem-naranja"?"🟠":cls==="sem-amarillo"?"🟡":cls==="sem-celeste"?"🔵":"🟢";}
-function taskStatus(t){var estado=String(t.estado||t.status||"").toLowerCase();if(estado==="completada"||estado==="done")return"done";var d=diasRestantes(t.fecha||t.date);if(d!==null&&d<0)return"overdue";if(d!==null&&d<=2)return"soon";return"pending";}
-function prioIcon(p){return p==="alta"?"🔴":p==="media"?"🟡":p==="baja"?"🟢":"";}
-function turnoIcon(t){return t==="AM"?"☀️":t==="PM"?"🌙":"";}
-function catFor(task){var c=PRESETS.filter(function(p){return p.tasks.indexOf(task)>=0;})[0];return c?c.cat:"✏️ Personalizada";}
-function setSyncState(state,text){var dot=document.getElementById("sync-dot"),txt=document.getElementById("sync-text");if(!dot)return;dot.className="sync-dot"+(state==="syncing"?" syncing":state==="error"?" error":"");txt.textContent=text;}
-function sortProductos(arr){
-  var order={rojo:0,naranja:1,amarillo:2,celeste:3,verde:4,gris:5};
-  return arr.slice().sort(function(a,b){
-    var da=diasRestantes(a.date),db=diasRestantes(b.date);
-    var ka=semaforoKey(da),kb=semaforoKey(db);
-    if(order[ka]!==order[kb])return order[ka]-order[kb];
-    if(da===null&&db===null)return 0;
-    if(da===null)return 1;if(db===null)return-1;
-    return da-db;
-  });
-}
-
-// ══ PANTALLA SELECTOR ═══════════════════════════════
-function renderStoreSelector(){
-  var grid=document.getElementById("store-grid");
-  grid.innerHTML=STORES.map(function(s){
-    return'<button class="sel-btn'+(s.isMain?" mine":"")+'" onclick="selectStore(\''+s.code+'\')"><div class="sel-code">'+s.code+(s.isMain?" ★":"")+'</div><div class="sel-name">'+s.name+'</div><div class="sel-mgr">👤 '+s.manager+'</div></button>';
+function renderSel(){
+  var g=document.getElementById("store-grid");
+  g.innerHTML=STORES.map(function(s){
+    return'<button class="sel-btn'+(s.isMain?" mine":"")+'" onclick="selStore(\''+s.code+'\')">'+
+      '<div class="sel-name">'+s.code+" — "+s.name+(s.isMain?" ★":"")+"</div>"+
+      '<div class="sel-mgr">'+s.manager+"</div></button>";
   }).join("");
 }
 
-function selectStore(code){
-  var store=STORES.filter(function(s){return s.code===code;})[0];
-  if(!store)return;
-  currentStore=store;
-  userRole="";
-  isGerente=false;
-  // Pedir PIN — puede ser gerente o agente
-  pinMode="store-entry";
-  document.getElementById("pin-title").textContent="🏪 "+store.name;
-  document.getElementById("pin-sub").textContent="Ingresa tu PIN (Agente o Gerente)";
-  openPin(function(){
-    // El rol se determina por qué PIN ingresó
-    showScreen("app");
-    setupAppForStore();
-  });
+function selStore(code){
+  var st=STORES.filter(function(s){return s.code===code;})[0];if(!st)return;
+  CS=st;isG=false;pMode="entry";
+  document.getElementById("pin-ttl").textContent="🏪 "+st.name;
+  document.getElementById("pin-sub").textContent="PIN Agente o Gerente";
+  openPin(function(){showScr("app");setupApp();});
 }
-
-function openSupervisor(){
-  pinMode="supervisor";
-  document.getElementById("pin-title").textContent="🔭 Supervisor de Zona";
+function openSup(){
+  pMode="sup";
+  document.getElementById("pin-ttl").textContent="🔭 Supervisor de Zona";
   document.getElementById("pin-sub").textContent="Bryan Pineda · Yury Reyes";
-  openPin(function(){showScreen("supervisor");renderSupervisor();});
+  openPin(function(){showScr("sup");rendSup();});
 }
+function showScr(n){["sel","app","sup"].forEach(function(s){var e=document.getElementById("s-"+s);if(e)e.style.display=s===n?(s==="sel"?"flex":"block"):"none";});}
+function goHome(){CS=null;isG=false;if(rTimer){clearInterval(rTimer);rTimer=null;}showScr("sel");}
 
-function setupAppForStore(){
-  var store=currentStore;
-  document.getElementById("app-store-label").textContent=store.code+" — "+store.name+" · "+(isGerente?"Gerente: "+store.manager:"Agente");
-  var btn=document.getElementById("app-role-btn");
-  btn.textContent=isGerente?"🔓 Salir Gerente":"🔐 Gerente";
-  btn.className="hbtn "+(isGerente?"active":"ghost");
-  // Mostrar/ocultar sync indicator solo para A57
-  document.getElementById("sync-indicator").style.display=store.isMain?"flex":"none";
-  // Construir tabs
+function setupApp(){
+  var s=CS;
+  document.getElementById("app-lbl").textContent=s.code+" — "+s.name+" · "+(isG?"Gerente: "+s.manager:"Agente");
+  var rb=document.getElementById("role-btn");rb.textContent=isG?"🔓 Salir Gerente":"🔐 Gerente";rb.className="hbtn"+(isG?" on":"");
+  document.getElementById("sync-ind").style.display=s.isMain?"flex":"none";
   buildTabs();
-  // Cargar datos
-  if(store.isMain){
-    populateMainAgentSelects();
-    populateVencAgentSelect();
-    refreshTareas();
-    startAutoRefresh();
-  } else {
-    if(!productos[store.code])productos[store.code]=[];
-    if(!vencAgents[store.code])vencAgents[store.code]=[];
-    refreshAgentes().then(function(){
-      populateVencAgentSelect();
-    });
-    refreshVencimientos();
-    startAutoRefreshVenc();
-  }
-  // Mostrar/ocultar panel de agentes gerente
-  var gerentePanel=document.getElementById("gerente-agentes-panel");
-  if(gerentePanel)gerentePanel.style.display=isGerente&&!store.isMain?"block":"none";
-  showTab(store.isMain?"tareas":"vencimientos");
+  if(s.isMain){popMainSels();popVAg();refreshT();startAR();}
+  else{if(!prods[s.code])prods[s.code]=[];if(!vagents[s.code])vagents[s.code]=[];refreshVAg().then(function(){popVAg();});refreshV();startARV();}
+  var gp=document.getElementById("g-ag-panel");if(gp)gp.style.display=isG&&!s.isMain?"block":"none";
+  showTab(s.isMain?"tareas":"venc");
 }
-
 function buildTabs(){
-  var store=currentStore;
-  var tabsEl=document.getElementById("app-tabs");
-  var html="";
-  if(store.isMain){
-    html+='<div class="tab active" onclick="showTab(\'tareas\',this)">📋 Tareas <span class="alert-dot" id="dot-tareas"></span></div>';
-    html+='<div class="tab" onclick="showTab(\'agentes\',this)">👥 Agentes</div>';
-    html+='<div class="tab" onclick="showTab(\'vencimientos\',this)">🏷 Vencimientos <span class="alert-dot" id="dot-venc"></span></div>';
-    html+='<div class="tab" onclick="showTab(\'resumen\',this)">📊 Resumen</div>';
-  } else {
-    html+='<div class="tab active" onclick="showTab(\'vencimientos\',this)">🏷 Vencimientos</div>';
-    html+='<div class="tab" onclick="showTab(\'agentes-venc\',this)">👥 Agentes</div>';
-  }
-  tabsEl.innerHTML=html;
+  var s=CS,el=document.getElementById("app-tabs"),h="";
+  if(s.isMain){h+='<div class="tab on" onclick="showTab(\'tareas\',this)">📋 Tareas</div><div class="tab" onclick="showTab(\'agentes\',this)">👥 Agentes</div><div class="tab" onclick="showTab(\'venc\',this)">🏷 Vencimientos</div><div class="tab" onclick="showTab(\'res\',this)">📊 Resumen</div>';}
+  else{h+='<div class="tab on" onclick="showTab(\'venc\',this)">🏷 Vencimientos</div><div class="tab" onclick="showTab(\'ag-venc\',this)">👥 Agentes</div>';}
+  el.innerHTML=h;
 }
+function showTab(tab,el){
+  curTab=tab;
+  document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("on");});
+  if(el)el.classList.add("on");else{var t=document.querySelector(".tab");if(t)t.classList.add("on");}
+  ["tareas","agentes","venc","ag-venc","res"].forEach(function(t){var e=document.getElementById("t-"+t);if(e)e.style.display=t===tab?"block":"none";});
+  if(tab==="agentes"&&CS&&CS.isMain)rendAG();
+  if(tab==="res")rendRes();
+  if(tab==="ag-venc")rendVAGL();
+  if(tab==="venc"){popVAg();refreshV();}
+}
+function handleRole(){
+  if(isG){setG(false);return;}
+  pMode="gerente";
+  document.getElementById("pin-ttl").textContent="🔐 Acceso Gerente";
+  document.getElementById("pin-sub").textContent="PIN de "+CS.manager;
+  openPin(function(){setG(true);});
+}
+function setG(v){
+  isG=v;var rb=document.getElementById("role-btn");rb.textContent=v?"🔓 Salir Gerente":"🔐 Gerente";rb.className="hbtn"+(v?" on":"");
+  document.getElementById("app-lbl").textContent=CS.code+" — "+CS.name+" · "+(v?"Gerente: "+CS.manager:"Agente");
+  if(CS.isMain){document.getElementById("g-form").style.display=v?"block":"none";document.getElementById("ag-sel-wrap").style.display=v?"none":"block";document.getElementById("ag-tar-view").style.display=v?"none":"block";rendT();rendAG();}
+  else{var gp=document.getElementById("g-ag-panel");if(gp)gp.style.display=v?"block":"none";rendV();rendVAGL();}
+}
+function reqG(fn){if(isG){fn();return;}pMode="gerente";document.getElementById("pin-ttl").textContent="🔐 Acceso Gerente";document.getElementById("pin-sub").textContent="PIN de "+CS.manager;openPin(fn);}
 
-function showTab(tab, el){
-  currentTab=tab;
-  document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("active");});
-  if(el)el.classList.add("active");
-  else{var t=document.querySelector(".tab");if(t)t.classList.add("active");}
-  ["tareas","agentes","vencimientos","agentes-venc","resumen"].forEach(function(t){
-    var el2=document.getElementById("tab-"+t);
-    if(el2)el2.style.display=t===tab?"block":"none";
-  });
-  if(tab==="agentes"&&currentStore&&currentStore.isMain)renderAgentGrid();
-  if(tab==="resumen")renderResumen();
-  if(tab==="agentes-venc")renderVencAgentsList();
-  if(tab==="vencimientos"){
-    populateVencAgentSelect();
-    refreshVencimientos(); // siempre cargar desde Sheets al abrir
-  }
-}
-
-// ══ ROL BOTÓN ════════════════════════════════════════
-function handleRoleBtn(){
-  if(isGerente){exitGerente();return;}
-  pinMode="gerente";
-  document.getElementById("pin-title").textContent="🔐 Acceso Gerente";
-  document.getElementById("pin-sub").textContent="PIN de "+currentStore.manager;
-  openPin(function(){setGerente(true);});
-}
-function setGerente(v){
-  isGerente=v;
-  var btn=document.getElementById("app-role-btn");
-  btn.textContent=v?"🔓 Salir Gerente":"🔐 Gerente";
-  btn.className="hbtn "+(v?"active":"ghost");
-  document.getElementById("app-store-label").textContent=currentStore.code+" — "+currentStore.name+" · "+(v?"Gerente: "+currentStore.manager:"Agente");
-  if(currentStore.isMain){
-    document.getElementById("gerente-form").style.display=v?"block":"none";
-    document.getElementById("agente-selector-wrap").style.display=v?"none":"block";
-    document.getElementById("agente-tareas-view").style.display=v?"none":"block";
-    render();renderAgentGrid();
-  } else {
-    var gp=document.getElementById("gerente-agentes-panel");
-    if(gp)gp.style.display=v?"block":"none";
-    renderVencimientos();
-    renderVencAgentsList();
+function openPin(cb){pCb=cb;pBuf="";updPD();document.getElementById("perr").textContent="";document.getElementById("pin-ov").classList.add("op");}
+function closePin(){document.getElementById("pin-ov").classList.remove("op");pBuf="";}
+function pP(d){
+  if(pBuf.length>=4)return;pBuf+=d;updPD();
+  if(pBuf.length===4){
+    var ok=false;
+    if(pMode==="sup")ok=pBuf===SUP_PIN;
+    else if(pMode==="gerente"){if(CS&&pBuf===CS.pinG){ok=true;isG=true;}}
+    else if(pMode==="entry"){if(CS&&pBuf===CS.pinG){ok=true;isG=true;}else if(CS&&pBuf===CS.pinA){ok=true;isG=false;}}
+    if(ok){closePin();if(pCb)pCb();}
+    else{document.getElementById("perr").textContent="PIN incorrecto.";setTimeout(function(){pBuf="";updPD();document.getElementById("perr").textContent="";},800);}
   }
 }
-function exitGerente(){setGerente(false);}
-function reqGerenteAction(fn){if(isGerente){fn();return;}pinMode="gerente";document.getElementById("pin-title").textContent="🔐 Acceso Gerente";document.getElementById("pin-sub").textContent="PIN de "+currentStore.manager;openPin(fn);}
+function pDel(){pBuf=pBuf.slice(0,-1);updPD();}
+function pCan(){closePin();}
+function updPD(){for(var i=0;i<4;i++)document.getElementById("pd"+i).classList.toggle("fi",i<pBuf.length);}
 
-// ══ PIN ═════════════════════════════════════════════
-function openPin(cb){pinCallback=cb;pinBuffer="";updatePinDots();document.getElementById("pin-error").textContent="";document.getElementById("pin-overlay").classList.add("open");}
-function closePin(){document.getElementById("pin-overlay").classList.remove("open");pinBuffer="";}
-function pinPress(d){
-  if(pinBuffer.length>=4)return;pinBuffer+=d;updatePinDots();
-  if(pinBuffer.length===4){
-    var correct=false;
-    if(pinMode==="supervisor"){
-      correct=pinBuffer===SUPERVISOR_PIN;
-    } else if(pinMode==="gerente"){
-      correct=currentStore&&pinBuffer===currentStore.pinGerente;
-      if(correct)isGerente=true;
-    } else if(pinMode==="store-entry"){
-      if(currentStore&&pinBuffer===currentStore.pinGerente){correct=true;isGerente=true;}
-      else if(currentStore&&pinBuffer===currentStore.pinAgente){correct=true;isGerente=false;}
-    }
-    if(correct){closePin();if(pinCallback)pinCallback();}
-    else{document.getElementById("pin-error").textContent="PIN incorrecto.";setTimeout(function(){pinBuffer="";updatePinDots();document.getElementById("pin-error").textContent="";},800);}
-  }
-}
-function pinDel(){pinBuffer=pinBuffer.slice(0,-1);updatePinDots();}
-function pinCancel(){closePin();}
-function updatePinDots(){for(var i=0;i<4;i++)document.getElementById("pd"+i).classList.toggle("filled",i<pinBuffer.length);}
-
-// ══ NAVEGACIÓN ═══════════════════════════════════════
-function showScreen(name){
-  ["selector","app","supervisor"].forEach(function(s){
-    var el=document.getElementById("screen-"+s);
-    if(el)el.style.display=s===name?(s==="selector"?"flex":"block"):"none";
+function apiCall(p){
+  return new Promise(function(res){
+    setSS("sy","Sincronizando...");
+    var cb="cb_"+Date.now(),sc=document.createElement("script");
+    var to=setTimeout(function(){delete window[cb];if(document.body.contains(sc))document.body.removeChild(sc);setSS("er","Sin conexion");res({ok:false});},18000);
+    window[cb]=function(d){clearTimeout(to);delete window[cb];if(document.body.contains(sc))document.body.removeChild(sc);setSS("","Conectado");res(d);};
+    p.callback=cb;sc.src=API+"?"+new URLSearchParams(p).toString();
+    sc.onerror=function(){clearTimeout(to);delete window[cb];setSS("er","Sin conexion");res({ok:false});};
+    document.body.appendChild(sc);
   });
 }
-function goHome(){
-  currentStore=null;isGerente=false;userRole="";
-  if(refreshTimer){clearInterval(refreshTimer);refreshTimer=null;}
-  showScreen("selector");
-}
+function refreshT(){return apiCall({action:"getTareas"}).then(function(d){if(d.ok){tasks=d.tareas||[];rendT();rendAG();}else if(!tasks.length)rendT();});}
+function refreshV(){if(!CS)return Promise.resolve();return apiCall({action:"getVencimientos",storeCode:CS.code}).then(function(d){if(d.ok){prods[CS.code]=d.productos||[];rendV();rendVAGL();}else if(!(prods[CS.code]||[]).length)rendV();});}
+function refreshVAg(){if(!CS)return Promise.resolve();return apiCall({action:"getAgentes",storeCode:CS.code}).then(function(d){if(d.ok){vagents[CS.code]=d.agentes||[];popVAg();rendVAGL();}});}
+function startAR(){if(rTimer)clearInterval(rTimer);rTimer=setInterval(function(){refreshT();},30000);}
+function startARV(){if(rTimer)clearInterval(rTimer);rTimer=setInterval(function(){refreshV();},30000);}
 
-// ══ API (solo A57) ════════════════════════════════════
-function apiCall(params){
-  return new Promise(function(resolve){
-    setSyncState("syncing","Sincronizando...");
-    var cbName="cb_"+Date.now();
-    var script=document.createElement("script");
-    var timeout=setTimeout(function(){delete window[cbName];if(document.body.contains(script))document.body.removeChild(script);setSyncState("error","Sin conexión");resolve({ok:false});},18000);
-    window[cbName]=function(data){clearTimeout(timeout);delete window[cbName];if(document.body.contains(script))document.body.removeChild(script);setSyncState("ok","Conectado ✓");resolve(data);};
-    params.callback=cbName;
-    script.src=API_URL+"?"+new URLSearchParams(params).toString();
-    script.onerror=function(){clearTimeout(timeout);delete window[cbName];setSyncState("error","Sin conexión");resolve({ok:false});};
-    document.body.appendChild(script);
-  });
+function popMainSels(){
+  var s1=document.getElementById("i-agent"),s2=document.getElementById("ag-sel");
+  [s1,s2].forEach(function(s){if(!s)return;s.innerHTML='<option value="">Seleccionar...</option>';MAIN_AG.forEach(function(a){var o=document.createElement("option");o.value=a.name;o.textContent=a.name;s.appendChild(o);});});
 }
+function popVAg(){
+  var s=document.getElementById("v-ag");if(!s)return;
+  var ag=CS&&CS.isMain?MAIN_AG:(vagents[CS?CS.code:""]||[]);
+  s.innerHTML='<option value="">Seleccionar...</option>';
+  ag.forEach(function(a){var o=document.createElement("option");o.value=a.name;o.textContent=a.name;s.appendChild(o);});
+}
+function updArea(){var n=document.getElementById("i-agent").value;document.getElementById("area-h").textContent=n?"📍 "+areaOf(n):"";}
 
-function refreshTareas(){
-  return apiCall({action:"getTareas"}).then(function(data){
-    if(data.ok){tasks=data.tareas||[];render();renderAgentGrid();}
-    else{if(!tasks.length)render();}
-  });
+function addVAg(){
+  var n=document.getElementById("new-ag-name").value.trim(),ar=document.getElementById("new-ag-area").value.trim();
+  if(!n){alert("Ingresa el nombre.");return;}
+  apiCall({action:"addAgente",storeCode:CS.code,name:n,area:ar||"—"}).then(function(r){if(r.ok){document.getElementById("new-ag-name").value="";document.getElementById("new-ag-area").value="";refreshVAg();}else alert("Error al guardar.");});
 }
-function startAutoRefresh(){
-  if(refreshTimer)clearInterval(refreshTimer);
-  refreshTimer=setInterval(function(){refreshTareas();},30000);
+function remVAg(n){
+  if(!confirm("Eliminar agente "+n+"?"))return;
+  apiCall({action:"deleteAgente",storeCode:CS.code,name:n}).then(function(r){if(r.ok)refreshVAg();else alert("Error.");});
 }
-function startAutoRefreshVenc(){
-  if(refreshTimer)clearInterval(refreshTimer);
-  refreshTimer=setInterval(function(){refreshVencimientos();},30000);
-}
-
-// ══ MAIN AGENTS (A57) ═══════════════════════════════
-function populateMainAgentSelects(){
-  var sel1=document.getElementById("inp-agent"),sel2=document.getElementById("agente-select");
-  [sel1,sel2].forEach(function(sel){
-    if(!sel)return;
-    sel.innerHTML='<option value="">Seleccionar...</option>';
-    MAIN_AGENTS.forEach(function(a){var o=document.createElement("option");o.value=a.name;o.textContent=a.name;sel.appendChild(o);});
-  });
-}
-function updateArea(){var n=document.getElementById("inp-agent").value;document.getElementById("area-hint").textContent=n?"📍 "+areaFor(n):"";}
-
-// ══ AGENTES VENCIMIENTOS (otras tiendas) ═════════════
-function populateVencAgentSelect(){
-  var sel=document.getElementById("v-agent-venc");
-  if(!sel)return;
-  sel.innerHTML='<option value="">Seleccionar...</option>';
-  var ag=currentStore&&currentStore.isMain ? MAIN_AGENTS : (vencAgents[currentStore?currentStore.code:""]||[]);
-  ag.forEach(function(a){
-    var o=document.createElement("option");
-    o.value=a.name;
-    o.textContent=a.name;
-    sel.appendChild(o);
-  });
-  console.log("Agentes cargados:",ag.length,"para",currentStore?currentStore.code:"?");
-}
-
-function addVencAgent(){
-  var name=document.getElementById("new-agent-name").value.trim();
-  var area=document.getElementById("new-agent-area").value.trim();
-  if(!name){alert("Ingresa el nombre del agente.");return;}
-  apiCall({action:"addAgente",storeCode:currentStore.code,name:name,area:area||"—"}).then(function(res){
-    if(res.ok){
-      document.getElementById("new-agent-name").value="";
-      document.getElementById("new-agent-area").value="";
-      refreshAgentes();
-    }else{alert("❌ Error al guardar.");}
-  });
-}
-
-function removeVencAgent(name){
-  if(!confirm("¿Eliminar agente "+name+"?"))return;
-  apiCall({action:"deleteAgente",storeCode:currentStore.code,name:name}).then(function(res){
-    if(res.ok){refreshAgentes();}else{alert("❌ Error al eliminar.");}
-  });
-}
-
-function refreshAgentes(){
-  if(!currentStore)return;
-  return apiCall({action:"getAgentes",storeCode:currentStore.code}).then(function(data){
-    if(data.ok){
-      vencAgents[currentStore.code]=data.agentes||[];
-      populateVencAgentSelect();
-      renderVencAgentsList();
-    }
-  });
-}
-
-function renderVencAgentsList(){
-  var el=document.getElementById("venc-agents-list");
-  if(!el)return;
-  var ag=vencAgents[currentStore.code]||[];
-  if(!ag.length){
-    el.innerHTML='<div class="empty">Sin agentes registrados.'+(isGerente?' El gerente puede agregar agentes desde arriba.':'')+'</div>';
-    return;
-  }
-  var prods=productos[currentStore.code]||[];
-  var html="";
+function rendVAGL(){
+  var el=document.getElementById("vag-list");if(!el)return;
+  var ag=CS&&CS.isMain?MAIN_AG:(vagents[CS?CS.code:""]||[]);
+  var pp=prods[CS?CS.code:""]||[];
+  if(!ag.length){el.innerHTML='<div class="emp">Sin agentes registrados.'+(isG?" El gerente puede agregar arriba.":"")+"</div>";return;}
+  var h="";
   ag.forEach(function(a,i){
-    var c=colorFor(i);
-    var ap=prods.filter(function(p){return p.agent===a.name;});
-    var counts={rojo:0,naranja:0,amarillo:0,celeste:0,verde:0};
-    ap.forEach(function(p){var k=semaforoKey(diasRestantes(p.date));if(counts[k]!==undefined)counts[k]++;});
-    html+='<div class="card" style="display:flex;align-items:center;gap:12px">';
-    html+='<div class="avatar" style="background:'+c[0]+";color:"+c[1]+'">'+initials(a.name)+'</div>';
-    html+='<div style="flex:1"><div style="font-size:13px;font-weight:600">'+a.name+'</div><div style="font-size:11px;color:var(--text-soft)">'+a.area+'</div>';
-    html+='<div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap">';
-    if(counts.rojo)html+='<span style="background:#fee2e2;color:#b91c1c;padding:1px 7px;border-radius:5px;font-size:11px;font-weight:700">🔴 '+counts.rojo+"</span>";
-    if(counts.naranja)html+='<span style="background:var(--orange-light);color:var(--orange-dark);padding:1px 7px;border-radius:5px;font-size:11px;font-weight:700">🟠 '+counts.naranja+"</span>";
-    if(counts.amarillo)html+='<span style="background:#fefce8;color:#713f12;padding:1px 7px;border-radius:5px;font-size:11px;font-weight:700">🟡 '+counts.amarillo+"</span>";
-    if(counts.celeste)html+='<span style="background:#dbeafe;color:#1e40af;padding:1px 7px;border-radius:5px;font-size:11px;font-weight:700">🔵 '+counts.celeste+"</span>";
-    if(counts.verde)html+='<span style="background:#EAF3DE;color:#27500A;padding:1px 7px;border-radius:5px;font-size:11px;font-weight:700">🟢 '+counts.verde+"</span>";
-    if(!ap.length)html+='<span style="font-size:11px;color:var(--text-soft)">Sin productos</span>';
-    html+="</div></div>";
-    if(isGerente)html+='<button class="danger" onclick="removeVencAgent(\''+a.name.replace(/'/g,"\\'")+'\')">🗑</button>';
-    html+="</div>";
+    var c=col(i),ap=pp.filter(function(p){return p.agent===a.name;}),cnt={rojo:0,naranja:0,amarillo:0,celeste:0,verde:0};
+    ap.forEach(function(p){var k=sk(dr(p.date));if(cnt[k]!==undefined)cnt[k]++;});
+    h+='<div class="card" style="display:flex;align-items:center;gap:12px"><div class="av" style="background:'+c[0]+";color:"+c[1]+'">'+ini(a.name)+'</div>';
+    h+='<div style="flex:1"><div style="font-size:13px;font-weight:600">'+a.name+'</div><div style="font-size:11px;color:var(--text-soft)">'+(a.area||"—")+'</div>';
+    h+='<div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap">';
+    if(cnt.rojo)h+='<span style="background:#fee2e2;color:#b91c1c;padding:1px 7px;border-radius:5px;font-size:11px;font-weight:700">🔴 '+cnt.rojo+"</span>";
+    if(cnt.naranja)h+='<span style="background:var(--orange-light);color:var(--orange-dark);padding:1px 7px;border-radius:5px;font-size:11px;font-weight:700">🟠 '+cnt.naranja+"</span>";
+    if(cnt.amarillo)h+='<span style="background:#fefce8;color:#713f12;padding:1px 7px;border-radius:5px;font-size:11px;font-weight:700">🟡 '+cnt.amarillo+"</span>";
+    if(cnt.celeste)h+='<span style="background:#dbeafe;color:#1e40af;padding:1px 7px;border-radius:5px;font-size:11px;font-weight:700">🔵 '+cnt.celeste+"</span>";
+    if(cnt.verde)h+='<span style="background:#EAF3DE;color:#27500A;padding:1px 7px;border-radius:5px;font-size:11px;font-weight:700">🟢 '+cnt.verde+"</span>";
+    if(!ap.length)h+='<span style="font-size:11px;color:var(--text-soft)">Sin productos</span>';
+    h+="</div></div>";
+    if(isG&&!CS.isMain)h+='<button class="btn-d" onclick="remVAg(\''+a.name.replace(/'/g,"\\'")+'\')">🗑</button>';
+    h+="</div>";
   });
-  el.innerHTML=html;
+  el.innerHTML=h;
 }
 
-// ══ VENCIMIENTOS ════════════════════════════════════
-function addProducto(){
-  var item=document.getElementById("v-item").value.trim();
-  var desc=document.getElementById("v-desc").value.trim();
-  var qty=document.getElementById("v-qty").value;
-  var agent=document.getElementById("v-agent-venc").value;
-  var date=document.getElementById("v-date").value;
-  if(!desc||!date){alert("Ingresa la descripción y fecha de vencimiento.");return;}
-  if(!currentStore){alert("Error: no hay tienda seleccionada.");return;}
-  var code=currentStore.code;
-  var btn=document.getElementById("btn-venc-add");btn.textContent="⏳ Guardando...";btn.disabled=true;
-  // Asegurar formato de fecha YYYY-MM-DD
-  var dateFormatted=date;
-  if(date&&date.indexOf("-")<0){
-    // Convertir dd/mm/aaaa a yyyy-mm-dd
-    var parts=date.split("/");
-    if(parts.length===3)dateFormatted=parts[2]+"-"+parts[1]+"-"+parts[0];
-  }
-  apiCall({action:"addVencimiento",storeCode:code,item:item,desc:desc,qty:qty||"1",agent:agent,date:dateFormatted}).then(function(res){
+function addProd(){
+  var item=document.getElementById("v-item").value.trim(),desc=document.getElementById("v-desc").value.trim();
+  var qty=document.getElementById("v-qty").value,ag=document.getElementById("v-ag").value,date=document.getElementById("v-date").value;
+  if(!desc||!date){alert("Ingresa descripcion y fecha.");return;}
+  var df=date;if(date&&date.indexOf("-")<0){var pt=date.split("/");if(pt.length===3)df=pt[2]+"-"+pt[1]+"-"+pt[0];}
+  var btn=document.getElementById("btn-venc");btn.textContent="⏳ Guardando...";btn.disabled=true;
+  apiCall({action:"addVencimiento",storeCode:CS.code,item:item,desc:desc,qty:qty||"1",agent:ag,date:df}).then(function(r){
     btn.textContent="+ Agregar";btn.disabled=false;
-    if(res.ok){
-      ["v-item","v-desc","v-qty","v-date"].forEach(function(id){document.getElementById(id).value="";});
-      document.getElementById("v-agent-venc").value="";
-      document.getElementById("policy-hint").innerHTML="";
-      refreshVencimientos();
-    }else{
-      alert("❌ Error al guardar: "+(res.error||"sin detalle"));
-    }
+    if(r.ok){["v-item","v-desc","v-qty","v-date"].forEach(function(id){document.getElementById(id).value="";});document.getElementById("v-ag").value="";document.getElementById("pol-hint").innerHTML="";refreshV();}
+    else alert("Error al guardar: "+(r.error||""));
   });
 }
-
-function removeProducto(id){
-  if(!confirm("¿Eliminar este producto?"))return;
-  apiCall({action:"deleteVencimiento",storeCode:currentStore.code,id:String(id)}).then(function(res){
-    if(res.ok){refreshVencimientos();}else{alert("❌ Error al eliminar.");}
-  });
+function remProd(id){
+  if(!confirm("Eliminar este producto?"))return;
+  apiCall({action:"deleteVencimiento",storeCode:CS.code,id:String(id)}).then(function(r){if(r.ok)refreshV();else alert("Error.");});
 }
-
-function refreshVencimientos(){
-  if(!currentStore)return;
-  return apiCall({action:"getVencimientos",storeCode:currentStore.code}).then(function(data){
-    if(data.ok){
-      if(!productos[currentStore.code])productos[currentStore.code]=[];
-      productos[currentStore.code]=data.productos||[];
-      renderVencimientos();
-      renderVencAgentsList();
-    }else{
-      if(!(productos[currentStore.code]||[]).length)renderVencimientos();
-      setSyncState("error","Sin conexión");
-    }
-  });
+function editCant(id,qa,desc,ag){
+  var n=prompt("Cantidad actual: "+qa+"\nNueva cantidad para:\n"+desc,""+qa);
+  if(n===null||n==="")return;var ni=parseInt(n);if(isNaN(ni)||ni<0){alert("Cantidad invalida.");return;}
+  apiCall({action:"updateCantidad",storeCode:CS.code,id:String(id),qty:String(ni),agente:ag||"Agente"}).then(function(r){if(r.ok)refreshV();else alert("Error.");});
 }
-
-function setVFilter(f,el){
-  vFilter=f;
-  document.querySelectorAll("#tab-vencimientos .chip").forEach(function(c){c.classList.remove("active");});
-  el.classList.add("active");renderVencimientos();
+function setVF(f,el){vFilt=f;document.querySelectorAll("#t-venc .chip").forEach(function(c){c.classList.remove("on");});el.classList.add("on");rendV();}
+function togVW(){
+  vView=vView==="gen"?"ag":"gen";
+  document.getElementById("vw-gen").style.display=vView==="gen"?"block":"none";
+  document.getElementById("vw-ag").style.display=vView==="ag"?"block":"none";
+  document.getElementById("vw-btn").textContent=vView==="gen"?"👥 Por Agente":"📋 Vista General";
+  rendV();
 }
+function togVA(n){if(opVAg.has(n))opVAg.delete(n);else opVAg.add(n);rendVAP();}
 
-function toggleVencView(){
-  vencView=vencView==="general"?"agentes":"general";
-  document.getElementById("venc-view-general").style.display=vencView==="general"?"block":"none";
-  document.getElementById("venc-view-agentes").style.display=vencView==="agentes"?"block":"none";
-  document.getElementById("btn-venc-view").textContent=vencView==="general"?"👥 Por Agente":"📋 Vista General";
-  renderVencimientos();
-}
-
-function toggleVencAgent(name){
-  if(openVencAgents.has(name))openVencAgents.delete(name);else openVencAgents.add(name);
-  renderVencAgentesPanel();
-}
-
-function renderVencimientos(){
-  if(!currentStore)return;
-  var code=currentStore.code;
-  var prods=productos[code]||[];
-  var counts={rojo:0,naranja:0,amarillo:0,celeste:0,verde:0};
-  prods.forEach(function(p){var k=semaforoKey(diasRestantes(p.date));if(counts[k]!==undefined)counts[k]++;});
-  document.getElementById("vp-total").textContent=prods.length;
-  Object.entries(counts).forEach(function(e){var el=document.getElementById("vp-"+e[0]);if(el)el.textContent=e[1];});
-  var venc=prods.filter(function(p){return semaforoKey(diasRestantes(p.date))==="rojo";});
-  var pronto=prods.filter(function(p){return["naranja","amarillo","celeste"].indexOf(semaforoKey(diasRestantes(p.date)))>=0;});
-  document.getElementById("banner-venc").innerHTML=
-    (venc.length?'<div class="alert-banner">🔴 <b>'+venc.length+" producto"+(venc.length>1?"s":"")+" vencido"+(venc.length>1?"s":"")+"</b> — Retirar de inmediato.</div>":"")+
-    (pronto.length?'<div class="warn-banner">🟠 <b>'+pronto.length+" producto"+(pronto.length>1?"s":"")+"</b> próximo"+(pronto.length>1?"s":"")+" a vencer.</div>":"");
-
-  if(vencView==="agentes"){renderVencAgentesPanel();return;}
-
-  var rows=sortProductos(prods.filter(function(p){return vFilter==="all"||semaforoKey(diasRestantes(p.date))===vFilter;}));
-  var tbody=document.getElementById("venc-list"),empty=document.getElementById("venc-empty");
-  if(!rows.length){tbody.innerHTML="";empty.style.display="block";return;}
-  empty.style.display="none";
-  tbody.innerHTML=rows.map(function(p){
-    var dias=diasRestantes(p.date),sem=semaforoInfo(dias);
-    var prod=CATALOG.filter(function(r){return r[0]===p.item;})[0];
-    var pol=prod?policyFor(prod[2]):null;
-    var polColor=pol?(pol.cambia.toLowerCase().indexOf("si")===0?"#27500A":pol.cambia.toLowerCase()==="no"?"#b91c1c":"#92400e"):"#aaa";
-    var polBg=pol?(pol.cambia.toLowerCase().indexOf("si")===0?"#EAF3DE":pol.cambia.toLowerCase()==="no"?"#fee2e2":"#fef3c7"):"#f3f4f6";
-    return"<tr><td data-label='Ítem'><b>"+(p.item||"—")+"</b></td><td data-label='Descripción'>"+p.desc+"</td><td data-label='Cant.'>"+p.qty+"</td><td data-label='Agente'>"+(p.agent||"—")+"</td><td data-label='Vence'>"+fmtDate(p.date)+"</td><td data-label='Días'>"+(dias!==null?(dias<0?"-"+Math.abs(dias):dias):"—")+"</td><td data-label='Estado'><span class='semaforo "+sem.cls+"'>"+semIcon(sem.cls)+" "+sem.label+"</span></td><td data-label='Cambio'>"+(pol?'<span style="background:'+polBg+";color:"+polColor+';padding:2px 7px;border-radius:6px;font-size:11px;font-weight:600">'+pol.cambia+"</span>":"—")+"</td><td>"+(isGerente?'<button class="danger" style="height:28px;padding:0 8px;font-size:11px" onclick="removeProducto(\''+p.id+"')\">🗑</button>":"")+"</td></tr>";
+function rendV(){
+  if(!CS)return;
+  var pp=prods[CS.code]||[];
+  var cnt={rojo:0,naranja:0,amarillo:0,celeste:0,verde:0};
+  pp.forEach(function(p){var k=sk(dr(p.date));if(cnt[k]!==undefined)cnt[k]++;});
+  document.getElementById("vp-tot").textContent=pp.length;
+  Object.entries(cnt).forEach(function(e){var el=document.getElementById("vp-"+e[0].substring(0,3));if(el)el.textContent=e[1];});
+  var vc=pp.filter(function(p){return sk(dr(p.date))==="rojo";}),pr=pp.filter(function(p){return["naranja","amarillo","celeste"].indexOf(sk(dr(p.date)))>=0;});
+  document.getElementById("ban-venc").innerHTML=(vc.length?'<div class="ab">🔴 <b>'+vc.length+" producto"+(vc.length>1?"s":"")+" vencido"+(vc.length>1?"s":"")+"</b> — Retirar de inmediato.</div>":"")+(pr.length?'<div class="wb">🟠 <b>'+pr.length+" producto"+(pr.length>1?"s":"")+"</b> proximo a vencer.</div>":"");
+  if(vView==="ag"){rendVAP();return;}
+  var rows=sortP(pp.filter(function(p){return vFilt==="all"||sk(dr(p.date))===vFilt;}));
+  var tb=document.getElementById("venc-list"),em=document.getElementById("venc-emp");
+  em.style.display=!rows.length?"block":"none";
+  if(!rows.length){tb.innerHTML="";return;}
+  tb.innerHTML=rows.map(function(p){
+    var d=dr(p.date),s=si(d),prod=CAT.filter(function(r){return r[0]===p.item;})[0],pol=prod?policyFor(prod[2]):null;
+    var pc=pol?(pol.c.toLowerCase().indexOf("si")===0?"#27500A":pol.c.toLowerCase()==="no"?"#b91c1c":"#92400e"):"#aaa";
+    var pb=pol?(pol.c.toLowerCase().indexOf("si")===0?"#EAF3DE":pol.c.toLowerCase()==="no"?"#fee2e2":"#fef3c7"):"#f3f4f6";
+    return"<tr><td data-label='Item'><b>"+(p.item||"—")+"</b></td><td data-label='Descripcion'>"+p.desc+"</td>"+
+      "<td data-label='Cant.'><div style='display:flex;align-items:center;gap:4px'><span>"+p.qty+"</span>"+
+      "<button onclick=\"editCant('"+p.id+"','"+p.qty+"','"+p.desc.replace(/'/g,"\\'")+"','"+p.agent+"')\" style='height:22px;padding:0 6px;font-size:10px;background:var(--blue-light);border-color:var(--border)'>✏️</button></div></td>"+
+      "<td data-label='Agente'>"+(p.agent||"—")+"</td><td data-label='Vence'>"+fd(p.date)+"</td>"+
+      "<td data-label='Dias'>"+(d!==null?(d<0?"-"+Math.abs(d):d):"—")+"</td>"+
+      "<td data-label='Estado'><span class='sem "+s.c+"'>"+semI(s.c)+" "+s.l+"</span></td>"+
+      "<td data-label='Cambio'>"+(pol?'<span style="background:'+pb+";color:"+pc+';padding:2px 7px;border-radius:6px;font-size:11px;font-weight:600">'+pol.c+"</span>":"—")+"</td>"+
+      "<td>"+(isG?'<button class="btn-d" style="height:28px;padding:0 8px;font-size:11px" onclick="remProd(\''+p.id+"')\">🗑</button>":"")+"</td></tr>";
   }).join("");
 }
 
-function renderVencAgentesPanel(){
-  var container=document.getElementById("venc-agentes-list");if(!container)return;
-  var code=currentStore.code;
-  var prods=productos[code]||[];
-  var ag=currentStore.isMain?MAIN_AGENTS:vencAgents[code]||[];
-  var filtered=prods.filter(function(p){return vFilter==="all"||semaforoKey(diasRestantes(p.date))===vFilter;});
-  if(!filtered.length){container.innerHTML='<div class="empty">🏷 Sin productos para mostrar</div>';return;}
-  var groups={};
-  filtered.forEach(function(p){var key=p.agent||"__sin__";if(!groups[key])groups[key]=[];groups[key].push(p);});
-  function urgencyScore(arr){var s=0;arr.forEach(function(p){var d=diasRestantes(p.date);if(d!==null&&d<0)s+=1000;else if(d!==null&&d<=3)s+=100;else if(d!==null&&d<=7)s+=10;else s+=1;});return s;}
-  var sortedGroups=Object.entries(groups).sort(function(a,b){return urgencyScore(b[1])-urgencyScore(a[1]);});
-  var html="";
-  sortedGroups.forEach(function(entry){
-    var agentKey=entry[0],prods2=entry[1];
-    var isOpen=openVencAgents.has(agentKey);
-    var agentName=agentKey==="__sin__"?"Sin asignar":agentKey;
-    var agIdx=ag.findIndex(function(a){return a.name===agentKey;});
-    var c=agIdx>=0?colorFor(agIdx):["#f3f4f6","#6b7280"];
-    var counts={rojo:0,naranja:0,amarillo:0,celeste:0,verde:0};
-    prods2.forEach(function(p){var k=semaforoKey(diasRestantes(p.date));if(counts[k]!==undefined)counts[k]++;});
-    var mini="";
-    if(counts.rojo)mini+='<span style="background:#fee2e2;color:#b91c1c;padding:2px 7px;border-radius:6px;font-size:11px;font-weight:700">🔴 '+counts.rojo+"</span> ";
-    if(counts.naranja)mini+='<span style="background:var(--orange-light);color:var(--orange-dark);padding:2px 7px;border-radius:6px;font-size:11px;font-weight:700">🟠 '+counts.naranja+"</span> ";
-    if(counts.amarillo)mini+='<span style="background:#fefce8;color:#713f12;padding:2px 7px;border-radius:6px;font-size:11px;font-weight:700">🟡 '+counts.amarillo+"</span> ";
-    if(counts.celeste)mini+='<span style="background:#dbeafe;color:#1e40af;padding:2px 7px;border-radius:6px;font-size:11px;font-weight:700">🔵 '+counts.celeste+"</span> ";
-    if(counts.verde)mini+='<span style="background:#EAF3DE;color:#27500A;padding:2px 7px;border-radius:6px;font-size:11px;font-weight:700">🟢 '+counts.verde+"</span>";
+function rendVAP(){
+  var ct=document.getElementById("venc-ag-list");if(!ct)return;
+  var pp=prods[CS.code]||[];
+  var ag=CS.isMain?MAIN_AG:(vagents[CS.code]||[]);
+  var fil=pp.filter(function(p){return vFilt==="all"||sk(dr(p.date))===vFilt;});
+  if(!fil.length){ct.innerHTML='<div class="emp">Sin productos para mostrar</div>';return;}
+  var grp={};fil.forEach(function(p){var k=p.agent||"__sin__";if(!grp[k])grp[k]=[];grp[k].push(p);});
+  function usc(arr){var s=0;arr.forEach(function(p){var d=dr(p.date);if(d!==null&&d<0)s+=1000;else if(d!==null&&d<=3)s+=100;else if(d!==null&&d<=7)s+=10;else s+=1;});return s;}
+  var sg=Object.entries(grp).sort(function(a,b){return usc(b[1])-usc(a[1]);});
+  var h="";
+  sg.forEach(function(en){
+    var ak=en[0],pp2=en[1],isOp=opVAg.has(ak),an=ak==="__sin__"?"Sin asignar":ak;
+    var ai=ag.findIndex(function(a){return a.name===ak;});var c=ai>=0?col(ai):["#f3f4f6","#6b7280"];
+    var cnt={rojo:0,naranja:0,amarillo:0,celeste:0,verde:0};
+    pp2.forEach(function(p){var k=sk(dr(p.date));if(cnt[k]!==undefined)cnt[k]++;});
+    var mn="";
+    if(cnt.rojo)mn+='<span style="background:#fee2e2;color:#b91c1c;padding:2px 7px;border-radius:6px;font-size:11px;font-weight:700">🔴 '+cnt.rojo+"</span> ";
+    if(cnt.naranja)mn+='<span style="background:var(--orange-light);color:var(--orange-dark);padding:2px 7px;border-radius:6px;font-size:11px;font-weight:700">🟠 '+cnt.naranja+"</span> ";
+    if(cnt.amarillo)mn+='<span style="background:#fefce8;color:#713f12;padding:2px 7px;border-radius:6px;font-size:11px;font-weight:700">🟡 '+cnt.amarillo+"</span> ";
+    if(cnt.celeste)mn+='<span style="background:#dbeafe;color:#1e40af;padding:2px 7px;border-radius:6px;font-size:11px;font-weight:700">🔵 '+cnt.celeste+"</span> ";
+    if(cnt.verde)mn+='<span style="background:#EAF3DE;color:#27500A;padding:2px 7px;border-radius:6px;font-size:11px;font-weight:700">🟢 '+cnt.verde+"</span>";
     var rows="";
-    sortProductos(prods2).forEach(function(p){
-      var dias=diasRestantes(p.date),sem=semaforoInfo(dias);
-      var borderColor=sem.cls==="sem-rojo"?"#e53e3e":sem.cls==="sem-naranja"?"var(--orange)":sem.cls==="sem-amarillo"?"#ca8a04":sem.cls==="sem-celeste"?"#1e40af":"#34d399";
-      rows+='<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--border);border-left:3px solid '+borderColor+'">';
-      rows+='<div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.desc+'</div><div style="font-size:10px;color:var(--text-soft)">'+(p.item||"—")+" · Cant: <b>"+p.qty+"</b></div></div>";
-      rows+='<div style="text-align:right;flex-shrink:0"><span class="semaforo '+sem.cls+'" style="font-size:10px">'+semIcon(sem.cls)+" "+sem.label+'</span><div style="font-size:10px;color:var(--text-soft);margin-top:2px">'+fmtDate(p.date)+"</div></div>";
-      if(isGerente)rows+='<button class="danger" style="height:26px;padding:0 7px;font-size:11px;flex-shrink:0" onclick="removeProducto(\''+p.id+"')\">🗑</button>";
+    sortP(pp2).forEach(function(p){
+      var d=dr(p.date),s=si(d);
+      var bc=s.c==="sr"?"#e53e3e":s.c==="sn"?"var(--orange)":s.c==="sa"?"#ca8a04":s.c==="sc"?"#1e40af":"#34d399";
+      rows+='<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--border);border-left:3px solid '+bc+'">';
+      rows+='<div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">'+p.desc+'</div><div style="font-size:10px;color:var(--text-soft)">'+(p.item||"—")+" · Cant: <b>"+p.qty+"</b></div></div>";
+      rows+='<div style="text-align:right;flex-shrink:0"><span class="sem '+s.c+'" style="font-size:10px">'+semI(s.c)+" "+s.l+'</span><div style="font-size:10px;color:var(--text-soft);margin-top:2px">'+fd(p.date)+"</div></div>";
+      if(isG)rows+='<button class="btn-d" style="height:26px;padding:0 7px;font-size:11px;flex-shrink:0" onclick="remProd(\''+p.id+"')\">🗑</button>";
       rows+="</div>";
     });
-    html+='<div class="agent-card'+(isOpen?" selected":"")+'" onclick="toggleVencAgent(\''+agentKey.replace(/'/g,"\\'")+'\')"><div class="agent-header" style="justify-content:space-between"><div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0"><div class="avatar" style="background:'+c[0]+";color:"+c[1]+';width:34px;height:34px;flex-shrink:0">'+(agentKey==="__sin__"?"?":initials(agentName))+'</div><div style="min-width:0"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+agentName+'</div><div style="font-size:10px;color:var(--text-soft)">'+prods2.length+" producto"+(prods2.length>1?"s":"")+'</div></div></div><div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0">'+mini+'</div></div><div class="agent-detail'+(isOpen?" open":"")+'" style="padding:0">'+rows+"</div></div>";
+    h+='<div class="ac'+(isOp?" sel":"")+'" onclick="togVA(\''+ak.replace(/'/g,"\\'")+'\')">'+
+      '<div class="ach" style="justify-content:space-between"><div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">'+
+      '<div class="av" style="background:'+c[0]+";color:"+c[1]+';width:34px;height:34px;flex-shrink:0">'+(ak==="__sin__"?"?":ini(an))+'</div>'+
+      '<div style="min-width:0"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+an+'</div>'+
+      '<div style="font-size:10px;color:var(--text-soft)">'+pp2.length+" producto"+(pp2.length>1?"s":"")+'</div></div></div>'+
+      '<div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0">'+mn+'</div></div>'+
+      '<div class="acd'+(isOp?" op":"")+'" style="padding:0">'+rows+'</div></div>';
   });
-  container.innerHTML=html;
+  ct.innerHTML=h;
 }
 
-// ══ SUPERVISOR ════════════════════════════════════════
-function renderSupervisor(){
-  var totalAll=0,rojoAll=0,naranjaAll=0,amarilloAll=0,celesteAll=0,verdeAll=0;
-  STORES.forEach(function(s){
-    var p=productos[s.code]||[];totalAll+=p.length;
-    p.forEach(function(x){var k=semaforoKey(diasRestantes(x.date));if(k==="rojo")rojoAll++;else if(k==="naranja")naranjaAll++;else if(k==="amarillo")amarilloAll++;else if(k==="celeste")celesteAll++;else verdeAll++;});
-  });
-  document.getElementById("supervisor-metrics").innerHTML=
-    '<div class="metric"><div class="metric-label">Total</div><div class="metric-val" style="color:var(--blue)">'+totalAll+"</div></div>"+
-    '<div class="metric"><div class="metric-label">🔴 Vencidos</div><div class="metric-val" style="color:#b91c1c">'+rojoAll+"</div></div>"+
-    '<div class="metric"><div class="metric-label">🟠 ≤3d</div><div class="metric-val" style="color:#d97706">'+naranjaAll+"</div></div>"+
-    '<div class="metric"><div class="metric-label">🟡 ≤7d</div><div class="metric-val" style="color:#ca8a04">'+amarilloAll+"</div></div>"+
-    '<div class="metric"><div class="metric-label">🔵 ≤15d</div><div class="metric-val" style="color:#1e40af">'+celesteAll+"</div></div>"+
-    '<div class="metric"><div class="metric-label">🟢 OK</div><div class="metric-val" style="color:#27500A">'+verdeAll+"</div></div>";
-
-  function storeUrgency(s){var p=productos[s.code]||[];var sc=0;p.forEach(function(x){var d=diasRestantes(x.date);if(d!==null&&d<0)sc+=1000;else if(d!==null&&d<=3)sc+=100;else if(d!==null&&d<=7)sc+=10;else sc+=1;});return sc;}
-  var sorted=STORES.slice().sort(function(a,b){return storeUrgency(b)-storeUrgency(a);});
-  var html="";
-  sorted.forEach(function(s,i){
-    var p=productos[s.code]||[];
-    var counts={rojo:0,naranja:0,amarillo:0,celeste:0,verde:0};
-    p.forEach(function(x){var k=semaforoKey(diasRestantes(x.date));if(counts[k]!==undefined)counts[k]++;});
-    var hasAlert=counts.rojo>0||counts.naranja>0;
-    var miniSem="";
-    if(counts.rojo)miniSem+='<span style="background:#fee2e2;color:#b91c1c;padding:2px 7px;border-radius:6px;font-size:12px;font-weight:700">🔴 '+counts.rojo+"</span> ";
-    if(counts.naranja)miniSem+='<span style="background:var(--orange-light);color:var(--orange-dark);padding:2px 7px;border-radius:6px;font-size:12px;font-weight:700">🟠 '+counts.naranja+"</span> ";
-    if(counts.amarillo)miniSem+='<span style="background:#fefce8;color:#713f12;padding:2px 7px;border-radius:6px;font-size:12px;font-weight:700">🟡 '+counts.amarillo+"</span> ";
-    if(counts.celeste)miniSem+='<span style="background:#dbeafe;color:#1e40af;padding:2px 7px;border-radius:6px;font-size:12px;font-weight:700">🔵 '+counts.celeste+"</span> ";
-    if(counts.verde)miniSem+='<span style="background:#EAF3DE;color:#27500A;padding:2px 7px;border-radius:6px;font-size:12px;font-weight:700">🟢 '+counts.verde+"</span>";
-    if(!p.length)miniSem='<span style="font-size:11px;color:var(--text-soft)">Sin registros aún</span>';
-    html+='<div class="store-summary-card" style="'+(hasAlert?"border-left:3px solid #e53e3e":"")+'"><div class="store-summary-header"><span class="store-code-badge">'+s.code+'</span><div style="flex:1;min-width:0;margin-left:8px"><div style="font-size:13px;font-weight:700">'+s.name+'</div><div style="font-size:11px;color:var(--text-soft)">👤 '+s.manager+'</div></div>'+(s.isMain?'<span style="background:#F58220;color:#fff;padding:2px 6px;border-radius:5px;font-size:10px;font-weight:700">★ Principal</span>':'')+'</div><div class="store-summary-body"><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px">'+miniSem+'</div><div style="font-size:11px;color:var(--text-soft)">'+p.length+" producto"+(p.length!==1?"s":"")+" · "+(vencAgents[s.code]||[]).length+" agente"+((vencAgents[s.code]||[]).length!==1?"s":"")+"</div></div></div>";
-  });
-  document.getElementById("supervisor-grid").innerHTML=html;
-}
-
-// ══ TAREAS A57 ════════════════════════════════════════
-function addTask(){
-  var agent=document.getElementById("inp-agent").value,date=document.getElementById("inp-date").value,custom=document.getElementById("inp-task").value.trim();
-  var turno=document.getElementById("inp-turno").value,prioridad=document.getElementById("inp-prioridad").value;
-  if(!agent){alert("Selecciona un agente.");return;}
-  if(!custom){alert("Escribe o selecciona una tarea.");return;}
-  var btn=document.getElementById("btn-add");btn.textContent="⏳ Guardando...";btn.disabled=true;
-  apiCall({action:"addTarea",tarea:custom,agente:agent,area:areaFor(agent),turno:turno,prioridad:prioridad,fecha:date}).then(function(res){
-    btn.textContent="+ Asignar tarea";btn.disabled=false;
-    if(res.ok){document.getElementById("inp-task").value="";refreshTareas();}
-    else{alert("❌ Error al guardar.");}
-  });
-}
-function toggle(id){
-  reqGerenteAction(function(){
-    var t=tasks.filter(function(x){return String(x.id)===String(id);})[0];if(!t)return;
-    var nuevoEstado=taskStatus(t)==="done"?"Pendiente":"Completada";
-    apiCall({action:"updateEstado",id:String(id),estado:nuevoEstado}).then(function(res){if(res.ok)refreshTareas();else alert("❌ Error.");});
-  });
-}
-function removeTask(id){
-  reqGerenteAction(function(){
-    if(!confirm("¿Eliminar esta tarea?"))return;
-    apiCall({action:"deleteTarea",id:String(id)}).then(function(res){if(res.ok)refreshTareas();else alert("❌ Error.");});
-  });
-}
-function validarTarea(id){
-  reqGerenteAction(function(){
-    apiCall({action:"validarTarea",id:String(id)}).then(function(res){if(res.ok){refreshTareas();showHistorial(id);}else alert("❌ Error.");});
-  });
-}
-
-function setFilter(f,el){
-  filter=f;
-  document.querySelectorAll("#tab-tareas .chip").forEach(function(c){c.classList.remove("active");});
-  el.classList.add("active");render();
-}
-
-function render(){
-  if(!currentStore||!currentStore.isMain)return;
-  var total=tasks.length,done=tasks.filter(function(t){return taskStatus(t)==="done";}).length;
-  var pending=tasks.filter(function(t){return taskStatus(t)==="pending"||taskStatus(t)==="soon";}).length;
-  var overdue=tasks.filter(function(t){return taskStatus(t)==="overdue";}).length;
-  var pct=total?Math.round(done/total*100):null;
-  document.getElementById("m-total").textContent=total;document.getElementById("m-pending").textContent=pending;
-  document.getElementById("m-done").textContent=done;document.getElementById("m-overdue").textContent=overdue;
-  document.getElementById("m-pct").textContent=pct!==null?pct+"%":"—";document.getElementById("m-bar").style.width=(pct||0)+"%";
-  var ol=tasks.filter(function(t){return taskStatus(t)==="overdue";}),sl=tasks.filter(function(t){return taskStatus(t)==="soon";});
-  document.getElementById("banner-tareas").innerHTML=
-    (ol.length?'<div class="alert-banner">🔴 <b>'+ol.length+" tarea"+(ol.length>1?"s":"")+" vencida"+(ol.length>1?"s":"")+"</b> — Requieren atención inmediata.</div>":"")+
-    (sl.length?'<div class="warn-banner">🟠 <b>'+sl.length+" tarea"+(sl.length>1?"s":"")+"</b> próxima"+(sl.length>1?"s":"")+" a vencer.</div>":"");
-  if(isGerente){
-    document.getElementById("gerente-form").style.display="block";
-    document.getElementById("agente-selector-wrap").style.display="none";
-    document.getElementById("agente-tareas-view").style.display="none";
-  } else {
-    document.getElementById("gerente-form").style.display="none";
-    document.getElementById("agente-selector-wrap").style.display="block";
-    document.getElementById("agente-tareas-view").style.display="block";
-  }
-  var vis=tasks;
-  if(filter==="pending")vis=tasks.filter(function(t){return taskStatus(t)==="pending"||taskStatus(t)==="soon";});
-  else if(filter==="done")vis=tasks.filter(function(t){return taskStatus(t)==="done";});
-  else if(filter==="overdue")vis=tasks.filter(function(t){return taskStatus(t)==="overdue";});
-  else if(filter==="alta")vis=tasks.filter(function(t){return t.prioridad==="alta";});
-  else if(filter==="am")vis=tasks.filter(function(t){return t.turno==="AM";});
-  else if(filter==="pm")vis=tasks.filter(function(t){return t.turno==="PM";});
-  vis=vis.slice().sort(function(a,b){var po={alta:0,media:1,baja:2,"":3};return(po[a.prioridad||""]||3)-(po[b.prioridad||""]||3);});
-  var list=document.getElementById("list");
-  if(!vis.length){list.innerHTML='<div class="empty">📋 Sin tareas para mostrar</div>';return;}
-  var groups={};vis.forEach(function(t){var c=t.cat||catFor(t.tarea||t.task||"");if(!groups[c])groups[c]=[];groups[c].push(t);});
-  var html="";
-  Object.entries(groups).forEach(function(entry){
-    var cat=entry[0],items=entry[1];
-    html+='<div style="margin-bottom:9px"><div style="font-size:11px;font-weight:700;color:var(--text-soft);background:var(--blue-light);padding:3px 8px;border-radius:5px;display:inline-block;margin-bottom:4px;border:1px solid var(--border)">'+cat+'</div><div style="display:flex;flex-direction:column;gap:4px">';
-    items.forEach(function(t){
-      var colors=colorFor(MAIN_AGENTS.findIndex(function(a){return a.name===(t.agente||t.agent);}));
-      var bg=colors[0],fg=colors[1],st=taskStatus(t),dias=diasRestantes(t.fecha||t.date);
-      var tarea=t.tarea||t.task||"",validada=String(t.validada||"").toLowerCase()==="si";
-      html+='<div class="task-card '+(st==="overdue"?"overdue":st==="soon"?"due-soon":"")+'" onclick="showHistorial(\''+t.id+'\')"><div class="avatar" style="background:'+bg+";color:"+fg+'">'+initials(t.agente||t.agent)+'</div><div class="task-body"><div class="task-name">'+tarea+(validada?' <span style="font-size:10px;background:#EAF3DE;color:#27500A;padding:1px 5px;border-radius:3px">✅</span>':st==="done"?' <span style="font-size:10px;background:#fef3c7;color:#92400e;padding:1px 5px;border-radius:3px">⏳ validar</span>':"")+'</div><div class="task-sub">📍 '+(t.area||areaFor(t.agente||t.agent||""))+'</div><div class="task-meta">'+shortName(t.agente||t.agent||"")+(t.turno?' <span class="badge '+t.turno.toLowerCase()+'">'+turnoIcon(t.turno)+" "+t.turno+"</span>":"")+(t.prioridad?' <span class="badge '+t.prioridad+'">'+prioIcon(t.prioridad)+" "+t.prioridad+"</span>":"")+(t.fecha||t.date?' <span style="font-size:10px;background:'+(st==="overdue"?"#fee2e2":st==="soon"?"#fef3c7":"var(--blue-light)")+";color:"+(st==="overdue"?"#b91c1c":st==="soon"?"#92400e":"var(--text-soft)")+';padding:1px 5px;border-radius:3px">'+(st==="overdue"?"Venció "+fmtDate(t.fecha||t.date):st==="soon"?"Vence "+fmtDate(t.fecha||t.date)+" ("+dias+"d)":"Vence "+fmtDate(t.fecha||t.date))+"</span>":"")+'</div></div><span class="badge '+(st==="done"?"done":st==="overdue"?"overdue":st==="soon"?"soon":"pending")+'">'+(st==="done"?"✓":st==="overdue"?"🔴":st==="soon"?"🟠":"⏳")+"</span>"+(isGerente?'<div style="display:flex;gap:4px;flex-shrink:0;align-items:center" onclick="event.stopPropagation()"><button class="ico-btn" onclick="toggle(\''+t.id+"')\">"+(st==="done"?"↩":"✓")+'</button><button class="ico-btn" onclick="removeTask(\''+t.id+"')\">🗑</button></div>":"")+"</div>";
-    });
-    html+="</div></div>";
-  });
-  list.innerHTML=html;
-}
-
-function renderAgentGrid(){
-  if(!currentStore||!currentStore.isMain)return;
-  var html="";
-  MAIN_AGENTS.forEach(function(a,i){
-    var c=colorFor(i);
-    var at=tasks.filter(function(t){return(t.agente||t.agent)===a.name;});
-    var done=at.filter(function(t){return taskStatus(t)==="done";}).length;
-    var ov=at.filter(function(t){return taskStatus(t)==="overdue";}).length;
-    var pend=at.filter(function(t){return taskStatus(t)==="pending"||taskStatus(t)==="soon";}).length;
-    var pendVal=at.filter(function(t){return taskStatus(t)==="done"&&String(t.validada||"").toLowerCase()!=="si";}).length;
-    var tot=at.length,pct=tot?Math.round(done/tot*100):0,isOpen=selectedAgent===a.name;
-    var taskRows=at.length?at.map(function(t){var st=taskStatus(t),tarea=t.tarea||t.task||"";return'<div class="detail-task"><span style="color:'+(st==="done"?"#27500A":st==="overdue"?"#b91c1c":"#854F0B")+'">'+(st==="done"?"✓":st==="overdue"?"🔴":"⏳")+'</span><span style="flex:1;font-size:12px">'+tarea+"</span>"+(t.turno?'<span class="badge '+t.turno.toLowerCase()+'" style="font-size:10px">'+turnoIcon(t.turno)+"</span>":"")+'<button class="ico-btn" onclick="event.stopPropagation();showHistorial(\''+t.id+'\')" style="width:22px;height:22px">👁</button>'+(isGerente?'<button class="ico-btn" onclick="event.stopPropagation();toggle(\''+t.id+'\')" style="width:22px;height:22px">'+(st==="done"?"↩":"✓")+'</button><button class="ico-btn" onclick="event.stopPropagation();removeTask(\''+t.id+'\')" style="width:22px;height:22px">🗑</button>':"")+"</div>";}).join(""):'<div class="no-tasks" style="font-size:12px;color:var(--text-soft);padding:5px 0;font-style:italic">Sin tareas asignadas</div>';
-    html+='<div class="agent-card'+(isOpen?" selected":"")+'" onclick="toggleAgentDetail(\''+a.name.replace(/'/g,"\\'")+'\')"><div class="agent-header"><div class="avatar" style="background:'+c[0]+";color:"+c[1]+';width:36px;height:36px;flex-shrink:0">'+initials(a.name)+'</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+a.name+'</div><div style="font-size:11px;color:var(--text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+a.area+'</div></div><div style="text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:3px">'+(ov?'<span class="badge overdue" style="font-size:10px">🔴 '+ov+"</span>":"")+(pend?'<span class="badge pending" style="font-size:10px">'+pend+" pend.</span>":"")+(pendVal?'<span class="badge pendval" style="font-size:10px;background:#fef3c7;color:#92400e">⏳ '+pendVal+"</span>":"")+(done?'<span class="badge done" style="font-size:10px">'+done+" ✓</span>":"")+(tot?'<div class="pbar" style="width:65px"><div class="pfill" style="width:'+pct+'%"></div></div><div style="font-size:10px;color:var(--text-soft)">'+pct+"%</div>":"")+'</div></div><div class="agent-detail'+(isOpen?" open":"")+'">'+taskRows+"</div></div>";
-  });
-  document.getElementById("agent-grid").innerHTML=html;
-}
-function toggleAgentDetail(name){selectedAgent=selectedAgent===name?null:name;renderAgentGrid();}
-
-function renderAgenteTareas(){
-  var name=document.getElementById("agente-select").value,wrap=document.getElementById("agente-tareas-view");
-  if(!name){wrap.innerHTML="";return;}
-  var myTasks=tasks.filter(function(t){return(t.agente||t.agent)===name;});
-  if(!myTasks.length){wrap.innerHTML='<div class="empty">Sin tareas asignadas.</div>';return;}
-  var html='<div class="card" style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">';
-  var pending=myTasks.filter(function(t){return taskStatus(t)==="pending"||taskStatus(t)==="soon";}).length;
-  var overdue=myTasks.filter(function(t){return taskStatus(t)==="overdue";}).length;
-  var done=myTasks.filter(function(t){return taskStatus(t)==="done";}).length;
-  html+='<div style="flex:1;min-width:120px"><div style="font-size:11px;color:var(--text-soft);font-weight:700">MIS TAREAS HOY</div><div style="display:flex;gap:8px;margin-top:6px"><span class="badge overdue">🔴 '+overdue+" vencidas</span><span class=\"badge pending\">⏳ "+pending+" pendientes</span><span class=\"badge done\">✓ "+done+" completas</span></div></div></div>";
-  myTasks.forEach(function(t){
-    var st=taskStatus(t),tarea=t.tarea||t.task||"";
-    html+='<div class="agente-task-card '+(st==="overdue"?"overdue":"")+" "+(st==="done"?"done-card":"")+'"><div style="display:flex;align-items:center;gap:8px"><div style="flex:1"><div style="font-size:13px;font-weight:600">'+tarea+'</div><div style="font-size:11px;color:var(--text-soft)">'+(t.cat||catFor(tarea))+" "+(t.turno?turnoIcon(t.turno)+" "+t.turno:"")+" "+(t.prioridad?prioIcon(t.prioridad)+" "+t.prioridad:"")+'</div></div><span class="badge '+(st==="done"?"done":st==="overdue"?"overdue":st==="soon"?"soon":"pending")+'">'+(st==="done"?"✓":st==="overdue"?"🔴":st==="soon"?"🟠":"⏳")+"</span></div>";
-    if(st!=="done"){
-      html+='<div class="complete-form"><div style="font-size:12px;font-weight:600">📸 Enviar evidencia</div><input type="file" accept="image/*" capture="environment" style="font-size:12px"><button style="background:#EAF3DE;color:#27500A;border-color:#9FE1CB;width:100%;justify-content:center" onclick="submitEvidencia(\''+t.id+"')\">✓ Marcar como completada</button></div>";
+function verHist(){
+  if(!CS)return;
+  apiCall({action:"getHistorial",storeCode:CS.code}).then(function(d){
+    if(!d.ok){alert("Error al cargar historial.");return;}
+    var h=d.historial||[],html="";
+    if(!h.length){html='<div class="emp">Sin movimientos registrados.</div>';}
+    else{
+      html='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><tr style="background:var(--blue-light)"><th style="padding:6px 8px;text-align:left">Fecha</th><th style="padding:6px 8px;text-align:left">Agente</th><th style="padding:6px 8px;text-align:left">Producto</th><th style="padding:6px 8px;text-align:center">Antes</th><th style="padding:6px 8px;text-align:center">Despues</th><th style="padding:6px 8px;text-align:left">Accion</th></tr>';
+      h.forEach(function(r){
+        var co=r.accion==="Producto eliminado"?"#b91c1c":r.accion==="Producto agregado"?"#27500A":r.accion==="Redujo cantidad"?"#d97706":"#1e40af";
+        html+="<tr style='border-bottom:1px solid var(--border)'><td style='padding:6px 8px;white-space:nowrap'>"+r.fecha+"</td><td style='padding:6px 8px'>"+r.agente+"</td><td style='padding:6px 8px;font-weight:600'>"+r.producto+"</td><td style='padding:6px 8px;text-align:center'>"+r.cantidad_anterior+"</td><td style='padding:6px 8px;text-align:center;font-weight:700'>"+r.cantidad_nueva+"</td><td style='padding:6px 8px'><span style='color:"+co+";font-weight:600'>"+r.accion+"</span></td></tr>";
+      });
+      html+="</table></div>";
     }
-    html+="</div>";
-  });
-  wrap.innerHTML=html;
-}
-
-function submitEvidencia(id){
-  apiCall({action:"updateEstado",id:String(id),estado:"Completada"}).then(function(res){
-    if(res.ok){refreshTareas();renderAgenteTareas();}else alert("❌ Error.");
+    document.getElementById("mod-ttl").textContent="📋 Historial — "+CS.name;
+    document.getElementById("mod-bdy").innerHTML=html;
+    document.getElementById("mod-ov").classList.add("op");
   });
 }
 
-function showHistorial(id){
+function rendSup(){
+  document.getElementById("sup-grid").innerHTML='<div class="lod">⏳ Cargando...</div>';
+  var pend=STORES.length;
+  STORES.forEach(function(s){
+    if((prods[s.code]||[]).length>0){pend--;if(pend===0)buildSup();}
+    else{apiCall({action:"getVencimientos",storeCode:s.code}).then(function(d){if(d.ok)prods[s.code]=d.productos||[];pend--;if(pend===0)buildSup();});}
+  });
+}
+function buildSup(){
+  var tot=0,roj=0,nar=0,ama=0,cel=0,ver=0;
+  STORES.forEach(function(s){var p=prods[s.code]||[];tot+=p.length;p.forEach(function(x){var k=sk(dr(x.date));if(k==="rojo")roj++;else if(k==="naranja")nar++;else if(k==="amarillo")ama++;else if(k==="celeste")cel++;else ver++;});});
+  document.getElementById("sup-mets").innerHTML='<div class="met"><div class="met-l">Total</div><div class="met-v" style="color:var(--blue)">'+tot+'</div></div><div class="met"><div class="met-l">🔴 Vencidos</div><div class="met-v" style="color:#b91c1c">'+roj+'</div></div><div class="met"><div class="met-l">🟠 ≤3d</div><div class="met-v" style="color:#d97706">'+nar+'</div></div><div class="met"><div class="met-l">🟡 ≤7d</div><div class="met-v" style="color:#ca8a04">'+ama+'</div></div><div class="met"><div class="met-l">🔵 ≤15d</div><div class="met-v" style="color:#1e40af">'+cel+'</div></div><div class="met"><div class="met-l">🟢 OK</div><div class="met-v" style="color:#27500A">'+ver+'</div></div>';
+  var rnk=STORES.map(function(s){var p=prods[s.code]||[],tot=p.length,crit=p.filter(function(x){var k=sk(dr(x.date));return k==="rojo"||k==="naranja";}).length,score=tot===0?100:Math.round((tot-crit)/tot*100);return{s:s,tot:tot,crit:crit,score:score};}).sort(function(a,b){return b.score-a.score;});
+  var rkH='<div class="card"><div style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--blue)">🏆 Ranking — Control de Vencimientos</div>';
+  rnk.forEach(function(r,i){
+    var m=i===0?"🥇":i===1?"🥈":i===2?"🥉":(i+1)+"°";
+    var co=r.score>=80?"#27500A":r.score>=50?"#d97706":"#b91c1c";
+    var bg=r.score>=80?"#EAF3DE":r.score>=50?"#fef3c7":"#fee2e2";
+    rkH+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><div style="font-size:18px;width:30px;text-align:center">'+m+'</div><div style="flex:1"><div style="font-size:13px;font-weight:700">'+r.s.code+" — "+r.s.name+'</div><div style="font-size:11px;color:var(--text-soft)">'+r.tot+" productos · "+r.crit+" criticos</div></div>"+'<div style="background:'+bg+";color:"+co+';padding:4px 10px;border-radius:8px;font-size:14px;font-weight:700">'+r.score+"%</div></div>";
+  });
+  rkH+="</div>";
+  function usc(s){var p=prods[s.code]||[],sc=0;p.forEach(function(x){var d=dr(x.date);if(d!==null&&d<0)sc+=1000;else if(d!==null&&d<=3)sc+=100;else if(d!==null&&d<=7)sc+=10;else sc+=1;});return sc;}
+  var srt=STORES.slice().sort(function(a,b){return usc(b)-usc(a);});
+  var stH="";
+  srt.forEach(function(s){
+    var p=prods[s.code]||[],cnt={rojo:0,naranja:0,amarillo:0,celeste:0,verde:0};
+    p.forEach(function(x){var k=sk(dr(x.date));if(cnt[k]!==undefined)cnt[k]++;});
+    var ha=cnt.rojo>0||cnt.naranja>0,mn="";
+    if(cnt.rojo)mn+='<span style="background:#fee2e2;color:#b91c1c;padding:2px 7px;border-radius:6px;font-size:12px;font-weight:700">🔴 '+cnt.rojo+"</span> ";
+    if(cnt.naranja)mn+='<span style="background:var(--orange-light);color:var(--orange-dark);padding:2px 7px;border-radius:6px;font-size:12px;font-weight:700">🟠 '+cnt.naranja+"</span> ";
+    if(cnt.amarillo)mn+='<span style="background:#fefce8;color:#713f12;padding:2px 7px;border-radius:6px;font-size:12px;font-weight:700">🟡 '+cnt.amarillo+"</span> ";
+    if(cnt.celeste)mn+='<span style="background:#dbeafe;color:#1e40af;padding:2px 7px;border-radius:6px;font-size:12px;font-weight:700">🔵 '+cnt.celeste+"</span> ";
+    if(cnt.verde)mn+='<span style="background:#EAF3DE;color:#27500A;padding:2px 7px;border-radius:6px;font-size:12px;font-weight:700">🟢 '+cnt.verde+"</span>";
+    if(!p.length)mn='<span style="font-size:11px;color:var(--text-soft)">Sin registros</span>';
+    var isOp=opSupSt===s.code,det="";
+    if(isOp){
+      if(!p.length){det='<div style="padding:10px;font-size:12px;color:var(--text-soft);font-style:italic">Sin productos registrados</div>';}
+      else{det='<div style="border-top:1px solid var(--border)">';sortP(p).forEach(function(x){var d=dr(x.date),s2=si(d),bc=s2.c==="sr"?"#e53e3e":s2.c==="sn"?"var(--orange)":s2.c==="sa"?"#ca8a04":s2.c==="sc"?"#1e40af":"#34d399";det+='<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);border-left:3px solid '+bc+'"><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">'+x.desc+'</div><div style="font-size:10px;color:var(--text-soft)">'+(x.agent||"Sin agente")+" · Cant: "+x.qty+"</div></div>"+'<div style="text-align:right;flex-shrink:0"><span class="sem '+s2.c+'" style="font-size:10px">'+semI(s2.c)+" "+s2.l+'</span><div style="font-size:10px;color:var(--text-soft);margin-top:2px">'+fd(x.date)+"</div></div></div>";});det+="</div>";}
+    }
+    stH+='<div class="sc-card'+(isOp?" sel":"")+'" style="'+(ha?"border-left:3px solid #e53e3e":"")+'" onclick="togSup(\''+s.code+'\')"><div class="sc-hdr"><span class="sc-badge">'+s.code+'</span><div style="flex:1;min-width:0;margin-left:8px"><div style="font-size:13px;font-weight:700">'+s.name+'</div><div style="font-size:11px;color:var(--text-soft)">👤 '+s.manager+'</div></div>'+(s.isMain?'<span style="background:#F58220;color:#fff;padding:2px 6px;border-radius:5px;font-size:10px;font-weight:700">★</span>':'')+'</div><div class="sc-bdy"><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px">'+mn+'</div><div style="font-size:11px;color:var(--text-soft)">'+p.length+" producto"+(p.length!==1?"s":"")+'</div></div>'+det+'</div>';
+  });
+  document.getElementById("sup-grid").innerHTML=rkH+stH;
+}
+function togSup(code){
+  opSupSt=opSupSt===code?null:code;
+  if(opSupSt&&!(prods[code]||[]).length){apiCall({action:"getVencimientos",storeCode:code}).then(function(d){if(d.ok){prods[code]=d.productos||[];buildSup();}});}
+  else buildSup();
+}
+
+function addTask(){
+  var ag=document.getElementById("i-agent").value,date=document.getElementById("i-date").value,task=document.getElementById("i-task").value.trim();
+  var tu=document.getElementById("i-turno").value,pr=document.getElementById("i-prio").value;
+  if(!ag){alert("Selecciona un agente.");return;}if(!task){alert("Escribe una tarea.");return;}
+  var btn=document.getElementById("btn-add");btn.textContent="⏳ Guardando...";btn.disabled=true;
+  apiCall({action:"addTarea",tarea:task,agente:ag,area:areaOf(ag),turno:tu,prioridad:pr,fecha:date}).then(function(r){btn.textContent="+ Asignar tarea";btn.disabled=false;if(r.ok){document.getElementById("i-task").value="";refreshT();}else alert("Error al guardar.");});
+}
+function togTask(id){
+  reqG(function(){var t=tasks.filter(function(x){return String(x.id)===String(id);})[0];if(!t)return;var ne=ts(t)==="done"?"Pendiente":"Completada";apiCall({action:"updateEstado",id:String(id),estado:ne}).then(function(r){if(r.ok)refreshT();else alert("Error.");});});
+}
+function remTask(id){reqG(function(){if(!confirm("Eliminar esta tarea?"))return;apiCall({action:"deleteTarea",id:String(id)}).then(function(r){if(r.ok)refreshT();else alert("Error.");});});}
+function valTask(id){reqG(function(){apiCall({action:"validarTarea",id:String(id)}).then(function(r){if(r.ok){refreshT();showMod(id);}else alert("Error.");});});}
+function setF(f,el){filt=f;document.querySelectorAll("#t-tareas .chip").forEach(function(c){c.classList.remove("on");});el.classList.add("on");rendT();}
+
+function rendT(){
+  if(!CS||!CS.isMain)return;
+  var tot=tasks.length,don=tasks.filter(function(t){return ts(t)==="done";}).length;
+  var pen=tasks.filter(function(t){return ts(t)==="pending"||ts(t)==="soon";}).length;
+  var ov=tasks.filter(function(t){return ts(t)==="overdue";}).length;
+  var pct=tot?Math.round(don/tot*100):null;
+  document.getElementById("m-tot").textContent=tot;document.getElementById("m-pen").textContent=pen;
+  document.getElementById("m-don").textContent=don;document.getElementById("m-ov").textContent=ov;
+  document.getElementById("m-pct").textContent=pct!==null?pct+"%":"—";document.getElementById("m-bar").style.width=(pct||0)+"%";
+  var ol=tasks.filter(function(t){return ts(t)==="overdue";}),sl=tasks.filter(function(t){return ts(t)==="soon";});
+  document.getElementById("ban-tar").innerHTML=(ol.length?'<div class="ab">🔴 <b>'+ol.length+" tarea"+(ol.length>1?"s":"")+" vencida"+(ol.length>1?"s":"")+"</b></div>":"")+(sl.length?'<div class="wb">🟠 <b>'+sl.length+" tarea"+(sl.length>1?"s":"")+"</b> proxima a vencer.</div>":"");
+  if(isG){document.getElementById("g-form").style.display="block";document.getElementById("ag-sel-wrap").style.display="none";document.getElementById("ag-tar-view").style.display="none";}
+  else{document.getElementById("g-form").style.display="none";document.getElementById("ag-sel-wrap").style.display="block";document.getElementById("ag-tar-view").style.display="block";}
+  var vis=tasks;
+  if(filt==="pending")vis=tasks.filter(function(t){return ts(t)==="pending"||ts(t)==="soon";});
+  else if(filt==="done")vis=tasks.filter(function(t){return ts(t)==="done";});
+  else if(filt==="overdue")vis=tasks.filter(function(t){return ts(t)==="overdue";});
+  else if(filt==="alta")vis=tasks.filter(function(t){return t.prioridad==="alta";});
+  else if(filt==="am")vis=tasks.filter(function(t){return t.turno==="AM";});
+  else if(filt==="pm")vis=tasks.filter(function(t){return t.turno==="PM";});
+  vis=vis.slice().sort(function(a,b){var po={alta:0,media:1,baja:2,"":3};return(po[a.prioridad||""]||3)-(po[b.prioridad||""]||3);});
+  var el=document.getElementById("t-list");
+  if(!vis.length){el.innerHTML='<div class="emp">Sin tareas para mostrar</div>';return;}
+  var grp={};vis.forEach(function(t){var c=t.cat||"✏️ Tarea";if(!grp[c])grp[c]=[];grp[c].push(t);});
+  var h="";
+  Object.entries(grp).forEach(function(en){
+    var cat=en[0],items=en[1];
+    h+='<div style="margin-bottom:9px"><div style="font-size:11px;font-weight:700;color:var(--text-soft);background:var(--blue-light);padding:3px 8px;border-radius:5px;display:inline-block;margin-bottom:4px;border:1px solid var(--border)">'+cat+'</div><div style="display:flex;flex-direction:column;gap:4px">';
+    items.forEach(function(t){
+      var ci=MAIN_AG.findIndex(function(a){return a.name===(t.agente||t.agent);}),c=col(ci),bg=c[0],fg=c[1],st=ts(t),d=dr(t.fecha||t.date),tar=t.tarea||t.task||"",val=String(t.validada||"").toLowerCase()==="si";
+      h+='<div class="tc '+(st==="overdue"?"ov":st==="soon"?"so":"")+'" onclick="showMod(\''+t.id+'\')"><div class="av" style="background:'+bg+";color:"+fg+'">'+ini(t.agente||t.agent)+'</div><div class="tb"><div class="tn">'+tar+(val?' <span style="font-size:10px;background:#EAF3DE;color:#27500A;padding:1px 5px;border-radius:3px">✅</span>':st==="done"?' <span style="font-size:10px;background:#fef3c7;color:#92400e;padding:1px 5px;border-radius:3px">⏳ validar</span>':"")+'</div><div class="ts">📍 '+(t.area||areaOf(t.agente||t.agent||""))+'</div><div class="tm">'+sn(t.agente||t.agent||"")+(t.turno?' <span class="bdg '+t.turno.toLowerCase()+'">'+ti(t.turno)+" "+t.turno+"</span>":"")+(t.prioridad?' <span class="bdg '+t.prioridad+'">'+pi(t.prioridad)+" "+t.prioridad+"</span>":"")+(t.fecha||t.date?' <span style="font-size:10px;background:'+(st==="overdue"?"#fee2e2":st==="soon"?"#fef3c7":"var(--blue-light)")+";color:"+(st==="overdue"?"#b91c1c":st==="soon"?"#92400e":"var(--text-soft)")+';padding:1px 5px;border-radius:3px">'+(st==="overdue"?"Vencio "+fd(t.fecha||t.date):st==="soon"?"Vence "+fd(t.fecha||t.date)+" ("+d+"d)":"Vence "+fd(t.fecha||t.date))+"</span>":"")+"</div></div>"+'<span class="bdg '+(st==="done"?"dn":st==="overdue"?"ov":st==="soon"?"so":"pe")+'">'+(st==="done"?"✓":st==="overdue"?"🔴":st==="soon"?"🟠":"⏳")+"</span>"+(isG?'<div style="display:flex;gap:4px;flex-shrink:0;align-items:center" onclick="event.stopPropagation()"><button class="ib" onclick="togTask(\''+t.id+"')\">"+(st==="done"?"↩":"✓")+'</button><button class="ib" onclick="remTask(\''+t.id+"')\">🗑</button></div>":"")+"</div>";
+    });
+    h+="</div></div>";
+  });
+  el.innerHTML=h;
+}
+
+function rendAG(){
+  if(!CS||!CS.isMain)return;
+  var h="";
+  MAIN_AG.forEach(function(a,i){
+    var c=col(i),at=tasks.filter(function(t){return(t.agente||t.agent)===a.name;});
+    var don=at.filter(function(t){return ts(t)==="done";}).length,ov=at.filter(function(t){return ts(t)==="overdue";}).length;
+    var pen=at.filter(function(t){return ts(t)==="pending"||ts(t)==="soon";}).length;
+    var tot=at.length,pct=tot?Math.round(don/tot*100):0,isOp=selAg===a.name;
+    var tr=at.length?at.map(function(t){var st=ts(t),tar=t.tarea||t.task||"";return'<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px"><span style="color:'+(st==="done"?"#27500A":st==="overdue"?"#b91c1c":"#854F0B")+'">'+(st==="done"?"✓":st==="overdue"?"🔴":"⏳")+'</span><span style="flex:1">'+tar+"</span>"+(isG?'<button class="ib" onclick="event.stopPropagation();togTask(\''+t.id+"')\" style='width:22px;height:22px'>"+(st==="done"?"↩":"✓")+'</button><button class="ib" onclick="event.stopPropagation();remTask(\''+t.id+"')\" style='width:22px;height:22px'>🗑</button>":"")+"</div>";}).join(""):'<div style="font-size:12px;color:var(--text-soft);padding:5px 0;font-style:italic">Sin tareas</div>';
+    h+='<div class="ac'+(isOp?" sel":"")+'" onclick="togAD(\''+a.name.replace(/'/g,"\\'")+'\')"><div class="ach"><div class="av" style="background:'+c[0]+";color:"+c[1]+';width:36px;height:36px;flex-shrink:0">'+ini(a.name)+'</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+a.name+'</div><div style="font-size:11px;color:var(--text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+a.area+'</div></div><div style="text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:3px">'+(ov?'<span class="bdg ov" style="font-size:10px">🔴 '+ov+"</span>":"")+(pen?'<span class="bdg pe" style="font-size:10px">'+pen+" pend.</span>":"")+(don?'<span class="bdg dn" style="font-size:10px">'+don+" ✓</span>":"")+(tot?'<div class="pbar" style="width:65px"><div class="pfill" style="width:'+pct+'%"></div></div><div style="font-size:10px;color:var(--text-soft)">'+pct+"%</div>":"")+'</div></div><div class="acd'+(isOp?" op":"")+'">'+tr+'</div></div>';
+  });
+  document.getElementById("ag-grid").innerHTML=h;
+}
+function togAD(n){selAg=selAg===n?null:n;rendAG();}
+
+function rendAgTar(){
+  var n=document.getElementById("ag-sel").value,w=document.getElementById("ag-tar-view");
+  if(!n){w.innerHTML="";return;}
+  var my=tasks.filter(function(t){return(t.agente||t.agent)===n;});
+  if(!my.length){w.innerHTML='<div class="emp">Sin tareas asignadas.</div>';return;}
+  var don=my.filter(function(t){return ts(t)==="done";}).length,ov=my.filter(function(t){return ts(t)==="overdue";}).length,pen=my.filter(function(t){return ts(t)==="pending"||ts(t)==="soon";}).length;
+  var h='<div class="card" style="display:flex;gap:8px;flex-wrap:wrap"><span class="bdg ov">🔴 '+ov+' vencidas</span><span class="bdg pe">⏳ '+pen+' pendientes</span><span class="bdg dn">✓ '+don+' completas</span></div>';
+  my.forEach(function(t){
+    var st=ts(t),tar=t.tarea||t.task||"";
+    h+='<div class="atc '+(st==="overdue"?"ov":"")+" "+(st==="done"?"dn":"")+'"><div style="display:flex;align-items:center;gap:8px"><div style="flex:1"><div style="font-size:13px;font-weight:600">'+tar+'</div><div style="font-size:11px;color:var(--text-soft)">'+(t.turno?ti(t.turno)+" "+t.turno:"")+" "+(t.prioridad?pi(t.prioridad)+" "+t.prioridad:"")+'</div></div><span class="bdg '+(st==="done"?"dn":st==="overdue"?"ov":st==="soon"?"so":"pe")+'">'+(st==="done"?"✓":st==="overdue"?"🔴":st==="soon"?"🟠":"⏳")+"</span></div>";
+    if(st!=="done")h+='<div class="cof"><div style="font-size:12px;font-weight:600">📸 Enviar evidencia</div><input type="file" accept="image/*" capture="environment" style="font-size:12px"><button style="background:#EAF3DE;color:#27500A;border-color:#9FE1CB;width:100%;justify-content:center" onclick="subEv(\''+t.id+"')\">✓ Marcar como completada</button></div>";
+    h+="</div>";
+  });
+  w.innerHTML=h;
+}
+function subEv(id){apiCall({action:"updateEstado",id:String(id),estado:"Completada"}).then(function(r){if(r.ok){refreshT();rendAgTar();}else alert("Error.");});}
+
+function showMod(id){
   var t=tasks.filter(function(x){return String(x.id)===String(id);})[0];if(!t)return;
-  var tarea=t.tarea||t.task||"",st=taskStatus(t),validada=String(t.validada||"").toLowerCase()==="si";
-  document.getElementById("modal-title").textContent="📝 "+tarea;
-  var body='<div style="margin-bottom:10px;display:flex;gap:6px;flex-wrap:wrap"><span class="badge '+(st==="done"?"done":st==="overdue"?"overdue":"pending")+'">'+(st==="done"?"✓ Completada":st==="overdue"?"🔴 Vencida":"⏳ Pendiente")+"</span>"+(t.turno?'<span class="badge '+t.turno.toLowerCase()+'">'+turnoIcon(t.turno)+" "+t.turno+"</span>":"")+(t.prioridad?'<span class="badge '+t.prioridad+'">'+prioIcon(t.prioridad)+" "+t.prioridad+"</span>":"")+(st==="done"&&!validada&&isGerente?'<button style="height:26px;padding:0 10px;font-size:11px;background:#EAF3DE;color:#27500A;border-color:#9FE1CB" onclick="validarTarea(\''+id+'\')">✓ Validar</button>':"")+(validada?'<span class="badge validado">✅ Validada</span>':"")+"</div>"+'<div style="font-size:11px;color:var(--text-soft)">Agente: <b>'+(t.agente||t.agent)+"</b></div>"+(t.fecha||t.date?'<div style="font-size:11px;color:var(--text-soft);margin-top:4px">Fecha: '+fmtDate(t.fecha||t.date)+"</div>":"");
-  document.getElementById("modal-body").innerHTML=body;
-  document.getElementById("modal-overlay").classList.add("open");
+  var tar=t.tarea||t.task||"",st=ts(t),val=String(t.validada||"").toLowerCase()==="si";
+  document.getElementById("mod-ttl").textContent="📝 "+tar;
+  var b='<div style="margin-bottom:10px;display:flex;gap:6px;flex-wrap:wrap"><span class="bdg '+(st==="done"?"dn":st==="overdue"?"ov":"pe")+'">'+(st==="done"?"✓ Completada":st==="overdue"?"🔴 Vencida":"⏳ Pendiente")+"</span>"+(t.turno?'<span class="bdg '+t.turno.toLowerCase()+'">'+ti(t.turno)+" "+t.turno+"</span>":"")+(t.prioridad?'<span class="bdg '+t.prioridad+'">'+pi(t.prioridad)+" "+t.prioridad+"</span>":"")+(st==="done"&&!val&&isG?'<button style="height:26px;padding:0 10px;font-size:11px;background:#EAF3DE;color:#27500A;border-color:#9FE1CB" onclick="valTask(\''+id+'\')">✓ Validar</button>':"")+(val?'<span class="bdg va">✅ Validada</span>':"")+"</div>"+'<div style="font-size:11px;color:var(--text-soft)">Agente: <b>'+(t.agente||t.agent)+"</b></div>"+(t.fecha||t.date?'<div style="font-size:11px;color:var(--text-soft);margin-top:4px">Fecha: '+fd(t.fecha||t.date)+"</div>":"");
+  document.getElementById("mod-bdy").innerHTML=b;
+  document.getElementById("mod-ov").classList.add("op");
 }
-function closeHistorial(){document.getElementById("modal-overlay").classList.remove("open");}
-function closeModal(e){if(e.target===document.getElementById("modal-overlay"))closeHistorial();}
+function closeMod(e){if(e.target===document.getElementById("mod-ov"))closeMod2();}
+function closeMod2(){document.getElementById("mod-ov").classList.remove("op");}
 
-function renderResumen(){
-  var html='<div class="card"><div style="font-size:14px;font-weight:700;margin-bottom:10px;color:var(--blue)">📊 Resumen A57 Bluefields</div>';
-  var total=tasks.length,done=tasks.filter(function(t){return taskStatus(t)==="done";}).length;
-  var ov=tasks.filter(function(t){return taskStatus(t)==="overdue";}).length;
-  var ef=total?Math.round(done/total*100):0;
-  html+='<div class="metrics"><div class="metric"><div class="metric-label">Total tareas</div><div class="metric-val" style="color:var(--blue)">'+total+"</div></div><div class=\"metric\"><div class=\"metric-label\">Completadas</div><div class=\"metric-val\" style=\"color:#27500A\">"+done+"</div></div><div class=\"metric\"><div class=\"metric-label\">Vencidas</div><div class=\"metric-val\" style=\"color:#b91c1c\">"+ov+"</div></div><div class=\"metric\"><div class=\"metric-label\">Eficacia</div><div class=\"metric-val\">"+ef+"%</div><div class=\"pbar\"><div class=\"pfill\" style=\"width:"+ef+"%\"></div></div></div></div></div>";
-  document.getElementById("resumen-content").innerHTML=html;
+function rendRes(){
+  var tot=tasks.length,don=tasks.filter(function(t){return ts(t)==="done";}).length,ov=tasks.filter(function(t){return ts(t)==="overdue";}).length,ef=tot?Math.round(don/tot*100):0;
+  document.getElementById("res-cont").innerHTML='<div class="card"><div style="font-size:14px;font-weight:700;margin-bottom:10px;color:var(--blue)">📊 Resumen A57 Bluefields</div><div class="mets"><div class="met"><div class="met-l">Total</div><div class="met-v" style="color:var(--blue)">'+tot+'</div></div><div class="met"><div class="met-l">Completadas</div><div class="met-v" style="color:#27500A">'+don+'</div></div><div class="met"><div class="met-l">Vencidas</div><div class="met-v" style="color:#b91c1c">'+ov+'</div></div><div class="met"><div class="met-l">Eficacia</div><div class="met-v">'+ef+'%</div><div class="pbar"><div class="pfill" style="width:'+ef+'%"></div></div></div></div></div>';
 }
 
-// ══ AUTOCOMPLETE ════════════════════════════════════
-function acTaskSearch(){
-  var q=document.getElementById("inp-task").value.toLowerCase().trim(),dd=document.getElementById("ac-task");acTaskIdx=-1;
+function acTS(){
+  var q=document.getElementById("i-task").value.toLowerCase().trim(),dd=document.getElementById("ac-task");acIdx=-1;
   if(!q){dd.style.display="none";return;}
-  var matches=ALL_TASKS.filter(function(t){return t.toLowerCase().indexOf(q)>=0;}).slice(0,8);
-  if(!matches.length){dd.style.display="none";return;}
-  dd.innerHTML=matches.map(function(t){return'<div class="ac-item" data-task="'+t.replace(/"/g,"&quot;")+'" onmousedown="selectTask(this.getAttribute(\'data-task\'))"> '+t+"</div>";}).join("");
+  var m=TASKS_DEF.filter(function(t){return t.toLowerCase().indexOf(q)>=0;}).slice(0,8);
+  if(!m.length){dd.style.display="none";return;}
+  dd.innerHTML=m.map(function(t){return'<div class="aci" data-t="'+t.replace(/"/g,"&quot;")+'" onmousedown="selT(this.getAttribute(\'data-t\'))"> '+t+"</div>";}).join("");
   dd.style.display="block";
 }
-function hideTaskAC(){document.getElementById("ac-task").style.display="none";acTaskIdx=-1;}
-function selectTask(t){document.getElementById("inp-task").value=t;hideTaskAC();}
-function acTaskKey(e){
-  var dd=document.getElementById("ac-task"),items=dd.querySelectorAll(".ac-item");
-  if(!items.length)return;
-  if(e.key==="ArrowDown"){e.preventDefault();acTaskIdx=Math.min(acTaskIdx+1,items.length-1);}
-  else if(e.key==="ArrowUp"){e.preventDefault();acTaskIdx=Math.max(acTaskIdx-1,0);}
-  else if(e.key==="Enter"&&acTaskIdx>=0){e.preventDefault();selectTask(items[acTaskIdx].getAttribute("data-task"));return;}
+function hideTA(){document.getElementById("ac-task").style.display="none";acIdx=-1;}
+function selT(t){document.getElementById("i-task").value=t;hideTA();}
+function acTK(e){
+  var dd=document.getElementById("ac-task"),items=dd.querySelectorAll(".aci");if(!items.length)return;
+  if(e.key==="ArrowDown"){e.preventDefault();acIdx=Math.min(acIdx+1,items.length-1);}
+  else if(e.key==="ArrowUp"){e.preventDefault();acIdx=Math.max(acIdx-1,0);}
+  else if(e.key==="Enter"&&acIdx>=0){e.preventDefault();selT(items[acIdx].getAttribute("data-t"));return;}
   else return;
-  items.forEach(function(el,i){el.classList.toggle("highlighted",i===acTaskIdx);});
-  if(items[acTaskIdx])items[acTaskIdx].scrollIntoView({block:"nearest"});
+  items.forEach(function(el,i){el.classList.toggle("hi",i===acIdx);});
+  if(items[acIdx])items[acIdx].scrollIntoView({block:"nearest"});
 }
-function acSearch(type){
+function acS(type){
   var q=(type==="item"?document.getElementById("v-item"):document.getElementById("v-desc")).value.toLowerCase().trim();
   var dd=document.getElementById("ac-"+type);
   if(!q){dd.style.display="none";return;}
-  var matches=CATALOG.filter(function(r){return type==="item"?r[0].toLowerCase().indexOf(q)>=0:r[1].toLowerCase().indexOf(q)>=0;}).slice(0,10);
-  if(!matches.length){dd.style.display="none";return;}
-  dd.innerHTML=matches.map(function(r){return'<div class="ac-item" onmousedown="selectProduct(\''+r[0].replace(/'/g,"\\'")+"','"+r[1].replace(/'/g,"\\'")+"','"+( r[2]||"").replace(/'/g,"\\'")+"')\"><b>"+r[0]+"</b><span>"+r[1]+(r[2]?" · "+r[2]:"")+"</span></div>";}).join("");
+  var m=CAT.filter(function(r){return type==="item"?r[0].toLowerCase().indexOf(q)>=0:r[1].toLowerCase().indexOf(q)>=0;}).slice(0,10);
+  if(!m.length){dd.style.display="none";return;}
+  dd.innerHTML=m.map(function(r){return'<div class="aci" onmousedown="selP(\''+r[0].replace(/'/g,"\\'")+"','"+r[1].replace(/'/g,"\\'")+"','"+( r[2]||"").replace(/'/g,"\\'")+"')\"><b>"+r[0]+"</b><span>"+r[1]+(r[2]?" · "+r[2]:"")+"</span></div>";}).join("");
   dd.style.display="block";
 }
-function hideAC(type){document.getElementById("ac-"+type).style.display="none";}
-function selectProduct(item,desc,supplier){
-  document.getElementById("v-item").value=item;
-  document.getElementById("v-desc").value=desc;
+function hideAC(t){document.getElementById("ac-"+t).style.display="none";}
+function selP(item,desc,sup){
+  document.getElementById("v-item").value=item;document.getElementById("v-desc").value=desc;
   hideAC("item");hideAC("desc");
-  var pol=policyFor(supplier);
-  var hint=document.getElementById("policy-hint");
-  if(!pol||!supplier){hint.innerHTML="";return;}
-  var color=pol.cambia.toLowerCase().indexOf("si")===0?"#27500A":pol.cambia.toLowerCase()==="no"?"#b91c1c":"#92400e";
-  var bg=pol.cambia.toLowerCase().indexOf("si")===0?"#EAF3DE":pol.cambia.toLowerCase()==="no"?"#fee2e2":"#fef3c7";
-  hint.innerHTML='<div style="font-size:11px;background:'+bg+";color:"+color+';padding:5px 8px;border-radius:6px;margin-top:3px"><b>'+supplier+"</b> — Cambia: <b>"+pol.cambia+"</b>"+(pol.obs?" · "+pol.obs:"")+"</div>";
+  var pol=policyFor(sup),h=document.getElementById("pol-hint");
+  if(!pol||!sup){h.innerHTML="";return;}
+  var co=pol.c.toLowerCase().indexOf("si")===0?"#27500A":pol.c.toLowerCase()==="no"?"#b91c1c":"#92400e";
+  var bg=pol.c.toLowerCase().indexOf("si")===0?"#EAF3DE":pol.c.toLowerCase()==="no"?"#fee2e2":"#fef3c7";
+  h.innerHTML='<div style="font-size:11px;background:'+bg+";color:"+co+';padding:5px 8px;border-radius:6px;margin-top:3px"><b>'+sup+"</b> — Cambia: <b>"+pol.c+"</b>"+(pol.o?" · "+pol.o:"")+"</div>";
 }
 
-// ══ EXPORTS ══════════════════════════════════════════
-function exportCSV(){if(!tasks.length){alert("No hay tareas.");return;}var csv="ID,Categoría,Tarea,Agente,Turno,Prioridad,Fecha,Estado\n";tasks.forEach(function(t){var tarea=t.tarea||t.task||"";csv+=t.id+',"'+catFor(tarea)+'","'+tarea+'","'+(t.agente||t.agent)+'","'+(t.turno||"")+'","'+(t.prioridad||"")+'","'+(t.fecha||t.date||"")+'","'+(taskStatus(t)==="done"?"Completada":taskStatus(t)==="overdue"?"Vencida":"Pendiente")+'"\n';});download("SAC_Tareas_A57.csv","data:text/csv;charset=utf-8,"+encodeURIComponent(csv));}
-function exportWord(){if(!tasks.length){alert("No hay tareas.");return;}var rows=tasks.map(function(t){var tarea=t.tarea||t.task||"";return"<tr><td>"+tarea+"</td><td>"+(t.agente||t.agent)+"</td><td>"+(t.turno||"—")+"</td><td>"+(t.prioridad||"—")+"</td><td>"+(taskStatus(t)==="done"?"Completada":taskStatus(t)==="overdue"?"Vencida":"Pendiente")+"</td></tr>";}).join("");var html="<html><head><meta charset='utf-8'><style>table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:5pt}th{background:#185FA5;color:#fff}</style></head><body><h1>Control SAC — Tareas A57</h1><table><tr><th>Tarea</th><th>Agente</th><th>Turno</th><th>Prioridad</th><th>Estado</th></tr>"+rows+"</table></body></html>";download("SAC_Tareas_A57.doc","data:application/msword;charset=utf-8,"+encodeURIComponent(html));}
-function exportAgentesCSV(){var csv="Agente,Área,Total,Pendientes,Vencidas,Completadas\n";MAIN_AGENTS.forEach(function(a){var at=tasks.filter(function(t){return(t.agente||t.agent)===a.name;}),d=at.filter(function(t){return taskStatus(t)==="done";}).length,ov=at.filter(function(t){return taskStatus(t)==="overdue";}).length,p=at.filter(function(t){return taskStatus(t)==="pending"||taskStatus(t)==="soon";}).length;csv+='"'+a.name+'","'+a.area+'",'+at.length+","+p+","+ov+","+d+"\n";});download("SAC_Agentes_A57.csv","data:text/csv;charset=utf-8,"+encodeURIComponent(csv));}
-function exportVencCSV(){if(!currentStore)return;var prods=productos[currentStore.code]||[];if(!prods.length){alert("Sin productos.");return;}var csv="Ítem,Descripción,Cantidad,Agente,Fecha venc.,Días,Estado\n";sortProductos(prods).forEach(function(p){var dias=diasRestantes(p.date),sem=semaforoInfo(dias);csv+='"'+(p.item||"")+'","'+p.desc+'","'+p.qty+'","'+(p.agent||"")+'","'+(p.date||"")+'","'+(dias!==null?dias:"—")+'","'+sem.label+'"\n';});download("Vencimientos_"+currentStore.code+".csv","data:text/csv;charset=utf-8,"+encodeURIComponent(csv));}
-function download(fn,du){var a=document.createElement("a");a.href=du;a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);}
+function expCSV(){if(!tasks.length){alert("No hay tareas.");return;}var c="ID,Tarea,Agente,Turno,Prioridad,Fecha,Estado\n";tasks.forEach(function(t){var ta=t.tarea||t.task||"";c+=t.id+',"'+ta+'","'+(t.agente||t.agent)+'","'+(t.turno||"")+'","'+(t.prioridad||"")+'","'+(t.fecha||t.date||"")+'","'+(ts(t)==="done"?"Completada":ts(t)==="overdue"?"Vencida":"Pendiente")+'"\n';});dl("SAC_Tareas.csv","data:text/csv;charset=utf-8,"+encodeURIComponent(c));}
+function expAgCSV(){var c="Agente,Total,Pendientes,Vencidas,Completadas\n";MAIN_AG.forEach(function(a){var at=tasks.filter(function(t){return(t.agente||t.agent)===a.name;}),d=at.filter(function(t){return ts(t)==="done";}).length,ov=at.filter(function(t){return ts(t)==="overdue";}).length,p=at.filter(function(t){return ts(t)==="pending"||ts(t)==="soon";}).length;c+='"'+a.name+'",'+at.length+","+p+","+ov+","+d+"\n";});dl("SAC_Agentes.csv","data:text/csv;charset=utf-8,"+encodeURIComponent(c));}
+function expVencCSV(){if(!CS)return;var pp=prods[CS.code]||[];if(!pp.length){alert("Sin productos.");return;}var c="Item,Descripcion,Cantidad,Agente,Fecha,Dias,Estado\n";sortP(pp).forEach(function(p){var d=dr(p.date),s=si(d);c+='"'+(p.item||"")+'","'+p.desc+'","'+p.qty+'","'+(p.agent||"")+'","'+(p.date||"")+'","'+(d!==null?d:"")+'","'+s.l+'"\n';});dl("Vencimientos_"+CS.code+".csv","data:text/csv;charset=utf-8,"+encodeURIComponent(c));}
+function dl(fn,du){var a=document.createElement("a");a.href=du;a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);}
 
-// ══ INIT ════════════════════════════════════════════
-loadData();
-renderStoreSelector();
-showScreen("selector");
+renderSel();
+showScr("sel");
 </script>
 </body>
 </html>
