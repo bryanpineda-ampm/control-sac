@@ -726,10 +726,10 @@ function verHist(){
     var h=d.historial||[],html="";
     if(!h.length){html='<div class="emp">Sin movimientos registrados.</div>';}
     else{
-      html='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><tr style="background:var(--blue-light)"><th style="padding:6px 8px;text-align:left">Fecha</th><th style="padding:6px 8px;text-align:left">Agente</th><th style="padding:6px 8px;text-align:left">Producto</th><th style="padding:6px 8px;text-align:center">Antes</th><th style="padding:6px 8px;text-align:center">Despues</th><th style="padding:6px 8px;text-align:left">Accion</th></tr>';
+      html='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><tr style="background:var(--blue-light)"><th style="padding:6px 8px;text-align:left">Fecha</th><th style="padding:6px 8px;text-align:left">Agente</th><th style="padding:6px 8px;text-align:left">Producto</th><th style="padding:6px 8px;text-align:center">Antes</th><th style="padding:6px 8px;text-align:center">Despues</th><th style="padding:6px 8px;text-align:left">Accion</th>'+(isG?'<th></th>':"")+'</tr>';
       h.forEach(function(r){
         var co=r.accion==="Producto eliminado"?"#b91c1c":r.accion==="Producto agregado"?"#27500A":r.accion==="Redujo cantidad"?"#d97706":"#1e40af";
-        html+="<tr style='border-bottom:1px solid var(--border)'><td style='padding:6px 8px;white-space:nowrap'>"+r.fecha+"</td><td style='padding:6px 8px'>"+r.agente+"</td><td style='padding:6px 8px;font-weight:600'>"+r.producto+"</td><td style='padding:6px 8px;text-align:center'>"+r.cantidad_anterior+"</td><td style='padding:6px 8px;text-align:center;font-weight:700'>"+r.cantidad_nueva+"</td><td style='padding:6px 8px'><span style='color:"+co+";font-weight:600'>"+r.accion+"</span></td></tr>";
+        html+="<tr style='border-bottom:1px solid var(--border)'><td style='padding:6px 8px;white-space:nowrap'>"+r.fecha+"</td><td style='padding:6px 8px'>"+r.agente+"</td><td style='padding:6px 8px;font-weight:600'>"+r.producto+"</td><td style='padding:6px 8px;text-align:center'>"+r.cantidad_anterior+"</td><td style='padding:6px 8px;text-align:center;font-weight:700'>"+r.cantidad_nueva+"</td><td style='padding:6px 8px'><span style='color:"+co+";font-weight:600'>"+r.accion+"</span></td>"+(isG?"<td style='padding:6px 8px'><button class='btn-d' style='height:24px;padding:0 7px;font-size:10px' onclick=\"remHist('"+r.rownum+"')\">🗑</button></td>":"")+"</tr>";
       });
       html+="</table></div>";
     }
@@ -738,8 +738,14 @@ function verHist(){
     document.getElementById("mod-ov").classList.add("op");
   });
 }
+function remHist(rownum){
+  if(!confirm("Eliminar este registro del historial? Esta acción no se puede deshacer."))return;
+  apiCall({action:"deleteHistorial",rownum:String(rownum)}).then(function(r){
+    if(r.ok)verHist();else alert("Error: "+(r.error||""));
+  });
+}
 
-function rendSup(){
+  function rendSup(){
   document.getElementById("sup-grid").innerHTML='<div class="lod">⏳ Cargando...</div>';
   var pend=STORES.length;
   STORES.forEach(function(s){
