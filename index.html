@@ -355,7 +355,7 @@ var POL=Object.assign({},POL_SEED);
 
 function policyFor(s){if(!s)return null;if(POL[s])return POL[s];var k=Object.keys(POL).filter(function(k){return s.toLowerCase().indexOf(k.toLowerCase())>=0||k.toLowerCase().indexOf(s.toLowerCase())>=0;})[0];return k?POL[k]:null;}
 
-var CS=null,isG=false,tasks=[],prods={},vagents={},filt="all",vFilt="all",vView="gen",opVAg=new Set(),opSupSt=null,selAg=null,curTab="",acIdx=-1,pBuf="",pCb=null,pMode="",rTimer=null,catalogo=[],politicas=[];
+var CS=null,isG=false,tasks=[],prods={},vagents={},filt="all",vFilt="all",vView="gen",opVAg=new Set(),opSupSt=null,selAg=null,curTab="",acIdx=-1,pBuf="",pCb=null,pMode="",rTimer=null,catalogo=[],politicas=[],histCache={};
 var TODAY=new Date();TODAY.setHours(0,0,0,0);
 
 function toggleTheme(){var h=document.documentElement,d=h.getAttribute("data-theme")==="dark";d?h.removeAttribute("data-theme"):h.setAttribute("data-theme","dark");var i=d?"🌙":"☀️";["thm-btn","thm-btn2"].forEach(function(id){var b=document.getElementById(id);if(b)b.textContent=i;});}
@@ -633,10 +633,29 @@ function remProd(id){
   if(!confirm("Eliminar este producto?"))return;
   apiCall({action:"deleteVencimiento",storeCode:CS.code,id:String(id)}).then(function(r){if(r.ok)refreshV();else alert("Error.");});
 }
-function editCant(id,qa,desc,ag){
-  var n=prompt("Cantidad actual: "+qa+"\nNueva cantidad para:\n"+desc,""+qa);
-  if(n===null||n==="")return;var ni=parseInt(n);if(isNaN(ni)||ni<0){alert("Cantidad invalida.");return;}
-  apiCall({action:"updateCantidad",storeCode:CS.code,id:String(id),qty:String(ni),agente:ag||"Agente"}).then(function(r){if(r.ok)refreshV();else alert("Error.");});
+function remProd(id){
+  document.getElementById("mod-ttl").textContent="🗑 Motivo de eliminación";
+  var h='<div style="font-size:12px;color:var(--text-soft);margin-bottom:10px">Selecciona qué pasó con este producto antes de eliminarlo del listado.</div>';
+  h+='<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px">';
+  h+='<button class="btn-p" style="justify-content:flex-start" onclick="confirmDelProd(\''+id+'\',\'Cambio/crédito de proveedor\')">✅ Proveedor lo cambió/acreditó</button>';
+  h+='<button style="justify-content:flex-start;background:#fee2e2;color:#b91c1c;border-color:#fca5a5" onclick="confirmDelProd(\''+id+'\',\'Venció (N/A cambio)\')">🔴 Se venció (N/A cambio)</button>';
+  h+='<button style="justify-content:flex-start;background:#EAF3DE;color:#27500A;border-color:#9FE1CB" onclick="confirmDelProd(\''+id+'\',\'Vendido con descuento\')">💲 Se vendió con descuento</button>';
+  h+='</div>';
+  h+='<div class="fld"><label>Otro motivo</label><input id="del-otro" type="text" placeholder="Especifica..."></div>';
+  h+='<button class="btn-p" style="width:100%;justify-content:center;margin-top:8px" onclick="confirmDelProdOtro(\''+id+'\')">Confirmar con este motivo</button>';
+  document.getElementById("mod-bdy").innerHTML=h;
+  document.getElementById("mod-ov").classList.add("op");
+}
+function confirmDelProd(id,motivo){
+  closeMod2();
+  apiCall({action:"deleteVencimiento",storeCode:CS.code,id:String(id),motivo:motivo}).then(function(r){if(r.ok)refreshV();else alert("Error.");});
+}
+function confirmDelProdOtro(id){
+  var n=document.getElementById("del-otro").value.trim();
+  if(!n){alert("Escribe el motivo.");return;}
+  confirmDelProd(id,"Otro: "+n);
+}
+}
 }
 function setVF(f,el){vFilt=f;document.querySelectorAll("#t-venc .chip").forEach(function(c){c.classList.remove("on");});el.classList.add("on");rendV();}
 function togVW(){
@@ -727,8 +746,7 @@ function verHist(){
     if(!h.length){html='<div class="emp">Sin movimientos registrados.</div>';}
     else{
       html='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><tr style="background:var(--blue-light)"><th style="padding:6px 8px;text-align:left">Fecha</th><th style="padding:6px 8px;text-align:left">Agente</th><th style="padding:6px 8px;text-align:left">Producto</th><th style="padding:6px 8px;text-align:center">Antes</th><th style="padding:6px 8px;text-align:center">Despues</th><th style="padding:6px 8px;text-align:left">Accion</th>'+(isG?'<th></th>':"")+'</tr>';
-      h.forEach(function(r){
-        var co=r.accion==="Producto eliminado"?"#b91c1c":r.accion==="Producto agregado"?"#27500A":r.accion==="Redujo cantidad"?"#d97706":"#1e40af";
+      h.forEach(function(r){var co=r.accion==="Producto agregado"?"#27500A":r.accion==="Redujo cantidad"?"#d97706":r.accion==="Venció (N/A cambio)"?"#b91c1c":r.accion==="Cambio/crédito de proveedor"?"#1e40af":r.accion==="Vendido con descuento"?"#7c3aed":"#1e40af";
         html+="<tr style='border-bottom:1px solid var(--border)'><td style='padding:6px 8px;white-space:nowrap'>"+r.fecha+"</td><td style='padding:6px 8px'>"+r.agente+"</td><td style='padding:6px 8px;font-weight:600'>"+r.producto+"</td><td style='padding:6px 8px;text-align:center'>"+r.cantidad_anterior+"</td><td style='padding:6px 8px;text-align:center;font-weight:700'>"+r.cantidad_nueva+"</td><td style='padding:6px 8px'><span style='color:"+co+";font-weight:600'>"+r.accion+"</span></td>"+(isG?"<td style='padding:6px 8px'><button class='btn-d' style='height:24px;padding:0 7px;font-size:10px' onclick=\"remHist('"+r.rownum+"')\">🗑</button></td>":"")+"</tr>";
       });
       html+="</table></div>";
@@ -747,11 +765,22 @@ function remHist(rownum){
 
   function rendSup(){
   document.getElementById("sup-grid").innerHTML='<div class="lod">⏳ Cargando...</div>';
-  var pend=STORES.length;
+  var pend=STORES.length*2;
+  function supDone(){pend--;if(pend===0)buildSup();}
   STORES.forEach(function(s){
-    if((prods[s.code]||[]).length>0){pend--;if(pend===0)buildSup();}
-    else{apiCall({action:"getVencimientos",storeCode:s.code}).then(function(d){if(d.ok)prods[s.code]=d.productos||[];pend--;if(pend===0)buildSup();});}
+    if((prods[s.code]||[]).length>0){supDone();}
+    else{apiCall({action:"getVencimientos",storeCode:s.code}).then(function(d){if(d.ok)prods[s.code]=d.productos||[];supDone();});}
+    apiCall({action:"getHistorial",storeCode:s.code}).then(function(d){if(d.ok)histCache[s.code]=d.historial||[];supDone();});
   });
+}
+function recoveryPct(code){
+  var h=histCache[code]||[];
+  var motivos=["Cambio/crédito de proveedor","Venció (N/A cambio)","Vendido con descuento"];
+  var res=h.filter(function(r){return motivos.indexOf(r.accion)>=0||(r.accion||"").indexOf("Otro:")===0;});
+  if(!res.length)return null;
+  var recuperados=res.filter(function(r){return r.accion!=="Venció (N/A cambio)";}).length;
+  return Math.round(recuperados/res.length*100);
+}
 }
 function buildSup(){
   var tot=0,roj=0,nar=0,ama=0,cel=0,ver=0;
@@ -779,12 +808,14 @@ function buildSup(){
     if(cnt.celeste)mn+='<span style="background:#dbeafe;color:#1e40af;padding:2px 7px;border-radius:6px;font-size:12px;font-weight:700">🔵 '+cnt.celeste+"</span> ";
     if(cnt.verde)mn+='<span style="background:#EAF3DE;color:#27500A;padding:2px 7px;border-radius:6px;font-size:12px;font-weight:700">🟢 '+cnt.verde+"</span>";
     if(!p.length)mn='<span style="font-size:11px;color:var(--text-soft)">Sin registros</span>';
+    var rec=recoveryPct(s.code);
+    var rc=rec!==null?'<div style="font-size:11px;color:var(--text-soft);margin-top:4px">🔄 '+rec+'% recuperado</div>':'';
     var isOp=opSupSt===s.code,det="";
     if(isOp){
       if(!p.length){det='<div style="padding:10px;font-size:12px;color:var(--text-soft);font-style:italic">Sin productos registrados</div>';}
       else{det='<div style="border-top:1px solid var(--border)">';sortP(p).forEach(function(x){var d=dr(x.date),s2=si(d),bc=s2.c==="sr"?"#e53e3e":s2.c==="sn"?"var(--orange)":s2.c==="sa"?"#ca8a04":s2.c==="sc"?"#1e40af":"#34d399";det+='<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);border-left:3px solid '+bc+'"><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">'+x.desc+'</div><div style="font-size:10px;color:var(--text-soft)">'+(x.agent||"Sin agente")+" · Cant: "+x.qty+"</div></div>"+'<div style="text-align:right;flex-shrink:0"><span class="sem '+s2.c+'" style="font-size:10px">'+semI(s2.c)+" "+s2.l+'</span><div style="font-size:10px;color:var(--text-soft);margin-top:2px">'+fd(x.date)+"</div></div></div>";});det+="</div>";}
     }
-    stH+='<div class="sc-card'+(isOp?" sel":"")+'" style="'+(ha?"border-left:3px solid #e53e3e":"")+'" onclick="togSup(\''+s.code+'\')"><div class="sc-hdr"><span class="sc-badge">'+s.code+'</span><div style="flex:1;min-width:0;margin-left:8px"><div style="font-size:13px;font-weight:700">'+s.name+'</div><div style="font-size:11px;color:var(--text-soft)">👤 '+s.manager+'</div></div>'+(s.isMain?'<span style="background:#F58220;color:#fff;padding:2px 6px;border-radius:5px;font-size:10px;font-weight:700">★</span>':'')+'</div><div class="sc-bdy"><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px">'+mn+'</div><div style="font-size:11px;color:var(--text-soft)">'+p.length+" producto"+(p.length!==1?"s":"")+'</div></div>'+det+'</div>';
+    stH+='<div class="sc-card'+(isOp?" sel":"")+'" style="'+(ha?"border-left:3px solid #e53e3e":"")+'" onclick="togSup(\''+s.code+'\')"><div class="sc-hdr"><span class="sc-badge">'+s.code+'</span><div style="flex:1;min-width:0;margin-left:8px"><div style="font-size:13px;font-weight:700">'+s.name+'</div><div style="font-size:11px;color:var(--text-soft)">👤 '+s.manager+'</div></div>'+(s.isMain?'<span style="background:#F58220;color:#fff;padding:2px 6px;border-radius:5px;font-size:10px;font-weight:700">★</span>':'')+'</div><div class="sc-bdy"><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px">'+mn+'</div><div style="font-size:11px;color:var(--text-soft)">'+p.length+" producto"+(p.length!==1?"s":"")+'</div></div>'+rc+det+'</div>';
   });
   document.getElementById("sup-grid").innerHTML=rkH+stH;
 }
