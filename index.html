@@ -617,22 +617,6 @@ function rendVAGL(){
   el.innerHTML=h;
 }
 
-function addProd(){
-  var item=document.getElementById("v-item").value.trim(),desc=document.getElementById("v-desc").value.trim();
-  var qty=document.getElementById("v-qty").value,ag=document.getElementById("v-ag").value,date=document.getElementById("v-date").value;
-  if(!desc||!date){alert("Ingresa descripcion y fecha.");return;}
-  var df=date;if(date&&date.indexOf("-")<0){var pt=date.split("/");if(pt.length===3)df=pt[2]+"-"+pt[1]+"-"+pt[0];}
-  var btn=document.getElementById("btn-venc");btn.textContent="⏳ Guardando...";btn.disabled=true;
-  apiCall({action:"addVencimiento",storeCode:CS.code,item:item,desc:desc,qty:qty||"1",agent:ag,date:df}).then(function(r){
-    btn.textContent="+ Agregar";btn.disabled=false;
-    if(r.ok){["v-item","v-desc","v-qty","v-date"].forEach(function(id){document.getElementById(id).value="";});document.getElementById("v-ag").value="";document.getElementById("pol-hint").innerHTML="";refreshV();}
-    else alert("Error al guardar: "+(r.error||""));
-  });
-}
-function remProd(id){
-  if(!confirm("Eliminar este producto?"))return;
-  apiCall({action:"deleteVencimiento",storeCode:CS.code,id:String(id)}).then(function(r){if(r.ok)refreshV();else alert("Error.");});
-}
 function remProd(id){
   document.getElementById("mod-ttl").textContent="🗑 Motivo de eliminación";
   var h='<div style="font-size:12px;color:var(--text-soft);margin-bottom:10px">Selecciona qué pasó con este producto antes de eliminarlo del listado.</div>';
@@ -655,7 +639,10 @@ function confirmDelProdOtro(id){
   if(!n){alert("Escribe el motivo.");return;}
   confirmDelProd(id,"Otro: "+n);
 }
-}
+function editCant(id,qa,desc,ag){
+  var n=prompt("Cantidad actual: "+qa+"\nNueva cantidad para:\n"+desc,""+qa);
+  if(n===null||n==="")return;var ni=parseInt(n);if(isNaN(ni)||ni<0){alert("Cantidad invalida.");return;}
+  apiCall({action:"updateCantidad",storeCode:CS.code,id:String(id),qty:String(ni),agente:ag||"Agente"}).then(function(r){if(r.ok)refreshV();else alert("Error.");});
 }
 function setVF(f,el){vFilt=f;document.querySelectorAll("#t-venc .chip").forEach(function(c){c.classList.remove("on");});el.classList.add("on");rendV();}
 function togVW(){
