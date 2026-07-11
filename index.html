@@ -768,7 +768,6 @@ function recoveryPct(code){
   var recuperados=res.filter(function(r){return r.accion!=="Venció (N/A cambio)";}).length;
   return Math.round(recuperados/res.length*100);
 }
-}
 function buildSup(){
   var tot=0,roj=0,nar=0,ama=0,cel=0,ver=0;
   STORES.forEach(function(s){var p=prods[s.code]||[];tot+=p.length;p.forEach(function(x){var k=sk(dr(x.date));if(k==="rojo")roj++;else if(k==="naranja")nar++;else if(k==="amarillo")ama++;else if(k==="celeste")cel++;else ver++;});});
