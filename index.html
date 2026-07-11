@@ -268,6 +268,7 @@ button:active{transform:scale(.96)}
         <div class="ebar">
           <button id="vw-btn" onclick="togVW()" style="background:var(--blue);color:#fff;border-color:var(--blue-dark);font-size:12px">👥 Por Agente</button>
           <button onclick="verHist()" style="font-size:12px">📋 Historial</button>
+          <button onclick="reqG(verCatalogo)" style="font-size:12px">📦 Catálogo</button>
           <button onclick="expVencCSV()" style="font-size:12px">⬇ CSV</button>
         </div>
       </div>
@@ -347,12 +348,14 @@ var STORES=[
 var COLORS=[["#B5D4F4","#0C447C"],["#9FE1CB","#085041"],["#FAC775","#633806"],["#F4C0D1","#72243E"],["#CECBF6","#3C3489"],["#F5C4B3","#712B13"],["#C0DD97","#27500A"],["#F7C1C1","#791F1F"]];
 var TASKS_DEF=["Mantener limpio el parqueo y entrada de la tienda","Limpiar puertas, ventanas y areas visibles al cliente","Mantener los pisos limpios durante todo el turno","Mantener los banos limpios, abastecidos y ordenados","Realizar frenteo de la gondola asignada","Abastecer la gondola asignada segun necesidad de inventario","Colocar productos siguiendo la planimetria establecida","Mantener visibles los precios de todos los productos","Organizar cabeceras y exhibiciones promocionales","Mantener ordenados los productos en exhibicion","Rotular promociones vigentes en el area asignada","Corregir espacios vacios mediante reposicion inmediata","Mantener limpia el area de preparacion de alimentos","Limpiar microondas, tostador y equipos de servicio","Mantener ordenada y atractiva el area de Food Service","Mantener limpia y ordenada el area de caja","Atender clientes siguiendo el protocolo de servicio","Ofrecer promociones y productos de impulso en cada venta","Mantener abastecidos los productos de impulso en caja","Entregar el area de trabajo limpia y organizada al finalizar el turno"];
 var MAIN_AG=[{name:"Dennis Javier Crespo Reyes",area:"Beer Cave"},{name:"Esteban Justino Rivas Rivas",area:"Gondola de Diana, Dinant"},{name:"George Harrington Wilson Fuigeroa",area:"Cuarto Frio CDN, LALA"},{name:"Jhonny Joel Omeir Sequeira",area:"Cuarto Frio FEMSA"},{name:"Edgar Brigido Guzman Duarte",area:"Gondola de Aseo"},{name:"Angel Gabriel Munguia Ramirez",area:"Food Service"},{name:"Elsy Yaleska Castillo Pineda",area:"Gondola Alimentos"},{name:"Emely Nickole Vidaurry Taylor",area:"Cabeceras de caja"},{name:"Yeslin Yaliz Flores Duarte",area:"Mi Bankito"},{name:"Gustavo Alfonso Alvarez Aguirre",area:"Mi Bankito CDN"}];
-var CAT=[["018200000164","Budweiser Lata 355ml","CCN"],["702596000111","Tona Botella x6","CCN"],["641194004308","Tona Ultra Lata 350ml","CCN"],["641194000119","Victoria Clasica Botella x6","CCN"],["764009007315","Heineken Botella x6","CCN"],["7441003500532","Coca Cola 1 litro","FEMSA"],["7441003500488","Coca Cola Clasica 600ml","FEMSA"],["7441003500235","Coca Cola Lata","FEMSA"],["7441003518230","Coca Cola Zero 354ml","FEMSA"],["7441003520233","Fanta Naranja Lata 354ml","FEMSA"],["070847019800","Monster Green Lata 473ml","FEMSA"],["070847019848","Monster Ultra 473ml","FEMSA"],["9002490204006","Red Bull 250ml","CLNSA-DCP"],["677585001083","Pepsi 500ml","CABCORP"],["677585008075","Pepsi 1 litro","CABCORP"],["7401005907753","Adrenaline Rush 355ml","CABCORP"],["036731039453","Gatorade Lima Limon 500ml","CABCORP"],["036731039460","Gatorade Naranja 500ml","CABCORP"],["026964900026","Agua Luna 600ml","CLNSA-FDC"],["7502268547349","Electrolit Lima Limon 625ml","IMFARSA"],["7502268547608","Electrolit Fresa 625ml","IMFARSA"],["849806001220","Four Loko Fruit Ponch 473ml","CLNSA-DCP"],["764009801814","Smirnoff Ice 355ml","CCN"],["7441002649904","Atun Gaviota Agua 140gr","OCAL"],["7441002638007","Atun Gaviota Vegetales 140gr","OCAL"],["705805031630","Mantequilla La Perfecta","LALA"],["705805032057","Yogurt Bebible Fresa","LALA"],["705805032194","Yogurt Bat Fresa 125gr","LALA"],["705805033160","Cajeta de leche La Perfecta","LALA"],["7441001609466","Helado Chocolate 1/2 Galon","CONGELADOS"],["7441001609640","Helado Fresa 1/4 Galon","CONGELADOS"],["7441001604300","Cono Alaska Vainilla 70gr","CONGELADOS"],["7441001610288","Sundae Chocolate 130gr","CONGELADOS"],["7441001602047","Deligurt Arandano 200ml","CONGELADOS"],["7441029500301","Pan para Hot Dogs 325gr","BIMBO"],["7441029518375","Pan Blanco Monarca 440gr","BIMBO"],["7441029508444","Tortillas Rapiditas 12pzs","BIMBO"],["7434004520418","Empanadas de Queso 10und","Chelitas"],["637213202251","Salchicha Parrillera 360gr","Delmor"],["637213606042","Chorizo Criollo 227gr","Delmor"],["7441008933182","Salchichon Con chile 200gr","SIGMA"],["8445291646049","Cafe Presto 50gr","NESTLE"],["7501072202727","Dog Chow Adult Raza Grande 2kg","NESTLE"],["023100051048","Pedigree Original 2kg","CSSA"],["023100041049","Pedigree Cachorro 2kg","CSSA"],["7501032925154","Raid Accion Total 400ml","DICEGSA"],["637662101150","Jabon Marfil 275gr","ECHAMORRO"],["099176003700","Lavaplatos Dona Blanca 340gr","DIINSA"],["028400019903","Doritos Nachos Cheese 1oz","CDN"],["028400022231","Cheetos Crunchy 35gr","CDN"],["721282411215","Lays original 105gr","CDN"],["038000846731","Pringles Original 40gr","ECHAMORRO"],["750894602780","Zambos Casera 155gr","DINANT"],["750894601059","Chicharrones Autentico 110gr","DINANT"],["748757000378","Alboroto 206gr","DIANA"],["748757001566","Elotito con limon 157gr","DIANA"],["748757000200","Jalapenos 160gr","DIANA"],["748757009449","Mani con Limon Diana 80gr","DIANA"],["7861002900117","Ferrero Rocher 100gr","OCAL"],["7622210426963","Halls Cereza","MONDELEZ"],["034000249862","Hersheys Chocolate","DICEGSA"],["80052760","Kinder Bueno 43gr","OCAL"],["80051671","Nutella 200gr","OCAL"],["7622201390211","Ritz Original 12und","MONDELEZ"],["7590011151110","Oreo Regular 12und","MONDELEZ"],["086581002510","Galleta Club Extra 9und","POZUELO"],["086581006280","Galleta Maria 12und","POZUELO"],["7441163404695","Galletas Nucitas 315gr","POZUELO"],["7431001003036","Mani Con Sal 80gr","CLNSA-DCP"],["7431001003043","Mani Con Chile 80gr","CLNSA-DCP"],["7431001001186","Party Mix 170gr","CLNSA-DCP"],["633148100013","Tajin Clasico 142gr","CONTESA"],["7439201379623","Nachitos 75gr","HOREB"],["7432678902318","Platanfritos 220gr","HOREB"],["7433200865064","Hojaldritas Valdez 100gr","VALDEZ"],["7433200865057","Rosquillas Valdez 100gr","VALDEZ"]];
-var POL={"CCN":{c:"Si",o:"Reportar antes de vencer"},"FEMSA":{c:"Cambio/Debito",o:"Reportar por correo hasta 3 dias antes"},"CABCORP":{c:"No",o:""},"CLNSA-DCP":{c:"No",o:""},"CLNSA-FDC":{c:"No",o:"Solo seltzer notificado 1 mes antes"},"OCAL":{c:"No",o:"Apoya si se comunico con proveedor"},"BIMBO":{c:"Cambio/Debito",o:"Reportar 15 dias antes en Managua, 35 dias foraneas"},"Chelitas":{c:"Si",o:"Reportar 15 dias antes"},"Delmor":{c:"Si debita",o:"Producto debe entregarse con 15 dias antes de vencer"},"SIGMA":{c:"Si",o:"Reportar con 8 dias de anticipacion"},"NESTLE":{c:"No",o:""},"CSSA":{c:"No",o:""},"DICEGSA":{c:"No",o:""},"DIINSA":{c:"No",o:""},"ECHAMORRO":{c:"No",o:""},"CONGELADOS":{c:"Si debita",o:"Despues de 15 dias vencido no realiza debito"},"LALA":{c:"Si",o:"Reportar 3 a 5 dias antes de vencer"},"DINANT":{c:"No",o:""},"DIANA":{c:"No",o:"Solo chicharrones vencidos"},"MONDELEZ":{c:"No",o:""},"POZUELO":{c:"No",o:"Solo producto nuevo por arreglo comercial"},"HOREB":{c:"No",o:""},"VALDEZ":{c:"Si",o:"Solo por fecha borrosa"},"CONTESA":{c:"No",o:""},"IMFARSA":{c:"No",o:""}};
+var CAT_SEED=[["018200000164","Budweiser Lata 355ml","CCN"],["702596000111","Tona Botella x6","CCN"],["641194004308","Tona Ultra Lata 350ml","CCN"],["641194000119","Victoria Clasica Botella x6","CCN"],["764009007315","Heineken Botella x6","CCN"],["7441003500532","Coca Cola 1 litro","FEMSA"],["7441003500488","Coca Cola Clasica 600ml","FEMSA"],["7441003500235","Coca Cola Lata","FEMSA"],["7441003518230","Coca Cola Zero 354ml","FEMSA"],["7441003520233","Fanta Naranja Lata 354ml","FEMSA"],["070847019800","Monster Green Lata 473ml","FEMSA"],["070847019848","Monster Ultra 473ml","FEMSA"],["9002490204006","Red Bull 250ml","CLNSA-DCP"],["677585001083","Pepsi 500ml","CABCORP"],["677585008075","Pepsi 1 litro","CABCORP"],["7401005907753","Adrenaline Rush 355ml","CABCORP"],["036731039453","Gatorade Lima Limon 500ml","CABCORP"],["036731039460","Gatorade Naranja 500ml","CABCORP"],["026964900026","Agua Luna 600ml","CLNSA-FDC"],["7502268547349","Electrolit Lima Limon 625ml","IMFARSA"],["7502268547608","Electrolit Fresa 625ml","IMFARSA"],["849806001220","Four Loko Fruit Ponch 473ml","CLNSA-DCP"],["764009801814","Smirnoff Ice 355ml","CCN"],["7441002649904","Atun Gaviota Agua 140gr","OCAL"],["7441002638007","Atun Gaviota Vegetales 140gr","OCAL"],["705805031630","Mantequilla La Perfecta","LALA"],["705805032057","Yogurt Bebible Fresa","LALA"],["705805032194","Yogurt Bat Fresa 125gr","LALA"],["705805033160","Cajeta de leche La Perfecta","LALA"],["7441001609466","Helado Chocolate 1/2 Galon","CONGELADOS"],["7441001609640","Helado Fresa 1/4 Galon","CONGELADOS"],["7441001604300","Cono Alaska Vainilla 70gr","CONGELADOS"],["7441001610288","Sundae Chocolate 130gr","CONGELADOS"],["7441001602047","Deligurt Arandano 200ml","CONGELADOS"],["7441029500301","Pan para Hot Dogs 325gr","BIMBO"],["7441029518375","Pan Blanco Monarca 440gr","BIMBO"],["7441029508444","Tortillas Rapiditas 12pzs","BIMBO"],["7434004520418","Empanadas de Queso 10und","Chelitas"],["637213202251","Salchicha Parrillera 360gr","Delmor"],["637213606042","Chorizo Criollo 227gr","Delmor"],["7441008933182","Salchichon Con chile 200gr","SIGMA"],["8445291646049","Cafe Presto 50gr","NESTLE"],["7501072202727","Dog Chow Adult Raza Grande 2kg","NESTLE"],["023100051048","Pedigree Original 2kg","CSSA"],["023100041049","Pedigree Cachorro 2kg","CSSA"],["7501032925154","Raid Accion Total 400ml","DICEGSA"],["637662101150","Jabon Marfil 275gr","ECHAMORRO"],["099176003700","Lavaplatos Dona Blanca 340gr","DIINSA"],["028400019903","Doritos Nachos Cheese 1oz","CDN"],["028400022231","Cheetos Crunchy 35gr","CDN"],["721282411215","Lays original 105gr","CDN"],["038000846731","Pringles Original 40gr","ECHAMORRO"],["750894602780","Zambos Casera 155gr","DINANT"],["750894601059","Chicharrones Autentico 110gr","DINANT"],["748757000378","Alboroto 206gr","DIANA"],["748757001566","Elotito con limon 157gr","DIANA"],["748757000200","Jalapenos 160gr","DIANA"],["748757009449","Mani con Limon Diana 80gr","DIANA"],["7861002900117","Ferrero Rocher 100gr","OCAL"],["7622210426963","Halls Cereza","MONDELEZ"],["034000249862","Hersheys Chocolate","DICEGSA"],["80052760","Kinder Bueno 43gr","OCAL"],["80051671","Nutella 200gr","OCAL"],["7622201390211","Ritz Original 12und","MONDELEZ"],["7590011151110","Oreo Regular 12und","MONDELEZ"],["086581002510","Galleta Club Extra 9und","POZUELO"],["086581006280","Galleta Maria 12und","POZUELO"],["7441163404695","Galletas Nucitas 315gr","POZUELO"],["7431001003036","Mani Con Sal 80gr","CLNSA-DCP"],["7431001003043","Mani Con Chile 80gr","CLNSA-DCP"],["7431001001186","Party Mix 170gr","CLNSA-DCP"],["633148100013","Tajin Clasico 142gr","CONTESA"],["7439201379623","Nachitos 75gr","HOREB"],["7432678902318","Platanfritos 220gr","HOREB"],["7433200865064","Hojaldritas Valdez 100gr","VALDEZ"],["7433200865057","Rosquillas Valdez 100gr","VALDEZ"]];
+var CAT=CAT_SEED.slice();  
+var POL_SEED={"CCN":{c:"Si",o:"Reportar antes de vencer"},"FEMSA":{c:"Cambio/Debito",o:"Reportar por correo hasta 3 dias antes"},"CABCORP":{c:"No",o:""},"CLNSA-DCP":{c:"No",o:""},"CLNSA-FDC":{c:"No",o:"Solo seltzer notificado 1 mes antes"},"OCAL":{c:"No",o:"Apoya si se comunico con proveedor"},"BIMBO":{c:"Cambio/Debito",o:"Reportar 15 dias antes en Managua, 35 dias foraneas"},"Chelitas":{c:"Si",o:"Reportar 15 dias antes"},"Delmor":{c:"Si debita",o:"Producto debe entregarse con 15 dias antes de vencer"},"SIGMA":{c:"Si",o:"Reportar con 8 dias de anticipacion"},"NESTLE":{c:"No",o:""},"CSSA":{c:"No",o:""},"DICEGSA":{c:"No",o:""},"DIINSA":{c:"No",o:""},"ECHAMORRO":{c:"No",o:""},"CONGELADOS":{c:"Si debita",o:"Despues de 15 dias vencido no realiza debito"},"LALA":{c:"Si",o:"Reportar 3 a 5 dias antes de vencer"},"DINANT":{c:"No",o:""},"DIANA":{c:"No",o:"Solo chicharrones vencidos"},"MONDELEZ":{c:"No",o:""},"POZUELO":{c:"No",o:"Solo producto nuevo por arreglo comercial"},"HOREB":{c:"No",o:""},"VALDEZ":{c:"Si",o:"Solo por fecha borrosa"},"CONTESA":{c:"No",o:""},"IMFARSA":{c:"No",o:""}};
+var POL=Object.assign({},POL_SEED);
 
 function policyFor(s){if(!s)return null;if(POL[s])return POL[s];var k=Object.keys(POL).filter(function(k){return s.toLowerCase().indexOf(k.toLowerCase())>=0||k.toLowerCase().indexOf(s.toLowerCase())>=0;})[0];return k?POL[k]:null;}
 
-var CS=null,isG=false,tasks=[],prods={},vagents={},filt="all",vFilt="all",vView="gen",opVAg=new Set(),opSupSt=null,selAg=null,curTab="",acIdx=-1,pBuf="",pCb=null,pMode="",rTimer=null;
+var CS=null,isG=false,tasks=[],prods={},vagents={},filt="all",vFilt="all",vView="gen",opVAg=new Set(),opSupSt=null,selAg=null,curTab="",acIdx=-1,pBuf="",pCb=null,pMode="",rTimer=null,catalogo=[],politicas=[];
 var TODAY=new Date();TODAY.setHours(0,0,0,0);
 
 function toggleTheme(){var h=document.documentElement,d=h.getAttribute("data-theme")==="dark";d?h.removeAttribute("data-theme"):h.setAttribute("data-theme","dark");var i=d?"🌙":"☀️";["thm-btn","thm-btn2"].forEach(function(id){var b=document.getElementById(id);if(b)b.textContent=i;});}
@@ -404,6 +407,7 @@ function setupApp(){
   var rb=document.getElementById("role-btn");rb.textContent=isG?"🔓 Salir Gerente":"🔐 Gerente";rb.className="hbtn"+(isG?" on":"");
   document.getElementById("sync-ind").style.display=s.isMain?"flex":"none";
   buildTabs();
+  refreshCatalogo();refreshPoliticas();
   if(s.isMain){popMainSels();popVAg();refreshT();startAR();}
   else{if(!prods[s.code])prods[s.code]=[];if(!vagents[s.code])vagents[s.code]=[];refreshVAg().then(function(){popVAg();});refreshV();startARV();}
   var gp=document.getElementById("g-ag-panel");if(gp)gp.style.display=isG&&!s.isMain?"block":"none";
@@ -473,6 +477,99 @@ function refreshV(){if(!CS)return Promise.resolve();return apiCall({action:"getV
 function refreshVAg(){if(!CS)return Promise.resolve();return apiCall({action:"getAgentes",storeCode:CS.code}).then(function(d){if(d.ok){vagents[CS.code]=d.agentes||[];popVAg();rendVAGL();}});}
 function startAR(){if(rTimer)clearInterval(rTimer);rTimer=setInterval(function(){refreshT();},30000);}
 function startARV(){if(rTimer)clearInterval(rTimer);rTimer=setInterval(function(){refreshV();},30000);}
+  function refreshCatalogo(){
+  return apiCall({action:"getCatalogo"}).then(function(d){
+    if(d.ok){
+      catalogo=d.productos||[];
+      CAT=CAT_SEED.concat(catalogo.map(function(c){return [c.codigo,c.descripcion,c.proveedor];}));
+    }
+  });
+}
+function refreshPoliticas(){
+  return apiCall({action:"getPoliticas"}).then(function(d){
+    if(d.ok){
+      politicas=d.politicas||[];
+      var merged=Object.assign({},POL_SEED);
+      politicas.forEach(function(x){ if(x.proveedor) merged[x.proveedor]={c:x.cambio||"",o:x.observacion||""}; });
+      POL=merged;
+    }
+  });
+}
+function verCatalogo(){
+  document.getElementById("mod-ttl").textContent="📦 Catálogo y Políticas de Cambio";
+  rendCatalogoModal();
+  document.getElementById("mod-ov").classList.add("op");
+}
+function rendCatalogoModal(){
+  var b=document.getElementById("mod-bdy");
+  var h='<div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:6px">➕ Nuevo producto</div>';
+  h+='<div class="fr" style="margin-bottom:12px">';
+  h+='<div class="fld" style="min-width:100px"><label>Código</label><input id="cat-cod" type="text" placeholder="Código de barras"></div>';
+  h+='<div class="fld" style="flex:2;min-width:140px"><label>Descripción</label><input id="cat-desc" type="text" placeholder="Descripción"></div>';
+  h+='<div class="fld" style="min-width:110px"><label>Proveedor</label><input id="cat-prov" type="text" placeholder="Proveedor" list="cat-prov-list"><datalist id="cat-prov-list">'+Object.keys(POL).map(function(k){return"<option value='"+k+"'>";}).join("")+"</datalist></div>";
+  h+='<button class="btn-p" onclick="addProdCat()">+ Agregar</button>';
+  h+='</div>';
+  h+='<div style="max-height:220px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;margin-bottom:16px">';
+  if(!catalogo.length){h+='<div class="emp">Sin productos personalizados aún. El catálogo base sigue disponible.</div>';}
+  else{
+    h+='<table class="vtbl"><thead><tr><th>Código</th><th>Descripción</th><th>Proveedor</th><th></th></tr></thead><tbody>';
+    catalogo.forEach(function(c){
+      h+="<tr><td data-label='Código'>"+(c.codigo||"—")+"</td><td data-label='Descripción'>"+c.descripcion+"</td><td data-label='Proveedor'>"+(c.proveedor||"—")+"</td><td><button class='btn-d' style='height:26px;padding:0 8px;font-size:11px' onclick=\"remProdCat('"+c.id+"')\">🗑</button></td></tr>";
+    });
+    h+="</tbody></table>";
+  }
+  h+='</div>';
+  h+='<div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:6px">🔁 Políticas de cambio por proveedor</div>';
+  h+='<div class="fr" style="margin-bottom:12px">';
+  h+='<div class="fld" style="min-width:110px"><label>Proveedor</label><input id="pol-prov" type="text" placeholder="Proveedor"></div>';
+  h+='<div class="fld" style="min-width:110px"><label>¿Cambia?</label><select id="pol-cambio"><option value="Si">Si</option><option value="No">No</option><option value="Si debita">Si debita</option><option value="Cambio/Debito">Cambio/Debito</option></select></div>';
+  h+='<div class="fld" style="flex:2;min-width:140px"><label>Observación</label><input id="pol-obs" type="text" placeholder="Ej: Reportar 15 dias antes"></div>';
+  h+='<button class="btn-p" onclick="savePolCat()">💾 Guardar</button>';
+  h+='</div>';
+  h+='<div style="max-height:220px;overflow-y:auto;border:1px solid var(--border);border-radius:8px">';
+  var provs=Object.keys(POL).sort();
+  h+='<table class="vtbl"><thead><tr><th>Proveedor</th><th>Cambia</th><th>Observación</th><th></th></tr></thead><tbody>';
+  provs.forEach(function(k){
+    var pol=POL[k];
+    h+="<tr><td data-label='Proveedor'><b>"+k+"</b></td><td data-label='Cambia'>"+pol.c+"</td><td data-label='Observación'>"+(pol.o||"—")+"</td><td><button class='ib' onclick=\"editPolCat('"+k.replace(/'/g,"\\'")+"')\">✏️</button> <button class='btn-d' style='height:26px;padding:0 8px;font-size:11px' onclick=\"remPolCat('"+k.replace(/'/g,"\\'")+"')\">🗑</button></td></tr>";
+  });
+  h+="</tbody></table></div>";
+  b.innerHTML=h;
+}
+function addProdCat(){
+  var cod=document.getElementById("cat-cod").value.trim(),desc=document.getElementById("cat-desc").value.trim(),prov=document.getElementById("cat-prov").value.trim();
+  if(!desc){alert("Ingresa la descripción.");return;}
+  apiCall({action:"addProducto",codigo:cod,descripcion:desc,proveedor:prov}).then(function(r){
+    if(r.ok){["cat-cod","cat-desc","cat-prov"].forEach(function(id){document.getElementById(id).value="";});refreshCatalogo().then(rendCatalogoModal);}
+    else alert("Error al guardar: "+(r.error||""));
+  });
+}
+function remProdCat(id){
+  if(!confirm("Eliminar este producto del catálogo?"))return;
+  apiCall({action:"deleteProducto",id:String(id)}).then(function(r){
+    if(r.ok)refreshCatalogo().then(rendCatalogoModal);else alert("Error: "+(r.error||""));
+  });
+}
+function savePolCat(){
+  var prov=document.getElementById("pol-prov").value.trim(),cambio=document.getElementById("pol-cambio").value,obs=document.getElementById("pol-obs").value.trim();
+  if(!prov){alert("Ingresa el proveedor.");return;}
+  apiCall({action:"savePolitica",proveedor:prov,cambio:cambio,observacion:obs}).then(function(r){
+    if(r.ok){document.getElementById("pol-prov").value="";document.getElementById("pol-obs").value="";refreshPoliticas().then(rendCatalogoModal);}
+    else alert("Error al guardar: "+(r.error||""));
+  });
+}
+function editPolCat(prov){
+  var pol=POL[prov];if(!pol)return;
+  document.getElementById("pol-prov").value=prov;
+  document.getElementById("pol-cambio").value=pol.c;
+  document.getElementById("pol-obs").value=pol.o||"";
+}
+function remPolCat(prov){
+  if(!confirm("Eliminar la política de "+prov+"?"))return;
+  apiCall({action:"deletePolitica",proveedor:prov}).then(function(r){
+    if(r.ok)refreshPoliticas().then(rendCatalogoModal);else alert("Error: "+(r.error||"solo se pueden borrar políticas guardadas desde este panel"));
+  });
+}
 
 function popMainSels(){
   var s1=document.getElementById("i-agent"),s2=document.getElementById("ag-sel");
