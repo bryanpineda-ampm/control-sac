@@ -464,7 +464,7 @@ function updPD(){for(var i=0;i<4;i++)document.getElementById("pd"+i).classList.t
 function apiCall(p){
   return new Promise(function(res){
     setSS("sy","Sincronizando...");
-    var cb="cb_"+Date.now(),sc=document.createElement("script");
+    var cb="cb_"+Date.now()+"_"+Math.random().toString(36).slice(2),sc=document.createElement("script");
     var to=setTimeout(function(){delete window[cb];if(document.body.contains(sc))document.body.removeChild(sc);setSS("er","Sin conexion");res({ok:false});},18000);
     window[cb]=function(d){clearTimeout(to);delete window[cb];if(document.body.contains(sc))document.body.removeChild(sc);setSS("","Conectado");res(d);};
     p.callback=cb;sc.src=API+"?"+new URLSearchParams(p).toString();
