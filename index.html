@@ -367,7 +367,7 @@ var POL=Object.assign({},POL_SEED);
 
 function policyFor(s){if(!s)return null;if(POL[s])return POL[s];var k=Object.keys(POL).filter(function(k){return s.toLowerCase().indexOf(k.toLowerCase())>=0||k.toLowerCase().indexOf(s.toLowerCase())>=0;})[0];return k?POL[k]:null;}
 
-var CS=null,isG=false,tasks=[],prods={},vagents={},filt="all",vFilt="all",vView="gen",opVAg=new Set(),opSupSt=null,selAg=null,curTab="",acIdx=-1,pBuf="",pCb=null,pMode="",rTimer=null,catalogo=[],politicas=[],histCache={},curZone=null;
+var CS=null,isG=false,tasks=[],prods={},vagents={},filt="all",vFilt="all",vView="gen",opVAg=new Set(),opSupSt=null,selAg=null,curTab="",acIdx=-1,pBuf="",pCb=null,pMode="",rTimer=null,catalogo=[],politicas=[],histCache={},curZone=null,zoneStores=[];
 var TODAY=new Date();TODAY.setHours(0,0,0,0);
 
 function toggleTheme(){var h=document.documentElement,d=h.getAttribute("data-theme")==="dark";d?h.removeAttribute("data-theme"):h.setAttribute("data-theme","dark");var i=d?"🌙":"☀️";["thm-btn","thm-btn2"].forEach(function(id){var b=document.getElementById(id);if(b)b.textContent=i;});}
@@ -781,7 +781,7 @@ function remHist(rownum){
 
   function rendSup(){
   document.getElementById("sup-grid").innerHTML='<div class="lod">⏳ Cargando...</div>';
-  var zoneStores=STORES.filter(function(s){return s.zone===curZone.name;});
+  zoneStores=STORES.filter(function(s){return s.zone===curZone.name;});
   var hs=document.getElementById("sup-hsub");if(hs)hs.textContent="🏢 "+curZone.name+" — "+curZone.mgr;
   var pend=zoneStores.length*2;
   function supDone(){pend--;if(pend===0)buildSup();}
