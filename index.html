@@ -157,7 +157,7 @@ button:active{transform:scale(.96)}
   <div class="sel-title">Control SAC</div>
   <div class="sel-sub">Selecciona tu tienda para continuar</div>
   <div id="store-grid" class="sel-list"></div>
-  <button class="sel-sup" onclick="openSup()">🔭 Acceso Supervisor de Zona</button>
+  <button class="sel-sup" onclick="openSup()">🏢 Acceso Gerente de Zona</button>
 </div>
 
 <div id="s-app" style="display:none">
@@ -303,7 +303,7 @@ button:active{transform:scale(.96)}
 <div id="s-sup" style="display:none">
   <header>
     <div style="width:30px;height:30px;background:linear-gradient(135deg,#F58220,#FFB81C);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:700;flex-shrink:0">✓</div>
-    <div style="flex:1"><h1>Control SAC</h1><div class="hsub">🔭 Supervisor — Bryan Pineda · Yury Reyes</div></div>
+    <div style="flex:1"><h1>Control SAC</h1><div class="hsub" id="sup-hsub">🔭 Supervisor — Bryan Pineda · Yury Reyes</div></div>
     <button class="thm" onclick="toggleTheme()" id="thm-btn2">🌙</button>
     <button class="hbtn" onclick="goHome()">🏠</button>
   </header>
@@ -335,15 +335,27 @@ button:active{transform:scale(.96)}
 <script>
 var API="https://script.google.com/macros/s/AKfycbzJAAm7Sq0tTV5SCP-4lyncX1fTWI_Y3hQA0iNUTR6swCSTohm0We4iM_pG-vzt-lPE/exec";
 var SUP_PIN="9999";
+
 var STORES=[
-  {code:"A46",name:"Juigalpa Centro",manager:"Yasli Salazar",pinG:"4621",pinA:"4638",isMain:false},
-  {code:"A50",name:"Nueva Guinea",manager:"Mariela Bautista",pinG:"5032",pinA:"5027",isMain:false},
-  {code:"A55",name:"Juigalpa Puma",manager:"Idalia Leiva",pinG:"5514",pinA:"5561",isMain:false},
-  {code:"A58",name:"San Carlos",manager:"Luizhangella Tenorio",pinG:"5873",pinA:"5843",isMain:false},
-  {code:"A57",name:"Bluefields",manager:"Bryan Pineda",pinG:"2809",pinA:"5719",isMain:true},
-  {code:"A64",name:"Santo Tomas",manager:"Steven Arguello",pinG:"6448",pinA:"6452",isMain:false},
-  {code:"A67",name:"San Benito",manager:"Maykeling Reyes",pinG:"6719",pinA:"6784",isMain:false},
-  {code:"A87",name:"Rama",manager:"Edder Lopez",pinG:"8756",pinA:"8731",isMain:false}
+  {code:"A46",name:"Juigalpa Centro",manager:"Yasli Salazar",pinG:"4621",pinA:"4638",isMain:false,zone:"INT C-1"},
+  {code:"A50",name:"Nueva Guinea",manager:"Mariela Bautista",pinG:"5032",pinA:"5027",isMain:false,zone:"INT C-1"},
+  {code:"A55",name:"Juigalpa Puma",manager:"Idalia Leiva",pinG:"5514",pinA:"5561",isMain:false,zone:"INT C-1"},
+  {code:"A58",name:"San Carlos",manager:"Luizhangella Tenorio",pinG:"5873",pinA:"5843",isMain:false,zone:"INT C-1"},
+  {code:"A57",name:"Bluefields",manager:"Bryan Pineda",pinG:"2809",pinA:"5719",isMain:true,zone:"INT C-1"},
+  {code:"A64",name:"Santo Tomas",manager:"Steven Arguello",pinG:"6448",pinA:"6452",isMain:false,zone:"INT C-1"},
+  {code:"A67",name:"San Benito",manager:"Maykeling Reyes",pinG:"6719",pinA:"6784",isMain:false,zone:"INT C-1"},
+  {code:"A87",name:"Rama",manager:"Edder Lopez",pinG:"8756",pinA:"8731",isMain:false,zone:"INT C-1"},
+  {code:"A44",name:"Boaco",manager:"Por asignar",pinG:"4412",pinA:"4429",isMain:false,zone:"INT C-2"},
+  {code:"A47",name:"Camoapa",manager:"Por asignar",pinG:"4715",pinA:"4733",isMain:false,zone:"INT C-2"},
+  {code:"A48",name:"Matiguas",manager:"Por asignar",pinG:"4821",pinA:"4856",isMain:false,zone:"INT C-2"},
+  {code:"A68",name:"Rosita",manager:"Por asignar",pinG:"6817",pinA:"6842",isMain:false,zone:"INT C-2"},
+  {code:"A70",name:"Rio Blanco",manager:"Por asignar",pinG:"7014",pinA:"7039",isMain:false,zone:"INT C-2"},
+  {code:"A76",name:"Siuna",manager:"Por asignar",pinG:"7622",pinA:"7658",isMain:false,zone:"INT C-2"},
+  {code:"A80",name:"Puerto Cabezas",manager:"Por asignar",pinG:"8013",pinA:"8047",isMain:false,zone:"INT C-2"}
+];  
+  var ZONES=[
+  {name:"INT C-1",pin:"9999",mgr:"Bryan Pineda · Yury Reyes"},
+  {name:"INT C-2",pin:"8888",mgr:"Julio Gutierrez"}
 ];
 var COLORS=[["#B5D4F4","#0C447C"],["#9FE1CB","#085041"],["#FAC775","#633806"],["#F4C0D1","#72243E"],["#CECBF6","#3C3489"],["#F5C4B3","#712B13"],["#C0DD97","#27500A"],["#F7C1C1","#791F1F"]];
 var TASKS_DEF=["Mantener limpio el parqueo y entrada de la tienda","Limpiar puertas, ventanas y areas visibles al cliente","Mantener los pisos limpios durante todo el turno","Mantener los banos limpios, abastecidos y ordenados","Realizar frenteo de la gondola asignada","Abastecer la gondola asignada segun necesidad de inventario","Colocar productos siguiendo la planimetria establecida","Mantener visibles los precios de todos los productos","Organizar cabeceras y exhibiciones promocionales","Mantener ordenados los productos en exhibicion","Rotular promociones vigentes en el area asignada","Corregir espacios vacios mediante reposicion inmediata","Mantener limpia el area de preparacion de alimentos","Limpiar microondas, tostador y equipos de servicio","Mantener ordenada y atractiva el area de Food Service","Mantener limpia y ordenada el area de caja","Atender clientes siguiendo el protocolo de servicio","Ofrecer promociones y productos de impulso en cada venta","Mantener abastecidos los productos de impulso en caja","Entregar el area de trabajo limpia y organizada al finalizar el turno"];
@@ -355,7 +367,7 @@ var POL=Object.assign({},POL_SEED);
 
 function policyFor(s){if(!s)return null;if(POL[s])return POL[s];var k=Object.keys(POL).filter(function(k){return s.toLowerCase().indexOf(k.toLowerCase())>=0||k.toLowerCase().indexOf(s.toLowerCase())>=0;})[0];return k?POL[k]:null;}
 
-var CS=null,isG=false,tasks=[],prods={},vagents={},filt="all",vFilt="all",vView="gen",opVAg=new Set(),opSupSt=null,selAg=null,curTab="",acIdx=-1,pBuf="",pCb=null,pMode="",rTimer=null,catalogo=[],politicas=[],histCache={};
+var CS=null,isG=false,tasks=[],prods={},vagents={},filt="all",vFilt="all",vView="gen",opVAg=new Set(),opSupSt=null,selAg=null,curTab="",acIdx=-1,pBuf="",pCb=null,pMode="",rTimer=null,catalogo=[],politicas=[],histCache={},curZone=null;
 var TODAY=new Date();TODAY.setHours(0,0,0,0);
 
 function toggleTheme(){var h=document.documentElement,d=h.getAttribute("data-theme")==="dark";d?h.removeAttribute("data-theme"):h.setAttribute("data-theme","dark");var i=d?"🌙":"☀️";["thm-btn","thm-btn2"].forEach(function(id){var b=document.getElementById(id);if(b)b.textContent=i;});}
@@ -378,13 +390,19 @@ function sortP(arr){var o={rojo:0,naranja:1,amarillo:2,celeste:3,verde:4,gris:5}
 
 function renderSel(){
   var g=document.getElementById("store-grid");
-  g.innerHTML=STORES.map(function(s){
-    return'<button class="sel-btn'+(s.isMain?" mine":"")+'" onclick="selStore(\''+s.code+'\')">'+
-      '<div class="sel-name">'+s.code+" — "+s.name+(s.isMain?" ★":"")+"</div>"+
-      '<div class="sel-mgr">'+s.manager+"</div></button>";
-  }).join("");
+  var h="";
+  ZONES.forEach(function(z){
+    var st=STORES.filter(function(s){return s.zone===z.name;});
+    if(!st.length)return;
+    h+='<div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.75);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 4px;padding-left:2px">'+z.name+'</div>';
+    h+=st.map(function(s){
+      return'<button class="sel-btn'+(s.isMain?" mine":"")+'" onclick="selStore(\''+s.code+'\')">'+
+        '<div class="sel-name">'+s.code+" — "+s.name+(s.isMain?" ★":"")+"</div>"+
+        '<div class="sel-mgr">'+s.manager+"</div></button>";
+    }).join("");
+  });
+  g.innerHTML=h;
 }
-
 function selStore(code){
   var st=STORES.filter(function(s){return s.code===code;})[0];if(!st)return;
   CS=st;isG=false;pMode="entry";
@@ -394,8 +412,8 @@ function selStore(code){
 }
 function openSup(){
   pMode="sup";
-  document.getElementById("pin-ttl").textContent="🔭 Supervisor de Zona";
-  document.getElementById("pin-sub").textContent="Bryan Pineda · Yury Reyes";
+  document.getElementById("pin-ttl").textContent="🏢 Gerente de Zona";
+  document.getElementById("pin-sub").textContent="Ingresa el PIN de tu zona";
   openPin(function(){showScr("sup");rendSup();});
 }
 function showScr(n){["sel","app","sup"].forEach(function(s){var e=document.getElementById("s-"+s);if(e)e.style.display=s===n?(s==="sel"?"flex":"block"):"none";});}
@@ -447,10 +465,10 @@ function reqG(fn){if(isG){fn();return;}pMode="gerente";document.getElementById("
 function openPin(cb){pCb=cb;pBuf="";updPD();document.getElementById("perr").textContent="";document.getElementById("pin-ov").classList.add("op");}
 function closePin(){document.getElementById("pin-ov").classList.remove("op");pBuf="";}
 function pP(d){
-  if(pBuf.length>=4)return;pBuf+=d;updPD();
-  if(pBuf.length===4){
-    var ok=false;
-    if(pMode==="sup")ok=pBuf===SUP_PIN;
+if(pBuf.length>=4)return;pBuf+=d;updPD();
+if(pBuf.length===4){
+var ok=false;
+if(pMode==="sup"){var zz=ZONES.filter(function(z){return z.pin===pBuf;})[0];if(zz){ok=true;curZone=zz;}}      
     else if(pMode==="gerente"){if(CS&&pBuf===CS.pinG){ok=true;isG=true;}}
     else if(pMode==="entry"){if(CS&&pBuf===CS.pinG){ok=true;isG=true;}else if(CS&&pBuf===CS.pinA){ok=true;isG=false;}}
     if(ok){closePin();if(pCb)pCb();}
@@ -763,9 +781,11 @@ function remHist(rownum){
 
   function rendSup(){
   document.getElementById("sup-grid").innerHTML='<div class="lod">⏳ Cargando...</div>';
-  var pend=STORES.length*2;
+  var zoneStores=STORES.filter(function(s){return s.zone===curZone.name;});
+  var hs=document.getElementById("sup-hsub");if(hs)hs.textContent="🏢 "+curZone.name+" — "+curZone.mgr;
+  var pend=zoneStores.length*2;
   function supDone(){pend--;if(pend===0)buildSup();}
-  STORES.forEach(function(s){
+  zoneStores.forEach(function(s){
     if((prods[s.code]||[]).length>0){supDone();}
     else{apiCall({action:"getVencimientos",storeCode:s.code}).then(function(d){if(d.ok)prods[s.code]=d.productos||[];supDone();});}
     apiCall({action:"getHistorial",storeCode:s.code}).then(function(d){if(d.ok)histCache[s.code]=d.historial||[];supDone();});
@@ -781,9 +801,9 @@ function recoveryPct(code){
 }
 function buildSup(){
   var tot=0,roj=0,nar=0,ama=0,cel=0,ver=0;
-  STORES.forEach(function(s){var p=prods[s.code]||[];tot+=p.length;p.forEach(function(x){var k=sk(dr(x.date));if(k==="rojo")roj++;else if(k==="naranja")nar++;else if(k==="amarillo")ama++;else if(k==="celeste")cel++;else ver++;});});
+  zoneStores.forEach(function(s){var p=prods[s.code]||[];tot+=p.length;p.forEach(function(x){var k=sk(dr(x.date));if(k==="rojo")roj++;else if(k==="naranja")nar++;else if(k==="amarillo")ama++;else if(k==="celeste")cel++;else ver++;});});
   document.getElementById("sup-mets").innerHTML='<div class="met"><div class="met-l">Total</div><div class="met-v" style="color:var(--blue)">'+tot+'</div></div><div class="met"><div class="met-l">🔴 Vencidos</div><div class="met-v" style="color:#b91c1c">'+roj+'</div></div><div class="met"><div class="met-l">🟠 ≤3d</div><div class="met-v" style="color:#d97706">'+nar+'</div></div><div class="met"><div class="met-l">🟡 ≤7d</div><div class="met-v" style="color:#ca8a04">'+ama+'</div></div><div class="met"><div class="met-l">🔵 ≤15d</div><div class="met-v" style="color:#1e40af">'+cel+'</div></div><div class="met"><div class="met-l">🟢 OK</div><div class="met-v" style="color:#27500A">'+ver+'</div></div>';
-  var rnk=STORES.map(function(s){var p=prods[s.code]||[],tot=p.length,crit=p.filter(function(x){var k=sk(dr(x.date));return k==="rojo"||k==="naranja";}).length,score=tot===0?100:Math.round((tot-crit)/tot*100);return{s:s,tot:tot,crit:crit,score:score};}).sort(function(a,b){return b.score-a.score;});
+  var rnk=zoneStores.map(function(s){var p=prods[s.code]||[],tot=p.length,crit=p.filter(function(x){var k=sk(dr(x.date));return k==="rojo"||k==="naranja";}).length,score=tot===0?100:Math.round((tot-crit)/tot*100);return{s:s,tot:tot,crit:crit,score:score};}).sort(function(a,b){return b.score-a.score;});
   var rkH='<div class="card"><div style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--blue)">🏆 Ranking — Control de Vencimientos</div>';
   rnk.forEach(function(r,i){
     var m=i===0?"🥇":i===1?"🥈":i===2?"🥉":(i+1)+"°";
@@ -793,7 +813,7 @@ function buildSup(){
   });
   rkH+="</div>";
   function usc(s){var p=prods[s.code]||[],sc=0;p.forEach(function(x){var d=dr(x.date);if(d!==null&&d<0)sc+=1000;else if(d!==null&&d<=3)sc+=100;else if(d!==null&&d<=7)sc+=10;else sc+=1;});return sc;}
-  var srt=STORES.slice().sort(function(a,b){return usc(b)-usc(a);});
+  var srt=zoneStores.slice().sort(function(a,b){return usc(b)-usc(a);});
   var stH="";
   srt.forEach(function(s){
     var p=prods[s.code]||[],cnt={rojo:0,naranja:0,amarillo:0,celeste:0,verde:0};
