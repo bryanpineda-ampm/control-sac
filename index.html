@@ -799,18 +799,27 @@ function recoveryPct(code){
   var recuperados=res.filter(function(r){return r.accion!=="Venció (N/A cambio)";}).length;
   return Math.round(recuperados/res.length*100);
 }
-function buildSup(){
+function rnkClick(code){
+  if(opSupSt!==code)togSup(code);
+  setTimeout(function(){var el=document.getElementById("sc-"+code);if(el)el.scrollIntoView({behavior:"smooth",block:"center"});},50);
+}
+  function buildSup(){
   var tot=0,roj=0,nar=0,ama=0,cel=0,ver=0;
   zoneStores.forEach(function(s){var p=prods[s.code]||[];tot+=p.length;p.forEach(function(x){var k=sk(dr(x.date));if(k==="rojo")roj++;else if(k==="naranja")nar++;else if(k==="amarillo")ama++;else if(k==="celeste")cel++;else ver++;});});
   document.getElementById("sup-mets").innerHTML='<div class="met"><div class="met-l">Total</div><div class="met-v" style="color:var(--blue)">'+tot+'</div></div><div class="met"><div class="met-l">🔴 Vencidos</div><div class="met-v" style="color:#b91c1c">'+roj+'</div></div><div class="met"><div class="met-l">🟠 ≤3d</div><div class="met-v" style="color:#d97706">'+nar+'</div></div><div class="met"><div class="met-l">🟡 ≤7d</div><div class="met-v" style="color:#ca8a04">'+ama+'</div></div><div class="met"><div class="met-l">🔵 ≤15d</div><div class="met-v" style="color:#1e40af">'+cel+'</div></div><div class="met"><div class="met-l">🟢 OK</div><div class="met-v" style="color:#27500A">'+ver+'</div></div>';
-  var rnk=zoneStores.map(function(s){var p=prods[s.code]||[],tot=p.length,crit=p.filter(function(x){var k=sk(dr(x.date));return k==="rojo"||k==="naranja";}).length,score=tot===0?100:Math.round((tot-crit)/tot*100);return{s:s,tot:tot,crit:crit,score:score};}).sort(function(a,b){return b.score-a.score;});
+ var rnk=zoneStores.map(function(s){var p=prods[s.code]||[],tot=p.length,crit=p.filter(function(x){var k=sk(dr(x.date));return k==="rojo"||k==="naranja";}).length,score=tot===0?100:Math.round((tot-crit)/tot*100),rec=recoveryPct(s.code),h=histCache[s.code]||[],dias=h.length?Math.floor((Date.now()-new Date(h[0].fecha).getTime())/86400000):null;return{s:s,tot:tot,crit:crit,score:score,rec:rec,dias:dias};}).sort(function(a,b){return b.score-a.score;});
   var rkH='<div class="card"><div style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--blue)">🏆 Ranking — Control de Vencimientos</div>';
   rnk.forEach(function(r,i){
     var m=i===0?"🥇":i===1?"🥈":i===2?"🥉":(i+1)+"°";
     var co=r.score>=80?"#27500A":r.score>=50?"#d97706":"#b91c1c";
     var bg=r.score>=80?"#EAF3DE":r.score>=50?"#fef3c7":"#fee2e2";
-    rkH+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><div style="font-size:18px;width:30px;text-align:center">'+m+'</div><div style="flex:1"><div style="font-size:13px;font-weight:700">'+r.s.code+" — "+r.s.name+'</div><div style="font-size:11px;color:var(--text-soft)">'+r.tot+" productos · "+r.crit+" criticos</div></div>"+'<div style="background:'+bg+";color:"+co+';padding:4px 10px;border-radius:8px;font-size:14px;font-weight:700">'+r.score+"%</div></div>";
+    var recH=r.rec!==null?'<span style="background:#dbeafe;color:#1e40af;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;margin-left:6px;white-space:nowrap">🔄 '+r.rec+'%</span>':"";
+    var inactTxt=r.dias===null?"Sin registros aún":r.dias+(r.dias===1?" día":" días")+" desde último registro";
+    var inactC=r.dias!==null&&r.dias>=7?"#b91c1c":"var(--text-soft)";
+    var flag=(r.score<50||r.crit>=3||(r.dias!==null&&r.dias>=7))?'<span style="background:#fee2e2;color:#b91c1c;padding:2px 7px;border-radius:6px;font-size:10px;font-weight:700;margin-left:6px">⚠ Requiere atención</span>':"";
+    rkH+='<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="rnkClick(\''+r.s.code+'\')"><div style="font-size:18px;width:30px;text-align:center">'+m+'</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:700">'+r.s.code+" — "+r.s.name+flag+'</div><div style="font-size:11px;color:'+inactC+';margin-top:2px">'+r.tot+" productos · "+r.crit+" críticos · "+inactTxt+'</div></div><div style="text-align:right;flex-shrink:0;display:flex;align-items:center"><span style="background:'+bg+";color:"+co+';padding:4px 10px;border-radius:8px;font-size:14px;font-weight:700">'+r.score+"%</span>"+recH+"</div></div>";
   });
+  rkH+="</div>";
   rkH+="</div>";
   function usc(s){var p=prods[s.code]||[],sc=0;p.forEach(function(x){var d=dr(x.date);if(d!==null&&d<0)sc+=1000;else if(d!==null&&d<=3)sc+=100;else if(d!==null&&d<=7)sc+=10;else sc+=1;});return sc;}
   var srt=zoneStores.slice().sort(function(a,b){return usc(b)-usc(a);});
@@ -832,7 +841,7 @@ function buildSup(){
       if(!p.length){det='<div style="padding:10px;font-size:12px;color:var(--text-soft);font-style:italic">Sin productos registrados</div>';}
       else{det='<div style="border-top:1px solid var(--border)">';sortP(p).forEach(function(x){var d=dr(x.date),s2=si(d),bc=s2.c==="sr"?"#e53e3e":s2.c==="sn"?"var(--orange)":s2.c==="sa"?"#ca8a04":s2.c==="sc"?"#1e40af":"#34d399";det+='<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);border-left:3px solid '+bc+'"><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">'+x.desc+'</div><div style="font-size:10px;color:var(--text-soft)">'+(x.agent||"Sin agente")+" · Cant: "+x.qty+"</div></div>"+'<div style="text-align:right;flex-shrink:0"><span class="sem '+s2.c+'" style="font-size:10px">'+semI(s2.c)+" "+s2.l+'</span><div style="font-size:10px;color:var(--text-soft);margin-top:2px">'+fd(x.date)+"</div></div></div>";});det+="</div>";}
     }
-    stH+='<div class="sc-card'+(isOp?" sel":"")+'" style="'+(ha?"border-left:3px solid #e53e3e":"")+'" onclick="togSup(\''+s.code+'\')"><div class="sc-hdr"><span class="sc-badge">'+s.code+'</span><div style="flex:1;min-width:0;margin-left:8px"><div style="font-size:13px;font-weight:700">'+s.name+'</div><div style="font-size:11px;color:var(--text-soft)">👤 '+s.manager+'</div></div>'+(s.isMain?'<span style="background:#F58220;color:#fff;padding:2px 6px;border-radius:5px;font-size:10px;font-weight:700">★</span>':'')+'</div><div class="sc-bdy"><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px">'+mn+'</div><div style="font-size:11px;color:var(--text-soft)">'+p.length+" producto"+(p.length!==1?"s":"")+'</div></div>'+rc+det+'</div>';
+    stH+='<div class=sc-card'+(isOp?" sel":"")+'" id="sc-'+s.code+'" style="'+(ha?"border-left:3px solid #e53e3e":"")+'" onclick="togSup(\''+s.code+'\')"><div class="sc-hdr"><span class="sc-badge">'+s.code+'</span><div style="flex:1;min-width:0;margin-left:8px"><div style="font-size:13px;font-weight:700">'+s.name+'</div><div style="font-size:11px;color:var(--text-soft)">👤 '+s.manager+'</div></div>'+(s.isMain?'<span style="background:#F58220;color:#fff;padding:2px 6px;border-radius:5px;font-size:10px;font-weight:700">★</span>':'')+'</div><div class="sc-bdy"><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px">'+mn+'</div><div style="font-size:11px;color:var(--text-soft)">'+p.length+" producto"+(p.length!==1?"s":"")+'</div></div>'+rc+det+'</div>';
   });
   document.getElementById("sup-grid").innerHTML=rkH+stH;
 }
