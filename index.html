@@ -334,28 +334,28 @@ button:active{transform:scale(.96)}
 
 <script>
 var API="https://script.google.com/macros/s/AKfycbzJAAm7Sq0tTV5SCP-4lyncX1fTWI_Y3hQA0iNUTR6swCSTohm0We4iM_pG-vzt-lPE/exec";
-var SUP_PIN="9999";
+
 
 var STORES=[
-  {code:"A46",name:"Juigalpa Centro",manager:"Yasli Salazar",pinG:"4621",pinA:"4638",isMain:false,zone:"INT C-1"},
-  {code:"A50",name:"Nueva Guinea",manager:"Mariela Bautista",pinG:"5032",pinA:"5027",isMain:false,zone:"INT C-1"},
-  {code:"A55",name:"Juigalpa Puma",manager:"Idalia Leiva",pinG:"5514",pinA:"5561",isMain:false,zone:"INT C-1"},
-  {code:"A58",name:"San Carlos",manager:"Luizhangella Tenorio",pinG:"5873",pinA:"5843",isMain:false,zone:"INT C-1"},
-  {code:"A57",name:"Bluefields",manager:"Bryan Pineda",pinG:"2809",pinA:"5719",isMain:true,zone:"INT C-1"},
-  {code:"A64",name:"Santo Tomas",manager:"Steven Arguello",pinG:"6448",pinA:"6452",isMain:false,zone:"INT C-1"},
-  {code:"A67",name:"San Benito",manager:"Maykeling Reyes",pinG:"6719",pinA:"6784",isMain:false,zone:"INT C-1"},
-  {code:"A87",name:"Rama",manager:"Edder Lopez",pinG:"8756",pinA:"8731",isMain:false,zone:"INT C-1"},
-  {code:"A44",name:"Boaco",manager:"Maria Moreno",pinG:"4412",pinA:"4429",isMain:false,zone:"INT C-2"},
-  {code:"A47",name:"Camoapa",manager:"Elmer Mairena",pinG:"4715",pinA:"4733",isMain:false,zone:"INT C-2"},
-  {code:"A48",name:"Matiguas",manager:"David Diaz",pinG:"4821",pinA:"4856",isMain:false,zone:"INT C-2"},
-  {code:"A68",name:"Rosita",manager:"Iris Hernandez",pinG:"6817",pinA:"6842",isMain:false,zone:"INT C-2"},
-  {code:"A70",name:"Rio Blanco",manager:"Dania Salgado",pinG:"7014",pinA:"7039",isMain:false,zone:"INT C-2"},
-  {code:"A76",name:"Siuna",manager:"Jassenia Herrera",pinG:"7622",pinA:"7658",isMain:false,zone:"INT C-2"},
-  {code:"A80",name:"Puerto Cabezas",manager:"Kenneth Ortega",pinG:"8013",pinA:"8047",isMain:false,zone:"INT C-2"},
+  {code:"A46",name:"Juigalpa Centro",manager:"Yasli Salazar",isMain:false,zone:"INT C-1"},
+  {code:"A50",name:"Nueva Guinea",manager:"Mariela Bautista",isMain:false,zone:"INT C-1"},
+  {code:"A55",name:"Juigalpa Puma",manager:"Idalia Leiva",isMain:false,zone:"INT C-1"},
+  {code:"A58",name:"San Carlos",manager:"Luizhangella Tenorio",isMain:false,zone:"INT C-1"},
+  {code:"A57",name:"Bluefields",manager:"Bryan Pineda",isMain:true,zone:"INT C-1"},
+  {code:"A64",name:"Santo Tomas",manager:"Steven Arguello",isMain:false,zone:"INT C-1"},
+  {code:"A67",name:"San Benito",manager:"Maykeling Reyes",isMain:false,zone:"INT C-1"},
+  {code:"A87",name:"Rama",manager:"Edder Lopez",isMain:false,zone:"INT C-1"},
+  {code:"A44",name:"Boaco",manager:"Maria Moreno",isMain:false,zone:"INT C-2"},
+  {code:"A47",name:"Camoapa",manager:"Elmer Mairena",isMain:false,zone:"INT C-2"},
+  {code:"A48",name:"Matiguas",manager:"David Diaz",isMain:false,zone:"INT C-2"},
+  {code:"A68",name:"Rosita",manager:"Iris Hernandez",isMain:false,zone:"INT C-2"},
+  {code:"A70",name:"Rio Blanco",manager:"Dania Salgado",isMain:false,zone:"INT C-2"},
+  {code:"A76",name:"Siuna",manager:"Jassenia Herrera",isMain:false,zone:"INT C-2"},
+  {code:"A80",name:"Puerto Cabezas",manager:"Kenneth Ortega",isMain:false,zone:"INT C-2"},
 ];
-  var ZONES=[
-  {name:"INT C-1",pin:"9999",mgr:"Bryan Pineda · Yury Reyes"},
-  {name:"INT C-2",pin:"8888",mgr:"Julio Gutierrez"}
+var ZONES=[
+  {name:"INT C-1",mgr:"Bryan Pineda · Yury Reyes"},
+  {name:"INT C-2",mgr:"Julio Gutierrez"}
 ];
 var COLORS=[["#B5D4F4","#0C447C"],["#9FE1CB","#085041"],["#FAC775","#633806"],["#F4C0D1","#72243E"],["#CECBF6","#3C3489"],["#F5C4B3","#712B13"],["#C0DD97","#27500A"],["#F7C1C1","#791F1F"]];
 var TASKS_DEF=["Mantener limpio el parqueo y entrada de la tienda","Limpiar puertas, ventanas y areas visibles al cliente","Mantener los pisos limpios durante todo el turno","Mantener los banos limpios, abastecidos y ordenados","Realizar frenteo de la gondola asignada","Abastecer la gondola asignada segun necesidad de inventario","Colocar productos siguiendo la planimetria establecida","Mantener visibles los precios de todos los productos","Organizar cabeceras y exhibiciones promocionales","Mantener ordenados los productos en exhibicion","Rotular promociones vigentes en el area asignada","Corregir espacios vacios mediante reposicion inmediata","Mantener limpia el area de preparacion de alimentos","Limpiar microondas, tostador y equipos de servicio","Mantener ordenada y atractiva el area de Food Service","Mantener limpia y ordenada el area de caja","Atender clientes siguiendo el protocolo de servicio","Ofrecer promociones y productos de impulso en cada venta","Mantener abastecidos los productos de impulso en caja","Entregar el area de trabajo limpia y organizada al finalizar el turno"];
@@ -465,14 +465,19 @@ function reqG(fn){if(isG){fn();return;}pMode="gerente";document.getElementById("
 function openPin(cb){pCb=cb;pBuf="";updPD();document.getElementById("perr").textContent="";document.getElementById("pin-ov").classList.add("op");}
 function closePin(){document.getElementById("pin-ov").classList.remove("op");pBuf="";}
 function pP(d){
-if(pBuf.length>=4)return;pBuf+=d;updPD();
-if(pBuf.length===4){
-var ok=false;
-if(pMode==="sup"){var zz=ZONES.filter(function(z){return z.pin===pBuf;})[0];if(zz){ok=true;curZone=zz;}}      
-    else if(pMode==="gerente"){if(CS&&pBuf===CS.pinG){ok=true;isG=true;}}
-    else if(pMode==="entry"){if(CS&&pBuf===CS.pinG){ok=true;isG=true;}else if(CS&&pBuf===CS.pinA){ok=true;isG=false;}}
-    if(ok){closePin();if(pCb)pCb();}
-    else{document.getElementById("perr").textContent="PIN incorrecto.";setTimeout(function(){pBuf="";updPD();document.getElementById("perr").textContent="";},800);}
+  if(pBuf.length>=4)return;pBuf+=d;updPD();
+  if(pBuf.length===4){
+    var reqCode=pMode==="sup"?"":(CS?CS.code:"");
+    apiCall({action:"validarPin",modo:pMode,pin:pBuf,code:reqCode}).then(function(r){
+      if(r.ok){
+        if(pMode==="sup"){curZone={name:r.zone,mgr:r.mgr};}
+        else{isG=r.role==="gerente";}
+        closePin();if(pCb)pCb();
+      }else{
+        document.getElementById("perr").textContent="PIN incorrecto.";
+        setTimeout(function(){pBuf="";updPD();document.getElementById("perr").textContent="";},800);
+      }
+    });
   }
 }
 function pDel(){pBuf=pBuf.slice(0,-1);updPD();}
