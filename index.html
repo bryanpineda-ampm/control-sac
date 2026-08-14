@@ -270,6 +270,7 @@ button:active{transform:scale(.96)}
           <button onclick="verHist()" style="font-size:12px">📋 Historial</button>
           <button onclick="reqG(verCatalogo)" style="font-size:12px">📦 Catálogo</button>
           <button onclick="expVencCSV()" style="font-size:12px">⬇ CSV</button>
+          <button onclick="reqG(enviarAlertaGT)" style="font-size:12px">📧 Alertar GT</button>
         </div>
       </div>
       <div id="vw-gen">
@@ -995,6 +996,7 @@ function selP(item,desc,sup){
 
 function expCSV(){if(!tasks.length){alert("No hay tareas.");return;}var c="ID,Tarea,Agente,Turno,Prioridad,Fecha,Estado\n";tasks.forEach(function(t){var ta=t.tarea||t.task||"";c+=t.id+',"'+ta+'","'+(t.agente||t.agent)+'","'+(t.turno||"")+'","'+(t.prioridad||"")+'","'+(t.fecha||t.date||"")+'","'+(ts(t)==="done"?"Completada":ts(t)==="overdue"?"Vencida":"Pendiente")+'"\n';});dl("SAC_Tareas.csv","data:text/csv;charset=utf-8,"+encodeURIComponent(c));}
 function expAgCSV(){var c="Agente,Total,Pendientes,Vencidas,Completadas\n";MAIN_AG.forEach(function(a){var at=tasks.filter(function(t){return(t.agente||t.agent)===a.name;}),d=at.filter(function(t){return ts(t)==="done";}).length,ov=at.filter(function(t){return ts(t)==="overdue";}).length,p=at.filter(function(t){return ts(t)==="pending"||ts(t)==="soon";}).length;c+='"'+a.name+'",'+at.length+","+p+","+ov+","+d+"\n";});dl("SAC_Agentes.csv","data:text/csv;charset=utf-8,"+encodeURIComponent(c));}
+function enviarAlertaGT(){if(!CS)return;apiCall({action:"enviarAlertaVencimientos",storeCode:CS.code}).then(function(r){if(!r.ok){alert("Error: "+(r.error||""));return;}if(!r.sent){alert("Sin vencidos ni próximos a vencer. No se envió correo.");return;}alert("Alerta enviada a "+r.email+" ("+r.total+" producto(s)).");});}
 function expVencCSV(){if(!CS)return;var pp=prods[CS.code]||[];if(!pp.length){alert("Sin productos.");return;}var c="Item,Descripcion,Cantidad,Agente,Fecha,Dias,Estado\n";sortP(pp).forEach(function(p){var d=dr(p.date),s=si(d);c+='"'+(p.item||"")+'","'+p.desc+'","'+p.qty+'","'+(p.agent||"")+'","'+(p.date||"")+'","'+(d!==null?d:"")+'","'+s.l+'"\n';});dl("Vencimientos_"+CS.code+".csv","data:text/csv;charset=utf-8,"+encodeURIComponent(c));}
 function dl(fn,du){var a=document.createElement("a");a.href=du;a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);}
 
