@@ -932,18 +932,51 @@ function rendAgTar(){
   my.forEach(function(t){
     var st=ts(t),tar=t.tarea||t.task||"";
     h+='<div class="atc '+(st==="overdue"?"ov":"")+" "+(st==="done"?"dn":"")+'"><div style="display:flex;align-items:center;gap:8px"><div style="flex:1"><div style="font-size:13px;font-weight:600">'+tar+'</div><div style="font-size:11px;color:var(--text-soft)">'+(t.turno?ti(t.turno)+" "+t.turno:"")+" "+(t.prioridad?pi(t.prioridad)+" "+t.prioridad:"")+'</div></div><span class="bdg '+(st==="done"?"dn":st==="overdue"?"ov":st==="soon"?"so":"pe")+'">'+(st==="done"?"✓":st==="overdue"?"🔴":st==="soon"?"🟠":"⏳")+"</span></div>";
-    if(st!=="done")h+='<div class="cof"><div style="font-size:12px;font-weight:600">📸 Enviar evidencia</div><input type="file" accept="image/*" capture="environment" style="font-size:12px"><button style="background:#EAF3DE;color:#27500A;border-color:#9FE1CB;width:100%;justify-content:center" onclick="subEv(\''+t.id+"')\">✓ Marcar como completada</button></div>";
+    if(st!=="done")h+='<div class="cof"><div style="font-size:12px;font-weight:600">📸 Enviar evidencia (obligatoria)</div><input type="file" accept="image/*" capture="environment" id="ev-'+t.id+'" style="font-size:12px"><button id="evb-'+t.id+'" style="background:#EAF3DE;color:#27500A;border-color:#9FE1CB;width:100%;justify-content:center" onclick="subEv(\''+t.id+"')\">✓ Marcar como completada</button></div>";
+    else if(t.foto)h+='<div class="cof"><a href="'+t.foto+'" target="_blank" style="font-size:12px;color:var(--blue);font-weight:600">📸 Ver evidencia enviada</a></div>';
     h+="</div>";
   });
   w.innerHTML=h;
 }
-function subEv(id){apiCall({action:"updateEstado",id:String(id),estado:"Completada"}).then(function(r){if(r.ok){refreshT();rendAgTar();}else alert("Error.");});}
+function readAndCompress(file,maxDim,quality){
+  return new Promise(function(resolve,reject){
+    var img=new Image(),reader=new FileReader();
+    reader.onload=function(e){
+      img.onload=function(){
+        var w=img.width,h=img.height,scale=Math.min(1,maxDim/Math.max(w,h));
+        var cw=Math.round(w*scale),ch=Math.round(h*scale);
+        var cv=document.createElement("canvas");cv.width=cw;cv.height=ch;
+        cv.getContext("2d").drawImage(img,0,0,cw,ch);
+        resolve(cv.toDataURL("image/jpeg",quality).split(",")[1]);
+      };
+      img.onerror=function(){reject(new Error("No se pudo leer la imagen"));};
+      img.src=e.target.result;
+    };
+    reader.onerror=function(){reject(new Error("No se pudo leer el archivo"));};
+    reader.readAsDataURL(file);
+  });
+}
+function subEv(id){
+  var inp=document.getElementById("ev-"+id),file=inp&&inp.files&&inp.files[0];
+  if(!file){alert("Selecciona o toma una foto de evidencia antes de marcar como completada.");return;}
+  var btn=document.getElementById("evb-"+id);
+  if(btn){btn.disabled=true;btn.textContent="Subiendo...";}
+  readAndCompress(file,1280,0.72).then(function(b64){
+    return fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"subirEvidencia",id:String(id),filename:"tarea_"+id+".jpg",mimeType:"image/jpeg",data:b64})});
+  }).then(function(r){return r.json();}).then(function(r){
+    if(r.ok){refreshT();rendAgTar();}
+    else{alert("Error al subir evidencia: "+(r.error||""));if(btn){btn.disabled=false;btn.textContent="✓ Marcar como completada";}}
+  }).catch(function(){
+    alert("Error de conexión al subir la evidencia. Intenta de nuevo.");
+    if(btn){btn.disabled=false;btn.textContent="✓ Marcar como completada";}
+  });
+}
 
 function showMod(id){
   var t=tasks.filter(function(x){return String(x.id)===String(id);})[0];if(!t)return;
   var tar=t.tarea||t.task||"",st=ts(t),val=String(t.validada||"").toLowerCase()==="si";
   document.getElementById("mod-ttl").textContent="📝 "+tar;
-  var b='<div style="margin-bottom:10px;display:flex;gap:6px;flex-wrap:wrap"><span class="bdg '+(st==="done"?"dn":st==="overdue"?"ov":"pe")+'">'+(st==="done"?"✓ Completada":st==="overdue"?"🔴 Vencida":"⏳ Pendiente")+"</span>"+(t.turno?'<span class="bdg '+t.turno.toLowerCase()+'">'+ti(t.turno)+" "+t.turno+"</span>":"")+(t.prioridad?'<span class="bdg '+t.prioridad+'">'+pi(t.prioridad)+" "+t.prioridad+"</span>":"")+(st==="done"&&!val&&isG?'<button style="height:26px;padding:0 10px;font-size:11px;background:#EAF3DE;color:#27500A;border-color:#9FE1CB" onclick="valTask(\''+id+'\')">✓ Validar</button>':"")+(val?'<span class="bdg va">✅ Validada</span>':"")+"</div>"+'<div style="font-size:11px;color:var(--text-soft)">Agente: <b>'+(t.agente||t.agent)+"</b></div>"+(t.fecha||t.date?'<div style="font-size:11px;color:var(--text-soft);margin-top:4px">Fecha: '+fd(t.fecha||t.date)+"</div>":"");
+  var b='<div style="margin-bottom:10px;display:flex;gap:6px;flex-wrap:wrap"><span class="bdg '+(st==="done"?"dn":st==="overdue"?"ov":"pe")+'">'+(st==="done"?"✓ Completada":st==="overdue"?"🔴 Vencida":"⏳ Pendiente")+"</span>"+(t.turno?'<span class="bdg '+t.turno.toLowerCase()+'">'+ti(t.turno)+" "+t.turno+"</span>":"")+(t.prioridad?'<span class="bdg '+t.prioridad+'">'+pi(t.prioridad)+" "+t.prioridad+"</span>":"")+(st==="done"&&!val&&isG?'<button style="height:26px;padding:0 10px;font-size:11px;background:#EAF3DE;color:#27500A;border-color:#9FE1CB" onclick="valTask(\''+id+'\')">✓ Validar</button>':"")+(val?'<span class="bdg va">✅ Validada</span>':"")+"</div>"+'<div style="font-size:11px;color:var(--text-soft)">Agente: <b>'+(t.agente||t.agent)+"</b></div>"+(t.fecha||t.date?'<div style="font-size:11px;color:var(--text-soft);margin-top:4px">Fecha: '+fd(t.fecha||t.date)+"</div>":"")+(t.foto?'<div style="margin-top:10px"><a href="'+t.foto+'" target="_blank"><img src="'+t.foto+'" style="max-width:100%;border-radius:8px;border:1px solid var(--border);display:block"></a></div>':"");
   document.getElementById("mod-bdy").innerHTML=b;
   document.getElementById("mod-ov").classList.add("op");
 }
