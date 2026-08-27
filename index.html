@@ -236,7 +236,10 @@ button:active{transform:scale(.96)}
         <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--blue)">➕ Registrar producto</div>
         <div class="fr">
           <div class="fld acw" style="min-width:110px;max-width:150px"><label>Ítem</label>
-            <input id="v-item" type="text" placeholder="Buscar..." autocomplete="off" oninput="acS('item')" onfocus="acS('item')" onblur="setTimeout(function(){hideAC('item')},200)">
+            <div style="display:flex;gap:4px">
+              <input id="v-item" type="text" placeholder="Buscar..." autocomplete="off" oninput="acS('item')" onfocus="acS('item')" onblur="setTimeout(function(){hideAC('item')},200)" style="flex:1;min-width:0">
+              <button type="button" onclick="abrirScanner()" title="Escanear código" style="flex-shrink:0;padding:0 8px">📷</button>
+            </div>
             <div class="acdd" id="ac-item"></div>
           </div>
           <div class="fld acw" style="flex:2;min-width:150px"><label>Descripción</label>
@@ -333,6 +336,16 @@ button:active{transform:scale(.96)}
   <div class="mod"><span class="mc" onclick="closeMod2()">✕</span><h3 id="mod-ttl"></h3><div id="mod-bdy"></div></div>
 </div>
 
+<div class="mod-ov" id="scan-ov" onclick="if(event.target.id==='scan-ov')cerrarScanner()">
+  <div class="mod" style="max-width:420px">
+    <span class="mc" onclick="cerrarScanner()">✕</span>
+    <h3>📷 Escanear código</h3>
+    <div id="qr-reader" style="width:100%;margin-top:8px"></div>
+    <div id="qr-err" style="font-size:12px;color:var(--text-soft);margin-top:8px"></div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
 var API="https://script.google.com/macros/s/AKfycbzJAAm7Sq0tTV5SCP-4lyncX1fTWI_Y3hQA0iNUTR6swCSTohm0We4iM_pG-vzt-lPE/exec";
 
@@ -1017,6 +1030,33 @@ function acS(type){
   dd.style.display="block";
 }
 function hideAC(t){document.getElementById("ac-"+t).style.display="none";}
+var qrScanner=null;
+function abrirScanner(){
+  document.getElementById("qr-err").textContent="";
+  document.getElementById("scan-ov").classList.add("op");
+  if(typeof Html5Qrcode==="undefined"){document.getElementById("qr-err").textContent="No se pudo cargar el lector de códigos. Verifica tu conexión.";return;}
+  qrScanner=new Html5Qrcode("qr-reader");
+  qrScanner.start(
+    {facingMode:"environment"},
+    {fps:10,qrbox:{width:250,height:150}},
+    function(code){aplicarCodigoEscaneado(code);},
+    function(){}
+  ).catch(function(err){document.getElementById("qr-err").textContent="No se pudo abrir la cámara: "+err;});
+}
+function cerrarScanner(){
+  document.getElementById("scan-ov").classList.remove("op");
+  if(qrScanner){
+    try{qrScanner.stop().then(function(){qrScanner.clear();}).catch(function(){});}catch(e){}
+    qrScanner=null;
+  }
+}
+function aplicarCodigoEscaneado(code){
+  cerrarScanner();
+  document.getElementById("v-item").value=code;
+  var prod=CAT.filter(function(r){return r[0]===code;})[0];
+  if(prod){selP(prod[0],prod[1],prod[2]);}
+  else{document.getElementById("v-desc").value="";document.getElementById("v-desc").focus();}
+}
 function selP(item,desc,sup){
   document.getElementById("v-item").value=item;document.getElementById("v-desc").value=desc;
   hideAC("item");hideAC("desc");
